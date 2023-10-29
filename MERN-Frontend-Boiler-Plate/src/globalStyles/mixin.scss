@@ -95,7 +95,7 @@ $monitor-mid-width: 2560;
 $monitor-min-width: 1920px;
 // Desktops
 $desktop-max-width: 1920px;
-$laptop-mid-width: 1560px;
+$desktop-mid-width: 1560px;
 $desktop-min-width: 1440px;
 // Laptops
 $laptop-max-width: 1440px;
@@ -118,43 +118,43 @@ $phone-xxs-width: 200px;
 
 @media (width > $monitor-min-width) {
     html {
-        font-size: 20px;
+        font-size: 16px;
     }
 }
 
 @media (width <= $monitor-min-width) {
     html {
-        font-size: 18px;
+        font-size: 15px;
     }
 }
 
-@media (width <= $desktop-min-width) {
-    html {
-        font-size: 16px;
-    }
-}
-
-@media (width <= $laptop-mid-width) {
+@media (width <= $desktop-mid-width) {
     html {
         font-size: 14px;
     }
 }
 
+@media (width <= $laptop-mid-width) {
+    html {
+        font-size: 13.2px;
+    }
+}
+
 @media (width <= $laptop-min-width) {
     html {
-        font-size: 13px;
+        font-size: 12.4px;
     }
 }
 
 @media (width <= $tablet-mid-width) {
     html {
-        font-size: 12px;
+        font-size: 11.6px;
     }
 }
 
 @media (width <= $tablet-min-width) {
     html {
-        font-size: 10px;
+        font-size: 10.6px;
     }
 }
 
@@ -172,7 +172,7 @@ $phone-xxs-width: 200px;
 
 @media (width <= $phone-min-width) {
     html {
-        font-size: 8.6x;
+        font-size: 8.5x;
     }
 }
 
