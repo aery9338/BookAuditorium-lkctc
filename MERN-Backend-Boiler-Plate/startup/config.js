@@ -4,12 +4,17 @@ const AppEnvironmentId = {
     Production: process.env.APP_PRODUCTION_ID,
 }
 const ProjectId = process.env.APP_PROJECT_ID
-const ProjectDB = process.env.APP_PROJECT_DB
 
 const isEnvDev = ProjectId === AppEnvironmentId.Development
 const isEnvStaging = ProjectId === AppEnvironmentId.Staging
 const isEnvProd = ProjectId === AppEnvironmentId.Production
 const isEnvDevOrStaging = isEnvDev || isEnvStaging
+
+const ProjectDB = isEnvProd
+    ? process.env.APP_PRODUCTION_PROJECT_DB
+    : isEnvStaging
+    ? process.env.APP_STAGING_PROJECT_DB
+    : process.env.APP_DEVELOPMENT_PROJECT_DB
 
 const appConfig = {
     isEnvDev,
