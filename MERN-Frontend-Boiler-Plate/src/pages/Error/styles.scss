@@ -1,0 +1,41 @@
+@import "../../globalStyles/mixin.scss";
+
+.Error {
+    align-items: center;
+    display: flex;
+    height: 100%;
+    width: 100%;
+    flex: 1;
+    justify-content: center;
+
+    &-container {
+        align-items: center;
+        background-color: white;
+        border: 1px solid #f1f1f1;
+        border-radius: 15px;
+        color: $dark;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        max-width: rem(600);
+        padding: rem(30);
+        text-align: center;
+
+        .Error-heading {
+            font-weight: bold;
+            font-size: rem(28);
+            margin-bottom: rem(15);
+            white-space: pre-wrap;
+        }
+        
+        .Error-text {
+            font-size: rem(20);
+            white-space: pre-wrap;
+        }
+
+        .Error-button {
+            margin-top: rem(20);
+            width: fit-content;
+        }
+    }
+}

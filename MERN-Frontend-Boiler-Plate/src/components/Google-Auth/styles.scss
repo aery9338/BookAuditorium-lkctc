@@ -1,0 +1,22 @@
+@import "../../globalStyles/mixin.scss";
+
+.social-buttons {
+    display: flex;
+    gap: rem(20);
+    justify-content: center;
+
+    .social-button {
+        align-items: center;
+        aspect-ratio: 1/1;
+        border: 1px solid #ddd !important;
+        border-radius: 5px;
+        display: flex;
+        height: rem(120);
+        justify-content: center;
+
+        &__icon {
+            height: rem(70);
+            width: rem(70);
+        }
+    }
+}

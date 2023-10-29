@@ -1,0 +1,39 @@
+{
+    "env": {
+        "node": true,
+        "commonjs": true,
+        "es2021": true
+    },
+    "extends": [
+        "eslint:recommended",
+        "plugin:prettier/recommended"
+    ],
+    "parser": "@babel/eslint-parser",
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": 6,
+        "sourceType": "script",
+        "requireConfigFile": false
+    },
+    "rules": {
+        "prettier/prettier": "warn",
+        "linebreak-style": "off",
+        "semi": ["error", "never"],
+        "max-len": [1, { "code": 120 }],
+        "no-undef": "warn",
+        "no-constant-condition": "warn",
+        "no-case-declarations": "warn",
+        "no-useless-escape": "off",
+        "no-prototype-builtins": "off",
+        "no-unused-vars": "warn",
+        "no-useless-catch": "warn",
+        "no-extra-boolean-cast": "warn",
+        "react/no-unknown-property": "off",
+        "react/react-in-jsx-scope": "off",
+        "react/prop-types": "off",
+        "react/no-unescaped-entities": "off",
+        "react/jsx-no-target-blank": "off"
+    }
+}

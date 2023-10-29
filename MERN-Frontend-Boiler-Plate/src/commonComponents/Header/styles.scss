@@ -1,0 +1,85 @@
+@import "../../globalStyles/mixin.scss";
+
+.header-wrapper {
+    align-items: center;
+    color: $white;
+    display: flex;
+    justify-content: space-between;
+    padding: rem(16) rem(24);
+    width: 100%;
+
+    .logo-wrapper {
+        align-items: center;
+        display: flex;
+        gap: rem(10);
+
+        img {
+            width: rem(60);
+        }
+
+        article {
+            color: black;
+            font-size: rem(18);
+            font-weight: 600;
+            text-align: center;
+        }
+    }
+
+    .menu-container {
+        .profie-wrapper {
+            align-items: center;
+            display: flex;
+            gap: rem(14);
+
+            & .ant-divider {
+                border-color: #707070;
+                height: 20px;
+                margin: 0;
+            }
+
+            & .user-profile {
+                display: flex;
+                align-items: center;
+
+                article {
+                    font-size: rem(14);
+                    font-weight: 600;
+                }
+            }
+
+            & .notification {
+                rotate: 45deg;
+            }
+
+            svg {
+                color: black;
+                font-size: rem(36);
+                width: rem(36);
+            }
+        }
+    }
+}
+
+.profile-dropdown {
+    ul {
+        display: flex;
+        flex-direction: column;
+        gap: rem(6);
+
+        li span {
+            width: rem(160);
+        }
+
+        li:last-child {
+            border-top: 1px solid #00000030;
+        }
+    }
+    .menu-btn {
+        width: 100%;
+        text-align: start;
+        span {
+            color: $primary;
+            font-size: rem(18);
+        }
+    }
+}

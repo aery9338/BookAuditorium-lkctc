@@ -1,0 +1,105 @@
+{
+    "env": {
+        "node": true,
+        "browser": true,
+        "es2021": true
+    },
+    "extends": ["eslint:recommended", "plugin:prettier/recommended", "plugin:react/recommended", "react-app"],
+    "parser": "@babel/eslint-parser",
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true,
+            "modules": true
+        },
+        "babelOptions": {
+            "presets": ["@babel/preset-react"]
+        },
+        "ecmaVersion": 6,
+        "sourceType": "module",
+        "requireConfigFile": false
+    },
+    "plugins": ["react", "react-hooks", "import"],
+    "rules": {
+        "import/no-anonymous-default-export": "off",
+        "prettier/prettier": "warn",
+        "linebreak-style": "off",
+        "max-len": [1, { "code": 120 }],
+        "no-undef": "warn",
+        "no-constant-condition": "warn",
+        "no-case-declarations": "off",
+        "no-useless-escape": "off",
+        "no-prototype-builtins": "off",
+        "no-unused-vars": "warn",
+        "no-empty": "warn",
+        "no-useless-catch": "warn",
+        "no-extra-boolean-cast": "warn",
+        "react/no-unknown-property": "off",
+        "react/react-in-jsx-scope": "off",
+        "react/prop-types": "off",
+        "react/no-unescaped-entities": "off",
+        "react/jsx-no-target-blank": "off",
+        "cypress/no-unnecessary-waiting": "off",
+        "sort-imports": [
+            "error",
+            {
+                "ignoreCase": true,
+                "ignoreDeclarationSort": true,
+                "ignoreMemberSort": false,
+                "memberSyntaxSortOrder": ["single", "multiple", "all", "none"],
+                "allowSeparatedGroups": false
+            }
+        ],
+        "import/order": [
+            "error",
+            {
+                "groups": ["builtin", "external", "internal", "parent", "sibling", "index"],
+                "pathGroups": [
+                    {
+                        "pattern": "*(react|react-**)",
+                        "group": "external",
+                        "position": "before"
+                    },
+                    {
+                        "pattern": "react-icons/**",
+                        "group": "external",
+                        "position": "before"
+                    },
+                    {
+                        "pattern": "antd",
+                        "group": "external",
+                        "position": "before"
+                    },
+                    {
+                        "pattern": "@ant-design/**",
+                        "group": "external",
+                        "position": "before"
+                    },
+                    {
+                        "pattern": "assets/**",
+                        "group": "index",
+                        "position": "after"
+                    },
+                    {
+                        "pattern": "*.scss",
+                        "group": "index",
+                        "patternOptions": { "matchBase": true },
+                        "position": "after"
+                    }
+                ],
+                "pathGroupsExcludedImportTypes": [],
+                "newlines-between": "ignore",
+                "alphabetize": {
+                    "order": "asc",
+                    "caseInsensitive": true
+                },
+                "warnOnUnassignedImports": true
+            }
+        ]
+    },
+    "settings": {
+        "import/internal-regex": "^(assets|components|contexts|hooks|modals|pages|reduxStore|services|styles|utils|config|errorBoundary|router|index).*?",
+        "react": {
+            "version": "detect"
+        }
+    }
+}

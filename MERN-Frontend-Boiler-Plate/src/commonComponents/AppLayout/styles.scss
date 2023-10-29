@@ -1,0 +1,58 @@
+@import "../../globalStyles/mixin.scss";
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,400;1,700;1,800;1,900&display=swap");
+
+.app-layout-wrapper {
+    box-shadow: 0 0 40px -10px rgba(#141322, 0.2);
+    font-family: "Poppins", sans-serif;
+    margin: 0 auto;
+    max-width: 1920px;
+    min-height: 100vh;
+    width: 100%;
+
+    .app-layout-container {
+        background: white;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        width: 100%;
+
+        .app-header-wrapper {
+            align-items: center;
+            box-shadow: $shadow;
+            display: flex;
+            height: rem(72);
+        }
+
+        .app-content-wrapper {
+            background-color: #f1f6ff;
+            display: flex;
+            height: 100%;
+            height: calc(100vh - rem(120));
+
+            &.full {
+                height: calc(100vh - rem(48));
+            }
+
+            .app-side-wrapper {
+                box-shadow: $shadow;
+                height: 100%;
+                overflow: auto;
+                width: clamp(400px, 25%, 250px);
+            }
+
+            .app-main-content-wrapper {
+                display: flex;
+                height: 100%;
+                overflow-y: auto;
+                width: 100%;
+            }
+        }
+
+        .app-footer-wrapper {
+            align-items: center;
+            box-shadow: $shadow;
+            display: flex;
+            height: rem(48);
+        }
+    }
+}

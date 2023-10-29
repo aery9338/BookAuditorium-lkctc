@@ -1,0 +1,13 @@
+@import "../../../globalStyles/mixin.scss";
+
+.dashboard-conatiner {
+    height: 100%;
+    width: 100%;
+
+    .content {
+        display: flex;
+        flex-direction: column;
+        gap: rem(24);
+        padding: rem(24);
+    }
+}

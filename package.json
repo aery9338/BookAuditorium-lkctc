@@ -1,0 +1,16 @@
+{
+    "name": "bookauditorium-lkctc",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "install-server": "cd MERN-Backend-Boiler-Plate && npm install",
+        "start-server": "cd MERN-Backend-Boiler-Plate && node app.js",
+        "install-client": "cd MERN-Frontend-Boiler-Plate && npm install",
+        "build-client": "cd MERN-Frontend-Boiler-Plate && npm run build",
+        "start-client": "cd MERN-Frontend-Boiler-Plate && npm run start"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC"
+}

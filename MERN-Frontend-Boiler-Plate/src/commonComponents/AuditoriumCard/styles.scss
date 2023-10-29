@@ -1,0 +1,191 @@
+@import "../../globalStyles/mixin.scss";
+
+.auditorium-container {
+    background-color: white;
+    border-radius: rem(12);
+    box-shadow: $shadow-4;
+    display: flex;
+    flex-direction: column;
+    gap: rem(8);
+    transition: 0.5s ease-in;
+
+    &:hover {
+        box-shadow: $shadow;
+    }
+
+    .image-container {
+        bottom: 0;
+        position: relative;
+
+        &:hover {
+            .image {
+                filter: brightness(0.85) blur(1.25px);
+            }
+
+            .preview-image-main-action {
+                bottom: 0;
+                visibility: visible;
+            }
+
+            .preview-actions {
+                right: 8px;
+                visibility: visible;
+
+                @keyframes fadeIn {
+                    0% {
+                        opacity: 0;
+                    }
+                    100% {
+                        opacity: 0.75;
+                    }
+                }
+
+                .preview-action {
+                    animation: fadeIn 0.25s forwards;
+                }
+            }
+        }
+
+        .image {
+            aspect-ratio: 2/1.4;
+            box-shadow: $shadow-2;
+            margin: 0 0 -12px;
+            overflow: hidden;
+            border-top-left-radius: rem(14);
+            border-top-right-radius: rem(14);
+            object-fit: cover;
+            width: 100%;
+        }
+
+        .preview-image-main-action {
+            background-color: transparent;
+            border-color: white;
+            bottom: -40px;
+            box-shadow: none;
+            color: white;
+            left: 50%;
+            opacity: 0.75;
+            position: absolute;
+            transform: translate(-50%, -50%);
+            transition: bottom 0.5s ease;
+            visibility: hidden;
+            z-index: 0;
+
+            &:hover {
+                opacity: 1;
+            }
+
+            > span {
+                font-size: rem(16);
+            }
+            > svg {
+                font-size: rem(20);
+            }
+        }
+
+        .preview-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            position: absolute;
+            right: -12px;
+            top: 8px;
+            transition: right 0.5s ease;
+
+            @for $i from 1 through 10 {
+                .preview-action:nth-child(#{$i}) {
+                    animation-delay: 0.25s * $i;
+                }
+            }
+
+            .preview-action {
+                background-color: transparent;
+                border-color: white;
+                box-shadow: none;
+                color: white;
+                opacity: 0;
+                padding: rem(14) rem(10);
+
+                &:hover {
+                    opacity: 1 !important;
+                }
+
+                > article {
+                    color: white;
+                    font-size: rem(20);
+                }
+            }
+        }
+    }
+
+    .auditorium-content {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        z-index: 10;
+
+        .auditorium-details {
+            background-color: white;
+            border-top-left-radius: rem(14);
+            border-top-right-radius: rem(14);
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+            gap: rem(10);
+            margin-top: -6px;
+            padding: rem(16);
+            padding-top: rem(24);
+
+            .title {
+                color: $title-color;
+                font-size: rem(24);
+                font-weight: 600;
+            }
+
+            .sub-title {
+                color: $sub-title-color;
+                font-size: rem(19);
+                font-weight: 500;
+            }
+
+            .description {
+                align-items: center;
+                color: $description-color;
+                display: flex;
+                font-size: rem(18);
+                font-weight: 400;
+
+                svg {
+                    font-size: rem(26);
+                }
+            }
+
+            .features {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 8px;
+                margin-top: 8px;
+
+                .feature {
+                    background-color: #e3f3fe;
+                    border-radius: 12px;
+                    color: $title-color;
+                    font-size: rem(15);
+                    font-size: 500;
+                    padding: 2px 15px;
+                }
+            }
+        }
+
+        & .auditorium-actions {
+            display: flex;
+            gap: 10px;
+            padding: rem(16);
+
+            button {
+                width: 50%;
+            }
+        }
+    }
+}

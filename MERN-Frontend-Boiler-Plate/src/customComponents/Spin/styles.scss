@@ -1,0 +1,102 @@
+.loading-wrapper {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: inherit;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+    gap: 20px;
+
+    .loader {
+        align-items: center;
+        display: flex;
+        justify-content: center;
+        position: relative;
+
+        .outerCircle {
+            animation: spin 1.2s linear infinite;
+            -webkit-animation: spin 1.2s linear infinite;
+            border: 2px solid transparent;
+            border-radius: 50%;
+            border-top: 4px solid #3d88ff;
+            height: 50px;
+            width: 50px;
+        }
+
+        .innerCircle {
+            animation: spin 1s reverse linear infinite;
+            -webkit-animation: spin 1s reverse linear infinite;
+            border: 2px solid transparent;
+            border-bottom: 4px solid #3d88ff;
+            border-radius: 50%;
+            height: 30px;
+            position: absolute;
+            width: 30px;
+        }
+    }
+
+    .loading-text {
+        display: flex;
+        align-items: baseline;
+        gap: 7px;
+        font-size: large;
+        font-weight: 500;
+    }
+
+    &.small {
+        gap: 16px;
+
+        .loader {
+            .outerCircle {
+                height: 40px;
+                width: 40px;
+            }
+            .innerCircle {
+                height: 24px;
+                width: 24px;
+            }
+        }
+        
+        .loading-text {
+            font-size: medium;
+        }
+    }
+
+    &.large {
+        gap: 28px;
+
+        .loader {
+            .outerCircle {
+                height: 64px;
+                width: 64px;
+            }
+            .innerCircle {
+                height: 38px;
+                width: 38px;
+            }
+        }
+        .loading-text {
+            font-size: larger;
+        }
+    }
+
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    @-webkit-keyframes spin {
+        0% {
+            -webkit-transform: rotate(0deg);
+        }
+        100% {
+            -webkit-transform: rotate(360deg);
+        }
+    }
+}
