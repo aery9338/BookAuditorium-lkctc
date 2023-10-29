@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux"
 import { message } from "antd"
 import io from "socket.io-client"
 import { configActions } from "reduxStore"
-import AppConfig from "./config"
+import { AppConfig } from "./config"
 
 function ServerSocket() {
     const connectionKey = "server-connection"

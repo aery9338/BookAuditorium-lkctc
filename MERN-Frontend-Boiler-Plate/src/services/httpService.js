@@ -1,13 +1,12 @@
 import { notification } from "antd"
 import axios from "axios"
-import AppConsts from "startup/config"
-import AppConfig from "startup/config"
+import { AppConfig } from "startup/config"
 import { reduxStore } from "index"
 import { processHtmlString } from "utils/helper"
 import userAuthService from "./userAuthService"
 
 const http = axios.create({
-    baseURL: "http://localhost:5000/",
+    baseURL: AppConfig.serverBaseUrl,
     timeout: 600000,
 })
 
@@ -44,7 +43,7 @@ http.interceptors.response.use(
             const refreshToken = userAuthService?.getRefreshToken()
 
             return axios
-                .post(AppConsts?.serverBaseUrl + "api/auth/refresh-token", {
+                .post(AppConfig?.serverBaseUrl + "api/auth/refresh-token", {
                     refresh_token: refreshToken,
                 })
                 .then((result) => {

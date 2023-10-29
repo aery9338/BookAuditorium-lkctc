@@ -2,7 +2,7 @@ import { configureStore } from "@reduxjs/toolkit"
 import { connectRouter, routerMiddleware } from "connected-react-router"
 import { logger } from "redux-logger"
 import createSagaMiddleware from "redux-saga"
-import AppConfig from "startup/config"
+import { AppConfig } from "startup/config"
 import localStorage from "store"
 import { insertIf } from "utils/helper"
 

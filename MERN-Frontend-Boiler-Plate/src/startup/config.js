@@ -19,7 +19,7 @@ const useIdleTimer = false
 const useServerSocket = process.env.REACT_APP_USE_SERVER_SOCKET
 const useInternetSocket = process.env.REACT_APP_USE_INTERNET_SOCKET
 
-const AppConfig = {
+export const AppConfig = {
     isEnvDev,
     isEnvStaging,
     isEnvDevOrStaging,
@@ -34,5 +34,3 @@ const AppConfig = {
     useServerSocket: trueValues?.includes(useServerSocket?.toString()?.toLowerCase()),
     useInternetSocket: trueValues?.includes(useInternetSocket?.toString()?.toLowerCase()),
 }
-
-export default AppConfig
