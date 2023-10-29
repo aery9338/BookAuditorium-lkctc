@@ -5,12 +5,15 @@
     "main": "index.js",
     "scripts": {
         "install-server": "cd MERN-Backend-Boiler-Plate && yarn install",
-        "start-server": "cd MERN-Backend-Boiler-Plate && node app.js",
         "install-client": "cd MERN-Frontend-Boiler-Plate && yarn install",
-        "build-client": "cd MERN-Frontend-Boiler-Plate && yarn run build",
-        "start-client": "cd MERN-Frontend-Boiler-Plate && yarn run start"
+        "start-server": "cd MERN-Backend-Boiler-Plate && node server.js",
+        "start-client": "cd MERN-Frontend-Boiler-Plate && yarn start",
+        "build-client": "cd MERN-Frontend-Boiler-Plate && yarn build"
     },
     "keywords": [],
     "author": "",
-    "license": "ISC"
+    "license": "ISC",
+    "engines": {
+        "node": ">=16.14.0 <19.0.0"
+    }
 }
