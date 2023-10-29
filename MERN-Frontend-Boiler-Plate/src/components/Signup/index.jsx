@@ -99,33 +99,6 @@ const Signup = ({ onLogin = () => null, onAuthenticated = () => null }) => {
                                 className="input-field"
                             />
                         </Form.Item>
-                        {/*Name*/}
-                        <Form.Item
-                            name="displayname"
-                            hasFeedback
-                            rules={[
-                                {
-                                    required: true,
-                                    pattern: limits.name.regex,
-                                    validator(rule, value) {
-                                        if (rule?.required && !value) return Promise.reject("Enter a valid name")
-                                        else if (!rule?.pattern?.exec(value))
-                                            return Promise.reject(
-                                                `Allowed characters are letters, numbers, 
-                                                        underscores, space and dash`
-                                            )
-                                        return Promise.resolve()
-                                    },
-                                },
-                            ]}
-                        >
-                            <Input
-                                onBlur={getUsernameSuggestion}
-                                placeholder="Name"
-                                maxLength={limits.name.max}
-                                className="input-field"
-                            />
-                        </Form.Item>
 
                         {/*Username*/}
                         <Form.Item
