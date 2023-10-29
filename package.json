@@ -4,11 +4,11 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "install-server": "cd MERN-Backend-Boiler-Plate && npm install",
+        "install-server": "cd MERN-Backend-Boiler-Plate && yarn install",
         "start-server": "cd MERN-Backend-Boiler-Plate && node app.js",
-        "install-client": "cd MERN-Frontend-Boiler-Plate && npm install",
-        "build-client": "cd MERN-Frontend-Boiler-Plate && npm run build",
-        "start-client": "cd MERN-Frontend-Boiler-Plate && npm run start"
+        "install-client": "cd MERN-Frontend-Boiler-Plate && yarn install",
+        "build-client": "cd MERN-Frontend-Boiler-Plate && yarn run build",
+        "start-client": "cd MERN-Frontend-Boiler-Plate && yarn run start"
     },
     "keywords": [],
     "author": "",
