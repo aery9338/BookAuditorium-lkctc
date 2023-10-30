@@ -35,7 +35,7 @@ router.post("/signup", async (req, res) => {
         await session.withTransaction(async () => {
             const reqBody = {
                 ...req?.body,
-                roles: [],
+                roles: [{ rolename: "user" }],
                 createdby: "self",
                 modifiedby: "self",
             }

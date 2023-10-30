@@ -2,27 +2,31 @@
 
 .footer-wrapper {
     align-items: center;
-    display: flex;
-    justify-content: center;
-    gap: rem(20);
     background-color: $white;
+    display: flex;
+    gap: rem(20);
+    justify-content: center;
     width: 100%;
 
     > .footer {
         align-items: center;
         display: flex;
-        margin: 0;
         font-size: rem(18);
         justify-content: center;
+        margin: 0;
         padding: 0 rem(24);
 
-        .social-icons {
+        .footer-social-icons {
             display: flex;
             gap: rem(10);
 
+            @media (width < $phone-min-width) {
+                display: none;
+            }
+
             .social-icon {
-                width: rem(26);
                 cursor: pointer;
+                width: rem(26);
             }
         }
     }

@@ -48,7 +48,7 @@
                     box-shadow: $shadow;
                     display: flex;
                     flex-direction: column;
-                    gap: rem(16);
+                    gap: rem(20);
                     margin-top: -24px;
                     padding: rem(32) rem(20);
                     z-index: 10;
@@ -184,6 +184,7 @@
                     .actions {
                         display: flex;
                         justify-content: flex-end;
+                        margin-top: rem(8);
 
                         svg {
                             font-size: rem(26);
@@ -227,57 +228,10 @@
                         flex-direction: column;
                         gap: rem(20);
 
-                        .form-item {
-                            display: flex;
-                            flex-direction: column;
-                            gap: rem(12);
-
-                            label {
-                                font-size: rem(20);
-                                font-weight: 500;
-                            }
-
-                            .optional-text {
-                                color: $description-color;
-                                font-size: rem(16);
-                            }
-
-                            .ant-input-affix-wrapper,
-                            .ant-picker, textarea {
-                                border-color: #00000040;
-                                border-radius: rem(8);
-                                padding: rem(8) rem(15);
-                                font-size: rem(22);
-                                height: rem(50);
-
-                                &:hover {
-                                    box-shadow: $shadow-3 !important;
-                                }
-
-                                input {
-                                    font-size: rem(20);
-                                }
-
-                                svg {
-                                    font-size: rem(24);
-                                }
-                                
-                            }
-
-                            textarea {
-                                height: rem(144);
-                            }
-                            
-                        }
-
                         .actions {
                             display: flex;
                             justify-content: flex-end;
                             margin-top: rem(16);
-                        }
-
-                        .ant-form-item-explain {
-                            text-align: start;
                         }
                     }
                 }

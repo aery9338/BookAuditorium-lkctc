@@ -13,7 +13,6 @@ const {
     pull,
     forOwn,
 } = require("lodash")
-const fs = require("fs-extra")
 
 const containsObject = (obj, list) => {
     for (let i = 0; i < list.length; i++) {
@@ -148,15 +147,6 @@ const weekToMonthYear = (weeks) => {
     }
 }
 
-const writeToFile = (jsonFileName, jsonData) => {
-    const targetDataPath = "../files/"
-    const jsonStringified = JSON.stringify(jsonData, null, 4)
-    fs.writeFile(`${targetDataPath}/${jsonFileName}`, jsonStringified, "utf8", (err) => {
-        if (err) throw err
-        console.log("complete")
-    })
-}
-
 const yearToWeekMonth = (years) => {
     return {
         weeks: round(years * 52.143, 2),
@@ -181,6 +171,5 @@ module.exports = {
     settingsDiff,
     toTitleCase,
     weekToMonthYear,
-    writeToFile,
     yearToWeekMonth,
 }

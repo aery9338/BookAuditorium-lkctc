@@ -8,9 +8,10 @@ import { FaPeopleGroup } from "react-icons/fa6"
 import { MdOutlineLocationCity } from "react-icons/md"
 import { PiMicrophoneStageThin, PiTelevision } from "react-icons/pi"
 import { RiProjector2Fill } from "react-icons/ri"
-import { Button, DatePicker, Form, Input, TimePicker, Typography } from "antd"
+import { Button, DatePicker, Form, Input, Select, TimePicker, Typography } from "antd"
 import AuditoriumCard from "commonComponents/AuditoriumCard"
 import { Spin } from "customComponents"
+import { ApplicationTypes, Departments } from "utils/constants"
 import { compare, getQueryParams } from "utils/helper"
 import { mockupAuditoriumsData } from "utils/mockup"
 import "./styles.scss"
@@ -44,7 +45,9 @@ const AuditoriumPage = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [search, params, auditoriumsData])
 
-    const onFinish = () => {}
+    const onFinish = (values) => {
+        console.log("Submited values: ", { ...values, bookingdate: new Date(values.bookingdate) })
+    }
     const onFinishFailed = () => {}
 
     return (
@@ -177,59 +180,98 @@ const AuditoriumPage = () => {
                                         onFinishFailed={onFinishFailed}
                                     >
                                         {/*Title*/}
-                                        <Form.Item name="title" hasFeedback rules={[{ required: true }]}>
-                                            <div className="form-item">
-                                                <label>Title:</label>
-                                                <Input placeholder="Title" />
-                                            </div>
-                                        </Form.Item>
-                                        {/*Meeting Agenda*/}
-                                        <Form.Item name="agenda" hasFeedback rules={[{ required: true }]}>
-                                            <div className="form-item">
-                                                <label>Meeting Agenda:</label>
-                                                <Input.TextArea placeholder="Meeting agenda" />
-                                            </div>
+                                        <Form.Item
+                                            required={false}
+                                            label="Title:"
+                                            name="title"
+                                            rules={[{ required: true }]}
+                                        >
+                                            <Input placeholder="Title" />
                                         </Form.Item>
                                         {/*Meeting Type*/}
-                                        <Form.Item name="type" hasFeedback rules={[{ required: true }]}>
-                                            <div className="form-item">
-                                                <label>Meeting type:</label>
-                                                <Input placeholder="Meeting type" />
-                                            </div>
+                                        <Form.Item
+                                            required={false}
+                                            name="appliedfor"
+                                            label="Applied for:"
+                                            rules={[{ required: true }]}
+                                        >
+                                            <Select
+                                                allowClear
+                                                placeholder="Select type"
+                                                options={Object?.keys(ApplicationTypes)?.map((key) => {
+                                                    return { value: key, label: ApplicationTypes[key] }
+                                                })}
+                                                showSearch
+                                            />
                                         </Form.Item>
                                         {/*Date*/}
-                                        <Form.Item name="date" hasFeedback rules={[{ required: true }]}>
-                                            <div className="form-item">
-                                                <label>Date:</label>
-                                                <DatePicker onChange={() => null} />
-                                            </div>
+                                        <Form.Item
+                                            required={false}
+                                            label="Booking date:"
+                                            name="bookingdate"
+                                            rules={[{ required: true }]}
+                                        >
+                                            <DatePicker
+                                                disabledDate={(date) =>
+                                                    new Date(date).setHours(0, 0, 0, 0) < Date.now()
+                                                }
+                                            />
                                         </Form.Item>
                                         {/*Booking time*/}
-                                        <Form.Item name="time" hasFeedback rules={[{ required: true }]}>
-                                            <div className="form-item">
-                                                <label>Booking time:</label>
-                                                <TimePicker.RangePicker popupClassName="custom-time-picker" />
-                                            </div>
+                                        <Form.Item
+                                            required={false}
+                                            name="time"
+                                            label="Booking time:"
+                                            rules={[{ required: true }]}
+                                        >
+                                            <TimePicker.RangePicker
+                                                minuteStep={10}
+                                                // use12Hours
+                                                format="h:mm a"
+                                                hideDisabledOptions
+                                                disabledTime={() => {
+                                                    return {
+                                                        disabledHours: () =>
+                                                            Array.from({ length: 24 }, (_, i) => i).filter(
+                                                                (hour) => hour >= 21 || hour < 9
+                                                            ),
+                                                    }
+                                                }}
+                                            />
                                         </Form.Item>
                                         {/*Department*/}
-                                        <Form.Item name="type" hasFeedback rules={[{ required: true }]}>
-                                            <div className="form-item">
-                                                <label>Department:</label>
-                                                <Input placeholder="Department" />
-                                            </div>
+                                        <Form.Item
+                                            required={false}
+                                            name="department"
+                                            label="Department:"
+                                            rules={[{ required: true }]}
+                                        >
+                                            <Select
+                                                allowClear
+                                                placeholder="Select department"
+                                                options={Object?.keys(Departments)?.map((key) => {
+                                                    return { value: key, label: Departments[key] }
+                                                })}
+                                                showSearch
+                                            />
                                         </Form.Item>
-                                        {/*Project*/}
-                                        <Form.Item name="type" hasFeedback rules={[{ required: false }]}>
-                                            <div className="form-item">
-                                                <label>
-                                                    Project: <span className="optional-text">(Optional)</span>
-                                                </label>
-                                                <Input placeholder="Project" />
-                                            </div>
+                                        {/*Purpose*/}
+                                        <Form.Item
+                                            required={false}
+                                            name="purpose"
+                                            label={
+                                                <Fragment>
+                                                    Purpose: &nbsp;<span className="optional-text">(Optional)</span>
+                                                </Fragment>
+                                            }
+                                        >
+                                            <Input.TextArea placeholder="Purpose" />
                                         </Form.Item>
                                         {/* Submit */}
                                         <div className="actions">
-                                            <Button type="primary">Apply</Button>
+                                            <Button type="primary" htmlType="submit">
+                                                Apply &nbsp; <BiSolidPaperPlane />
+                                            </Button>
                                         </div>
                                     </Form>
                                 </div>

@@ -12,7 +12,7 @@ const Footer = () => {
                     &#169; 2023 LKCTC Inc.{" "}
                     <Typography.Link href="https://github.com/aery9338">Avinav Aery</Typography.Link>
                 </Fragment>
-                <div className="social-icons">
+                <div className="footer-social-icons">
                     <Link to={""}>
                         <img className="social-icon" src={icons.instagram} alt="instagram" />
                     </Link>

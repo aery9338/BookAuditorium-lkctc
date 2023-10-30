@@ -10,7 +10,7 @@ export const Gender = Object.freeze({
     OTHER: "other",
 })
 
-export const InviteStatus = Object.freeze({
+export const Status = Object.freeze({
     PENDING: "pending",
     ACCEPTED: "accepted",
     REJECTED: "rejected",
@@ -33,4 +33,20 @@ export const Time = Object.freeze({
 export const Weight = Object.freeze({
     KG: "kg",
     LB: "lb",
+})
+
+export const Departments = Object.freeze({
+    IT: "Information Technology",
+    management: "Management",
+    other: "Other",
+})
+
+export const ApplicationTypes = Object.freeze({
+    official: "Official",
+    meeting: "Meeting",
+    program: "Program",
+    practice: "Practice",
+    function: "Function",
+    seminar: "Seminar",
+    other: "Other",
 })

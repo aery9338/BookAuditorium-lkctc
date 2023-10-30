@@ -8,7 +8,7 @@ module.exports = (app) => {
         new winston.transports.File({
             level: "info",
             log: (megObj) => console.log(megObj?.message),
-            filename: "logs/infoLog.txt",
+            filename: "logs/infoLog.log",
             format: winston.format.combine(
                 winston.format.timestamp(),
                 winston.format.splat(),
@@ -22,7 +22,7 @@ module.exports = (app) => {
     winston.add(
         new winston.transports.File({
             level: "error",
-            filename: "logs/errorLog.txt",
+            filename: "logs/errorLog.log",
             log: (errorObj) => console.log(errorObj?.message),
             format: winston.format.combine(
                 winston.format.errors({ stack: true }),
@@ -62,7 +62,7 @@ module.exports = (app) => {
         expressWinston.logger({
             transports: [
                 new winston.transports.File({
-                    filename: "logs/reqResTimeStatuslog.txt",
+                    filename: "logs/reqResTimeStatuslog.log",
                 }),
                 new winston.transports.MongoDB({
                     db: appConfig.ProjectDB,

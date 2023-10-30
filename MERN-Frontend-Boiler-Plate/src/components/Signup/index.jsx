@@ -154,7 +154,9 @@ const Signup = ({ onLogin = () => null, onAuthenticated = () => null }) => {
                                         if (value.match(limits.password.regex)) {
                                             return Promise.resolve()
                                         } else {
-                                            return Promise.reject()
+                                            return Promise.reject(
+                                                "Password should include at least one uppercase letter and one number."
+                                            )
                                         }
                                     },
                                 }),
@@ -177,10 +179,9 @@ const Signup = ({ onLogin = () => null, onAuthenticated = () => null }) => {
                                 ({ getFieldValue }) => ({
                                     required: true,
                                     validator(rule, value) {
-                                        if (!value || getFieldValue("password") === value) {
-                                            return Promise.resolve()
-                                        }
-                                        return Promise.reject("The two passwords do not match!")
+                                        if (getFieldValue("password") === value) return Promise.resolve()
+                                        else if (!value) return Promise.reject("Enter the password to confirm")
+                                        else return Promise.reject("The two passwords do not match!")
                                     },
                                 }),
                             ]}
