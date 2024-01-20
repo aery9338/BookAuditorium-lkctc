@@ -1,5 +1,4 @@
 import { notification } from "antd"
-import _ from "lodash"
 import { all, call, put, select, takeEvery } from "redux-saga/effects"
 import { userActions } from "reduxStore"
 import userAuthService from "services/userAuthService"
@@ -10,12 +9,21 @@ export function* getUserData() {
     try {
         if (!userAuthService?.getAccessToken()) return null
         yield put(userActions.setState({ loading: true }))
-        const { error, data } = yield call(userAuthService.getUserData)
-        if (!error) yield put(userActions.setState({ userData: data, loggedIn: true }))
+        const { data, error, message } = yield call(userAuthService.getUserData)
+        if (!error) {
+            const { userData } = data
+            yield put(userActions.setState({ userData, loggedIn: true }))
+        } else {
+            yield call(logoutUser)
+            notification.error({
+                message: "User logged out",
+                description: message,
+            })
+        }
     } catch (error) {
         console.error("Error (Get user data): ", error)
     } finally {
-        yield put(userActions.setState({ loading: false }))
+        yield put(userActions.setState({ loading: false, initialLoading: false }))
     }
 }
 
@@ -29,11 +37,12 @@ export function* loginUser({ payload }) {
         yield put(userActions.setState({ loading: true }))
         const { data, error, message } = yield call(userAuthService.login, payload)
         if (!error) {
-            userAuthService.setAccessToken(data?.access_token)
-            userAuthService.setRefreshToken(data?.refresh_token)
+            const { userData, access_token, refresh_token } = data
+            userAuthService.setAccessToken(access_token)
+            userAuthService.setRefreshToken(refresh_token)
             yield put(
                 userActions.setState({
-                    userData: _.pick(data, ["_id", "displayname", "username", "roles", "email"]),
+                    userData,
                     loggedIn: true,
                     loading: false,
                 })
@@ -64,11 +73,12 @@ export function* signupUser({ payload }) {
         yield put(userActions.setState({ loading: true }))
         const { data, error, message } = yield call(userAuthService.signup, payload)
         if (!error) {
-            userAuthService.setAccessToken(data?.access_token)
-            userAuthService.setRefreshToken(data?.refresh_token)
+            const { userData, access_token, refresh_token } = data
+            userAuthService.setAccessToken(access_token)
+            userAuthService.setRefreshToken(refresh_token)
             yield put(
                 userActions.setState({
-                    userData: _.pick(data, ["_id", "displayname", "username", "roles", "email"]),
+                    userData,
                     loggedIn: true,
                 })
             )

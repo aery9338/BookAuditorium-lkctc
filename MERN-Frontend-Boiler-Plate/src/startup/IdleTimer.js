@@ -9,12 +9,7 @@ const IdleTimer = () => {
     const promptBeforeIdle = 5 * 60 * 1000 //5 min before expire
 
     const handleOnIdle = () => {
-        let isauth = userAuthService.isAuthenticated()
-
-        //if authorized then logout
-        if (isauth === true) {
-            userAuthService.logout()
-        }
+        if (userAuthService.isAuthenticated()) userAuthService.logout()
     }
 
     const handleOnAction = (event, timer) => {

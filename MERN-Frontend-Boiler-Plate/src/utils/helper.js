@@ -15,6 +15,7 @@ const {
     isNumber,
     trim,
     isBoolean,
+    includes,
 } = require("lodash")
 
 export const containsObject = (obj, list) => {
@@ -175,11 +176,10 @@ export const settingsDiff = (newSettings, originalSettings, ignoreList = []) => 
     return { changed: Object.keys(changedSettings).length > 0, changedSettings }
 }
 
-export const toTitleCase = (str) => {
-    return str.replace(/\w\S*/g, (txt) => {
+export const toTitleCase = (str) =>
+    str.replace(/\w\S*/g, (txt) => {
         return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
     })
-}
 
 export const weekToMonthYear = (weeks) => {
     return {
@@ -218,7 +218,8 @@ export const processHtmlString = (string, extractBodyContent = false) => {
     }
 }
 
-export const isAuthrized = (rolesToCheck, userRoles) => userRoles.some((role) => rolesToCheck.includes(role?.rolename))
+export const isAuthorized = (userRoles, rolesToCheck) =>
+    userRoles.some(({ rolename, isinvoked }) => !isinvoked && isIncluded(rolename, rolesToCheck))
 
 export const getQueryParams = () => {
     const searchParams = new URLSearchParams(window.location.search)
@@ -230,8 +231,10 @@ export const getQueryParams = () => {
     return queryParams
 }
 
-export const compare = (valueA, valueB, strict = false) => {
-    return strict
+export const compare = (valueA, valueB, strict = false) =>
+    strict
         ? valueA?.toString() === valueB?.toString()
         : valueA?.toString()?.toLowerCase() === valueB?.toString()?.toLowerCase()
-}
+
+export const isIncluded = (searchString, array, strict = false) =>
+    includes(array, searchString, (item, search) => compare(item, search, strict))

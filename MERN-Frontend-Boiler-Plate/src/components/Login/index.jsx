@@ -1,7 +1,7 @@
 import React, { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
-import { Button, Divider, Form, Input, notification, Tooltip, Typography } from "antd"
+import { Button, Divider, Form, Input, notification, Tooltip } from "antd"
 import { Spin } from "customComponents"
 import _ from "lodash"
 import GoogleAuth from "components/Google-Auth"
@@ -88,10 +88,10 @@ const Login = ({ onSignup }) => {
                             Login
                         </Button>
                     </Form>
-                    <Divider className="m-0" />
+                    {/* <Divider className="m-0" />
                     <div className="toggle-auth-action">
                         Don't have an account ?<Typography.Link onClick={onSignup}>Create account</Typography.Link>
-                    </div>
+                    </div> */}
                 </div>
             )}
         </div>

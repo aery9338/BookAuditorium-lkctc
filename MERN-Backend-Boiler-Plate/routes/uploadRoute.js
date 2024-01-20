@@ -6,8 +6,8 @@ const { getStorage, ref, uploadBytesResumable } = require("firebase/storage")
 
 async function uploadImage(file, quantity) {
     const storageFB = getStorage()
-    const email = "testaccount@gmail.com"
-    const password = "Test@123"
+    // const email = "testaccount@gmail.com"
+    // const password = "Test@123"
     // await signInWithEmailAndPassword(auth, process.env.FIREBASE_USER, process.env.FIREBASE_AUTH)
 
     if (quantity === "single") {
@@ -30,7 +30,9 @@ async function uploadImage(file, quantity) {
                 contentType: file.images[i].mimetype,
             }
 
-            const saveImage = await Image.create({ imageUrl: fileName })
+            // Todo: milan Image is not define
+            // const saveImage = await Image.create({ imageUrl: fileName })
+            const saveImage = {}
             file.item.imageId.push({ _id: saveImage._id })
             await file.item.save()
 

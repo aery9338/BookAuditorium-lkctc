@@ -1,11 +1,8 @@
 import React from "react"
-import { useSelector } from "react-redux"
 import { Spin } from "customComponents"
-import { selectUserData } from "reduxStore/selectors"
 import "./styles.scss"
 
 const Dashboard = () => {
-    const userData = useSelector(selectUserData)
     const [loading, setLoading] = React.useState(true)
 
     React.useEffect(() => {

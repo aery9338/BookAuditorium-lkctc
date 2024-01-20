@@ -3,27 +3,26 @@ import { useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import { notification } from "antd"
 import { selectIsLoggedIn, selectUserRoles } from "reduxStore/selectors"
+import { isAuthorized } from "utils/helper"
 
-const Protected = ({ redirect = false, defaultRedirect = "/login", roles = [], children }) => {
+const Protected = ({ redirect, roles = [], children }) => {
     const loggedIn = useSelector(selectIsLoggedIn)
     const navigate = useNavigate()
     const userRoles = useSelector(selectUserRoles)
 
     useEffect(() => {
-        const redirect_url = redirect !== false ? redirect : defaultRedirect
-        const authorized = userRoles?.find((role) => roles?.includes(role?.rolename))
-
-        let allowed_access = authorized && loggedIn
-
-        if (!allowed_access) {
-            if (redirect_url) navigate(redirect_url)
-            if (loggedIn && !authorized)
-                notification.warn({ message: "Access denied", description: "You are not authorized" })
+        const authorized = isAuthorized(userRoles, roles)
+        console.log({ authorized, userRoles, roles })
+        if (!loggedIn) navigate("/login")
+        else if (loggedIn && !authorized) {
+            if (redirect) navigate(redirect)
+            else notification.warn({ message: "Access denied", description: "You are not authorized" })
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    const allowed_access = userRoles?.find((role) => roles?.includes(role?.rolename)) && loggedIn
+    const allowed_access = isAuthorized(userRoles, roles)
+
     const AuthorizedChildren = () => {
         if (!allowed_access) return null
         return <Fragment>{children}</Fragment>

@@ -12,4 +12,6 @@ export const selectUserData = (state) => state.user.userData
 
 export const selectIsUserLoading = (state) => state.user.loading
 
+export const selectIsUserInitialLoading = (state) => state.user.initialLoading
+
 export const selectViewMode = (state) => state.user.viewMode

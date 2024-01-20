@@ -11,7 +11,7 @@ const adminTokenAuth = (req, res, next) => {
     } else {
         if (!decoded?.roles?.find((role) => role?.rolename) || !decoded._id)
             return res.json({ error: true, message: "Access denied. Admin authorization required." })
-        req.user = decoded
+        req.userData = decoded
         next()
     }
 }
@@ -26,7 +26,7 @@ const userTokenAuth = (req, res, next) => {
         else return res.json({ error: true, message: "Failed to authenticate token." })
     } else {
         if (!decoded._id) return res.json({ error: true, message: "Access denied. User authorization required." })
-        req.user = decoded
+        req.userData = decoded
         next()
     }
 }

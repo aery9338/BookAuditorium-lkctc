@@ -1,8 +1,6 @@
 {
     "extends": ["stylelint-config-recommended-scss", "stylelint-config-hudochenkov/full"],
-    "plugins": [
-        "stylelint-order"
-    ],
+    "plugins": ["stylelint-order"],
     "rules": {
         "indentation": 4,
         "string-quotes": "double",
@@ -30,9 +28,12 @@
         "at-rule-name-case": "lower",
         "at-rule-name-space-after": "always",
         "at-rule-semicolon-space-before": "never",
-        "rule-empty-line-before": ["always-multi-line", {
-            "except": ["after-single-line-comment", "first-nested"]
-        }],
+        "rule-empty-line-before": [
+            "always-multi-line",
+            {
+                "except": ["after-single-line-comment", "first-nested"]
+            }
+        ],
         "selector-pseudo-class-parentheses-space-inside": "always",
         "selector-no-vendor-prefix": true,
         "media-feature-range-operator-space-before": "always",

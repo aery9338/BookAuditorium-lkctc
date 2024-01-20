@@ -8,8 +8,5 @@ module.exports = () => {
             useUnifiedTopology: true,
             useNewUrlParser: true,
         })
-        .then(() => {
-            console.log("Connected to MongoDB Successfully.")
-            winston.info("Connected to MongoDB Successfully.")
-        })
+        .then(() => winston.info("Connected to MongoDB Successfully."))
 }

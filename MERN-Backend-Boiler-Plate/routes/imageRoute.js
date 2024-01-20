@@ -7,12 +7,9 @@ const { getStorage, ref, uploadBytesResumable, getDownloadURL, listAll } = requi
 
 async function uploadImage(file, quantity) {
     const storageFB = getStorage()
-    const email = "testaccount@gmail.com"
-    const password = "Test@123"
     // await signInWithEmailAndPassword(auth, process.env.FIREBASE_USER, process.env.FIREBASE_AUTH)
 
     if (quantity === "single") {
-        const dateTime = Date.now()
         const name = file.name
         const fileName = `images/${name}`
         const storageRef = ref(storageFB, fileName)
@@ -32,7 +29,9 @@ async function uploadImage(file, quantity) {
                 contentType: file.images[i].mimetype,
             }
 
-            const saveImage = await Image.create({ imageUrl: fileName })
+            // Todo: milan Image is not presented
+            // const saveImage = await Image.create({ imageUrl: fileName })
+            const saveImage = {}
             file.item.imageId.push({ _id: saveImage._id })
             await file.item.save()
 
@@ -54,22 +53,23 @@ async function downloadImage(image, destination = "images") {
     }
 }
 
-async function getImagesList(destination = "images/") {
-    const storageFB = getStorage()
-    const storageRef = ref(storageFB, destination)
-    const list = []
-    try {
-        const res = await listAll(storageRef)
-        await Promise.all(res.items.map(async (imageRef) => {
-            list.push(imageRef?.name)
-            console.log(imageRef.name)
-        }));
-        return list
-
-    } catch (err) {
-        return err
-    }
-}
+// async function getImagesList(destination = "images/") {
+//     const storageFB = getStorage()
+//     const storageRef = ref(storageFB, destination)
+//     const list = []
+//     try {
+//         const res = await listAll(storageRef)
+//         await Promise.all(
+//             res.items.map(async (imageRef) => {
+//                 list.push(imageRef?.name)
+//                 console.log(imageRef.name)
+//             })
+//         )
+//         return list
+//     } catch (err) {
+//         return err
+//     }
+// }
 
 router.post("/upload", upload, async (req, res) => {
     const file = {
@@ -96,10 +96,10 @@ router.get("/all", async (req, res) => {
         const storageRef = ref(storageFB, "images/")
         const list = await listAll(storageRef)
         const listItems = []
-        list.items.map((item, index) => {
+        list.items.map((item) => {
             listItems.push({ index: item.name })
         })
-        res.send({ "list": listItems })
+        res.send({ list: listItems })
     } catch (err) {
         console.log(err)
     }
@@ -110,11 +110,10 @@ router.get("/:name", async (req, res) => {
         const { name } = req.params
         const downloadURL = await downloadImage(name)
         if (downloadURL.name === "FirebaseError")
-            return res.send(
-                {
-                    "downloadURL": "",
-                    "message": "File not present or filename.fileextension"
-                })
+            return res.send({
+                downloadURL: "",
+                message: "File not present or filename.fileextension",
+            })
         res.send({ downloadURL })
     } catch (err) {
         console.log(err)

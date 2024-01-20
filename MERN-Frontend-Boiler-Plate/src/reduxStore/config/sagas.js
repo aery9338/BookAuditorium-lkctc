@@ -10,7 +10,7 @@ export function* getConfigData() {
     } catch (error) {
         console.error(error)
     } finally {
-        yield put(configActions.setState({ loading: false }))
+        yield put(configActions.setState({ loading: false, initialLoading: false }))
     }
 }
 

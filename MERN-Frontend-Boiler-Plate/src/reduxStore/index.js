@@ -19,7 +19,8 @@ const createReduxStore = (history) => {
     const ignoredKeys = ["globalModal", "router"]
     const filteredPersistedState = Object.keys(persistedState).reduce((acc, key) => {
         if (!ignoredKeys.includes(key)) {
-            acc[key] = persistedState[key]
+            const initialLoading = persistedState[key].hasOwnProperty("initialLoading")
+            acc[key] = { ...persistedState[key], ...insertIf(initialLoading, { initialLoading }) }
         }
         return acc
     }, {})

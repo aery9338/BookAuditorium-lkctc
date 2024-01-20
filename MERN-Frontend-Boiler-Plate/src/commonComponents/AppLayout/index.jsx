@@ -18,6 +18,7 @@ const validateProps = ({ hideLayout, hideHeader, hideSidebar = true, children })
 
 const AppLayout = (props) => {
     const { hideHeader, hideSidebar, children } = validateProps(props)
+    const path = window.location.pathname
     const isLoggedIn = useSelector(selectIsLoggedIn)
     const viewMode = useSelector(selectViewMode)
     const navigate = useNavigate()
@@ -27,6 +28,7 @@ const AppLayout = (props) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isLoggedIn])
 
+    if (!isLoggedIn && !path.includes("/login")) return null
     return (
         <div className={`app-layout-wrapper ${viewMode === "dark" ? "dark" : ""}`}>
             <div className="app-layout-container">
