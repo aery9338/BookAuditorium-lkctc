@@ -1,0 +1,93 @@
+// Extra Large Screens
+$monitor-max-width: 3840px;
+$monitor-mid-width: 2560;
+$monitor-min-width: 1920px;
+// Desktops
+$desktop-max-width: 1920px;
+$desktop-mid-width: 1560px;
+$desktop-min-width: 1440px;
+// Laptops
+$laptop-max-width: 1440px;
+$laptop-mid-width: 1280px;
+$laptop-min-width: 1024px;
+// Tablets
+$tablet-max-width: 1024px;
+$tablet-mid-width: 960px;
+$tablet-min-width: 768px;
+// Fold Smartphones
+$fold-phone-max-width: 768px;
+$fold-phone-mid-width: 640px;
+$fold-phone-min-width: 480px;
+// Smartphones
+$phone-max-width: 425px;
+$phone-mid-width: 375px;
+$phone-min-width: 300px;
+$phone-xs-width: 240px;
+$phone-xxs-width: 200px;
+
+@media (width > $monitor-min-width) {
+    html {
+        font-size: 16px;
+    }
+}
+
+@media (width <= $monitor-min-width) {
+    html {
+        font-size: 15px;
+    }
+}
+
+@media (width <= $desktop-mid-width) {
+    html {
+        font-size: 14px;
+    }
+}
+
+@media (width <= $laptop-mid-width) {
+    html {
+        font-size: 13.2px;
+    }
+}
+
+@media (width <= $laptop-min-width) {
+    html {
+        font-size: 12.4px;
+    }
+}
+
+@media (width <= $tablet-mid-width) {
+    html {
+        font-size: 11.6px;
+    }
+}
+
+@media (width <= $tablet-min-width) {
+    html {
+        font-size: 10.6px;
+    }
+}
+
+@media (width <= $fold-phone-max-width) {
+    html {
+        font-size: 9.6px;
+    }
+}
+
+@media (width <= $phone-mid-width) {
+    html {
+        font-size: 9px;
+    }
+}
+
+@media (width <= $phone-min-width) {
+    html {
+        font-size: 8.5x;
+    }
+}
+
+@media (width <= $phone-xs-width) {
+    html {
+        font-size: 8px;
+    }
+}
+

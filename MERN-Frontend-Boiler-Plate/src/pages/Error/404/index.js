@@ -14,7 +14,7 @@ const Error404 = () => {
             </Helmet>
             <div className="Error-container">
                 <h2 className="Error-heading">Error 404 - Page Not Found</h2>
-                <div className="Error-text">This page is deprecated, deleted, or does not exist at all</div>
+                <div className="Error-text">This page is under maintenance or does not exist.</div>
                 <Button className="Error-button" onClick={() => navigate("/")}>
                     Back to Home
                 </Button>

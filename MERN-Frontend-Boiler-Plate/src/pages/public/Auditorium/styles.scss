@@ -1,4 +1,5 @@
-@import "../../../globalStyles/mixin.scss";
+@import "../../../globalStyles/main.scss";
+@import "../../../globalStyles/color.scss";
 
 .auditorium-wrapper {
     width: 100%;
@@ -32,7 +33,7 @@
 
                 .auditorium-image {
                     border-radius: 16px;
-                    box-shadow: $shadow;
+                    box-shadow: $shadow-5;
                     overflow: hidden;
 
                     img {
@@ -43,9 +44,9 @@
                 }
 
                 .auditorium-details {
-                    background-color: white;
+                    background-color: $card-background;
                     border-radius: 16px;
-                    box-shadow: $shadow;
+                    box-shadow: $shadow-5;
                     display: flex;
                     flex-direction: column;
                     gap: rem(20);
@@ -79,7 +80,7 @@
 
                     .divider {
                         align-items: center;
-                        color: #00000040;
+                        color: $grey;
                         display: flex;
                         font-size: rem(14);
                         gap: 8px;
@@ -88,14 +89,14 @@
 
                         &::after,
                         &::before {
-                            background: linear-gradient(to right, #00000030 30%, transparent 80%);
+                            background: linear-gradient(to right, $grey 30%, transparent 80%);
                             border-radius: 12px;
                             content: "";
                             height: 1px;
                             width: 30%;
                         }
                         &::before {
-                            background: linear-gradient(to left, #00000030 30%, transparent 80%);
+                            background: linear-gradient(to left, $grey 30%, transparent 80%);
                         }
                     }
 
@@ -115,16 +116,16 @@
                             grid-template-columns: repeat(auto-fill, minmax(rem(220), 1fr));
 
                             .feature-card-wrapper {
-                                background-color: #00000010;
+                                background-color: $gray-2;
                                 border-radius: 13px;
                                 display: flex;
 
                                 &:hover {
-                                    background: linear-gradient(to right, #f88f8b, #d26ff8);
+                                    background: linear-gradient(to right, $orange, $purple);
                                 }
 
                                 .feature-card {
-                                    background-color: white;
+                                    background-color: $gray-2;
                                     border-radius: 12px;
                                     box-shadow: $shadow-4;
                                     display: flex;
@@ -137,14 +138,17 @@
                                     .feature-image {
                                         align-items: center;
                                         aspect-ratio: 1/1;
-                                        border-radius: 8px;
+                                        border-radius: rem(10);
                                         box-shadow: $shadow-4;
                                         color: white;
                                         display: flex;
-                                        font-size: rem(36);
                                         justify-content: center;
                                         margin: 0 auto;
                                         width: rem(56);
+
+                                        > svg {
+                                            font-size: rem(36);
+                                        }
                                     }
 
                                     .feature-content {
@@ -153,6 +157,7 @@
                                         gap: 6px;
 
                                         .title {
+                                            color: $title-color;
                                             font-size: rem(21);
                                             text-align: center;
                                         }
@@ -165,17 +170,17 @@
                                 }
 
                                 &:nth-child(1) .feature-card .feature-image {
-                                    background-color: #53b3faaa;
+                                    background-color: $blue-1;
                                 }
 
                                 &:nth-child(2) .feature-card .feature-image {
-                                    background-color: #a988feaa;
+                                    background-color: $purple-1;
                                 }
                                 &:nth-child(3) .feature-card .feature-image {
-                                    background-color: #fac232aa;
+                                    background-color: $yellow-1;
                                 }
                                 &:nth-child(4) .feature-card .feature-image {
-                                    background-color: #31c496aa;
+                                    background-color: $green-1;
                                 }
                             }
                         }
@@ -194,7 +199,7 @@
             }
 
             & .right-container {
-                background-color: white;
+                background-color: $card-background;
                 border-radius: 12px;
                 box-shadow: $shadow;
                 height: fit-content;
@@ -202,6 +207,7 @@
                 width: 35%;
 
                 .title {
+                    color: $title-color;
                     font-size: rem(22);
                     font-weight: 600;
                 }

@@ -25,7 +25,7 @@ http.interceptors.request.use(
             return Promise.reject(new Error(errorMessage))
         }
         const token = userAuthService?.getAccessToken()
-        if (token && !config?.noAuth) {
+        if (token && !config?.noAuth && config?.headers?.common) {
             config.headers.common["Authorization"] = "Bearer " + token
         }
         return config

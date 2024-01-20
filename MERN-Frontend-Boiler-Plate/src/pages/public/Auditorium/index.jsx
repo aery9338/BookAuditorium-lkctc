@@ -2,15 +2,17 @@
 import React, { Fragment } from "react"
 import { Helmet } from "react-helmet"
 import { useNavigate, useParams } from "react-router-dom"
-import { BiSolidPaperPlane } from "react-icons/bi"
+import { BiChevronDown, BiSolidPaperPlane } from "react-icons/bi"
 import { BsAsterisk } from "react-icons/bs"
 import { FaPeopleGroup } from "react-icons/fa6"
 import { MdOutlineLocationCity } from "react-icons/md"
 import { PiMicrophoneStageThin, PiTelevision } from "react-icons/pi"
 import { RiProjector2Fill } from "react-icons/ri"
-import { Button, DatePicker, Form, Input, Select, TimePicker, Typography } from "antd"
+import { Button, DatePicker, Form, Input, notification, Select, TimePicker, Typography } from "antd"
 import AuditoriumCard from "commonComponents/AuditoriumCard"
 import { Spin } from "customComponents"
+import moment from "moment"
+import store from "store"
 import { ApplicationTypes, Departments } from "utils/constants"
 import { compare, getQueryParams } from "utils/helper"
 import { mockupAuditoriumsData } from "utils/mockup"
@@ -46,7 +48,17 @@ const AuditoriumPage = () => {
     }, [search, params, auditoriumsData])
 
     const onFinish = (values) => {
-        console.log("Submited values: ", { ...values, bookingdate: new Date(values.bookingdate) })
+        const newApplication = {
+            ...values,
+            bookingdate: moment(values.bookingdate).format("DD-MM-YYYY"),
+            bookingtime: [
+                moment(values.bookingtime[0]).format("hh:mm a"),
+                moment(values.bookingtime[1]).format("hh:mm a"),
+            ],
+        }
+        const applications = store.get("appliedAplications") ? JSON.parse(store.get("appliedAplications")) : []
+        store.set("appliedAplications", JSON.stringify([...applications, newApplication]))
+        notification.success("")
     }
     const onFinishFailed = () => {}
 
@@ -201,6 +213,7 @@ const AuditoriumPage = () => {
                                                 options={Object?.keys(ApplicationTypes)?.map((key) => {
                                                     return { value: key, label: ApplicationTypes[key] }
                                                 })}
+                                                suffixIcon={<BiChevronDown />}
                                                 showSearch
                                             />
                                         </Form.Item>
@@ -212,6 +225,7 @@ const AuditoriumPage = () => {
                                             rules={[{ required: true }]}
                                         >
                                             <DatePicker
+                                                format={"DD MMM, YYYY"}
                                                 disabledDate={(date) =>
                                                     new Date(date).setHours(0, 0, 0, 0) < Date.now()
                                                 }
@@ -220,14 +234,14 @@ const AuditoriumPage = () => {
                                         {/*Booking time*/}
                                         <Form.Item
                                             required={false}
-                                            name="time"
+                                            name="bookingtime"
                                             label="Booking time:"
                                             rules={[{ required: true }]}
                                         >
                                             <TimePicker.RangePicker
                                                 minuteStep={10}
                                                 // use12Hours
-                                                format="h:mm a"
+                                                format="hh:mm a"
                                                 hideDisabledOptions
                                                 disabledTime={() => {
                                                     return {
@@ -252,6 +266,7 @@ const AuditoriumPage = () => {
                                                 options={Object?.keys(Departments)?.map((key) => {
                                                     return { value: key, label: Departments[key] }
                                                 })}
+                                                suffixIcon={<BiChevronDown />}
                                                 showSearch
                                             />
                                         </Form.Item>

@@ -1,34 +1,33 @@
-@import "./mixin.scss";
+// Packages
+@use "sass:math";
+
+// Scss files
+@import "./color.scss";
+@import "./media.scss";
 
 // Fonts
 @import url("https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Marmelad&display=swap");
+
+// Functions
+@function rem($px, $base: $base-font-size) {
+    @return #{math.div(floor(math.div($px, $base) * 100), 100)}rem;
+}
 
 * {
     box-sizing: border-box;
+    // font-family: 'Marmelad', sans-serif !important;
     // font-family: "Public Sans", sans-serif !important;
     font-family: "Poppins", sans-serif !important;
+    font-size: rem(16);
     font-weight: 400;
     margin: 0;
     padding: 0;
 }
 
-:root {
-    --kit-color-primary: #4154ff;
-    --kit-font-family: -apple-system, blinkmacsystemfont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
-        "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-    --muted-text-color: #777;
-    --tinted-blue-background-color: #f8f8fb;
-    --tinted-green-background-color: #f7fdfe;
-    --light-green-background-color: rgba(102, 222, 189, 0.15);
-    --dark-blue-color: #0d0c46;
-    --green-color: #1fccbb;
-    --text-color: black;
-    --primary-color: #4154ff;
-}
-
 body {
-    background-color: white;
+    background-color: transparent;
     color: var(--text-color);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -64,7 +63,7 @@ html {
 }
 
 a {
-    color: #2c2ab6;
+    color: red;
     font-weight: 500;
 
     &:hover {
@@ -74,7 +73,7 @@ a {
 
 ::selection {
     background: $primary-1;
-    color: #fff;
+    color: $light;
 }
 
 .ant-modal-root {
@@ -82,7 +81,7 @@ a {
         .ant-modal-content {
             border: 1px solid $primary-1;
             border-radius: 12px;
-            box-shadow: $box-shadow;
+            box-shadow: $shadow;
             overflow: hidden;
 
             .ant-modal-footer {
@@ -99,7 +98,7 @@ a {
     background-color: white;
     border: 0;
     border-radius: 10px;
-    box-shadow: $box-shadow;
+    box-shadow: $shadow;
     margin: 2rem;
     overflow: hidden;
     transition: box-shadow 0.2s;
@@ -111,7 +110,7 @@ a {
     }
 
     &:hover {
-        box-shadow: $box-shadow-hover;
+        box-shadow: $shadow-2;
     }
 
     &.clickable {
@@ -130,11 +129,11 @@ a {
     }
 
     &::-webkit-scrollbar-track {
-        background-color: rgba(255, 255, 255, 0.35);
+        background-color: rgba(255, 255, 255, 0.12);
     }
 
     &::-webkit-scrollbar-thumb {
-        background-color: rgba(0, 0, 0, 0.1);
+        background-color: rgba(0, 0, 0, 0.08);
         border-radius: rem(10);
         visibility: hidden;
     }
@@ -144,7 +143,7 @@ a {
     }
 
     &::-webkit-scrollbar-thumb:hover {
-        background-color: rgba(0, 0, 0, 0.25);
+        background-color: rgba(0, 0, 0, 0.12);
     }
 }
 
@@ -181,7 +180,7 @@ a {
 
 .ant-form-item-has-error {
     * {
-        border-color: #ff4d4f !important;
+        border-color: $red-1 !important;
     }
 }
 
@@ -197,7 +196,7 @@ a.ant-typography {
     align-items: center;
     align-items: center;
     border-radius: rem(8);
-    box-shadow: $box-shadow;
+    box-shadow: $shadow;
     display: flex;
     height: auto;
     justify-content: center;
@@ -240,7 +239,7 @@ a.ant-typography {
     }
 
     &.ant-btn-default {
-        background-color: white;
+        background-color: transparent;
         border-color: $primary;
         color: $primary;
     }
@@ -248,7 +247,7 @@ a.ant-typography {
     &.ant-btn-primary {
         background-color: $primary;
         border-color: $primary;
-        color: $white;
+        color: $light;
     }
 
     &.ant-btn-primary[disabled] {
@@ -316,7 +315,18 @@ a.ant-typography {
 
         .ant-select-selection-search {
             left: 0;
-            top: 2px;
+            top: rem(-10);
+        }
+
+        .ant-select-selection-item,
+        .ant-select-selection-placeholder {
+            align-items: center;
+            display: flex;
+            font-size: rem(21);
+        }
+
+        .ant-select-selection-placeholder {
+            color: $description-color !important;
         }
 
         > *,
@@ -324,7 +334,7 @@ a.ant-typography {
         > *::after,
         &::after,
         input {
-            height: fit-content !important;
+            height: rem(54) !important;
             line-height: normal !important;
         }
     }
@@ -337,13 +347,11 @@ a.ant-typography {
 .ant-collapse {
     border: 1px solid $primary-3;
     border-radius: 12px;
-    box-shadow: 0 0 4px hsla(0, 0%, 0%, $shadowDepth), 0 2px 2px hsla(0, 0%, 0%, $shadowDepth),
-        0 4px 4px hsla(0, 0%, 0%, $shadowDepth), 0 8px 8px hsla(0, 0%, 0%, $shadowDepth);
-    box-shadow: $box-shadow;
+    box-shadow: $shadow;
     overflow: hidden;
 
     &:hover {
-        box-shadow: $box-shadow-hover;
+        box-shadow: $shadow-2;
     }
 
     .ant-collapse-item {
@@ -390,9 +398,9 @@ a.ant-typography {
 }
 
 .ant-table-wrapper {
-    border: 1px solid #70707040;
+    border: 1px solid $muted;
     border-radius: 10px;
-    box-shadow: $box-shadow;
+    box-shadow: $shadow;
     overflow: hidden;
 
     &:hover {
@@ -422,7 +430,7 @@ a.ant-typography {
                         }
 
                         .ant-checkbox.ant-checkbox-checked .ant-checkbox-inner:after {
-                            background: white;
+                            background: transparent;
                             background-color: white;
                             border: 3px solid $primary;
                             border-left: 0;
@@ -432,7 +440,7 @@ a.ant-typography {
                 }
                 .ant-table-tbody {
                     tr:where(:hover) > td {
-                        background-color: #f8f9ff !important;
+                        background-color: $tinted-blue !important;
                     }
 
                     .ant-table-row-selected > td {
@@ -480,6 +488,7 @@ a.ant-typography {
         margin: 0;
 
         label {
+            color: $title-color;
             font-size: rem(20);
             font-weight: 500;
         }
@@ -500,12 +509,11 @@ a.ant-typography {
 .ant-input,
 .ant-select,
 textarea {
-    background-color: #f1f2f860;
-    background-color: white;
-    border: 1px solid #00000040;
+    background-color: $gray-2;
+    border: 1px solid $grey-2;
     border-radius: rem(8);
-    box-shadow: none !important;
-    color: black !important;
+    box-shadow: $shadow-2 !important;
+    color: $title-color !important;
     font-size: rem(21);
     gap: rem(10);
     height: rem(54);
@@ -519,7 +527,6 @@ textarea {
 
     &:where(:hover, :active, :focus) {
         border: 1px solid $primary-3 !important;
-        box-shadow: $shadow-3 !important;
     }
 
     &::after,
@@ -546,6 +553,7 @@ textarea {
 
     &::placeholder,
     & ::placeholder {
+        color: $description-color !important;
         font-size: rem(21) !important;
     }
 }
@@ -617,7 +625,7 @@ textarea {
 
 ::placeholder,
 .ql-editor.ql-blank::before {
-    color: #868aa599 !important;
+    color: $description-color !important;
     font-size: rem(19);
     font-style: unset;
 }
@@ -673,7 +681,7 @@ textarea {
         justify-content: flex-end;
 
         &.warn {
-            color: #ff4d4f;
+            color: $orange-1;
             font-size: 12px;
         }
     }
@@ -681,7 +689,7 @@ textarea {
 
 .quill {
     * {
-        border-color: #cccccc60 !important;
+        border-color: $grey !important;
     }
 
     &.row-2 {
@@ -750,7 +758,7 @@ textarea {
 
 .ant-form-item-explain {
     font-size: rem(18);
-    margin-top: rem(4);
+    margin-top: rem(8);
     padding: 0 rem(8);
     text-align: start;
 }
@@ -766,8 +774,8 @@ textarea {
         width: clamp(rem(450), 45vw, 100vw - 48px);
 
         .ant-notification-notice-content {
-            .ant-notification-notice-icon {
-                width: rem(32);
+            .ant-notification-notice-icon > svg {
+                font-size: rem(32);
             }
             .ant-notification-notice-message {
                 font-size: rem(24);

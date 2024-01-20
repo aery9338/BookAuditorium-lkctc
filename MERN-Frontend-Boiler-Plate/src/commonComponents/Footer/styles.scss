@@ -1,8 +1,8 @@
-@import "../../globalStyles/mixin.scss";
+@import "../../globalStyles/main.scss";
+@import "../../globalStyles/color.scss";
 
 .footer-wrapper {
     align-items: center;
-    background-color: $white;
     display: flex;
     gap: rem(20);
     justify-content: center;
@@ -10,11 +10,21 @@
 
     > .footer {
         align-items: center;
+        color: $sub-title-color;
         display: flex;
         font-size: rem(18);
         justify-content: center;
         margin: 0;
+        font-family: "Marmelad", sans-serif !important;
         padding: 0 rem(24);
+
+        .ant-typography {
+            font-size: rem(20);
+            color: $primary;
+            &:hover {
+                color: $purple-1;
+            }
+        }
 
         .footer-social-icons {
             display: flex;

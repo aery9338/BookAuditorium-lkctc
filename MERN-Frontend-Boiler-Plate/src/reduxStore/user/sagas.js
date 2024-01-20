@@ -1,9 +1,10 @@
 import { notification } from "antd"
 import _ from "lodash"
-import { all, call, put, takeEvery } from "redux-saga/effects"
+import { all, call, put, select, takeEvery } from "redux-saga/effects"
 import { userActions } from "reduxStore"
 import userAuthService from "services/userAuthService"
 import initialState from "./initialState"
+import { selectViewMode } from "./selectors"
 
 export function* getUserData() {
     try {
@@ -16,6 +17,11 @@ export function* getUserData() {
     } finally {
         yield put(userActions.setState({ loading: false }))
     }
+}
+
+export function* toggleViewMode() {
+    const viewMode = yield select(selectViewMode)
+    yield put(userActions.setState({ viewMode: viewMode === "light" ? "dark" : "light" }))
 }
 
 export function* loginUser({ payload }) {
@@ -106,6 +112,7 @@ export function* logoutUser() {
 // Defines which saga should run upon each action dispatch
 export default function* rootSaga() {
     yield all([
+        takeEvery(userActions.toggleViewMode.type, toggleViewMode),
         takeEvery(userActions.loginUser.type, loginUser),
         takeEvery(userActions.signupUser.type, signupUser),
         takeEvery(userActions.logoutUser.type, logoutUser),

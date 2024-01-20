@@ -11,6 +11,7 @@ const userSlice = createSlice({
                 state[key] = payload[key]
             })
         },
+        toggleViewMode: () => {},
         updateUserData: (state, action) => {
             const { payload } = action
             state.userData = { ...state.userData, ...payload }

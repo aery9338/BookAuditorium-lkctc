@@ -1,13 +1,33 @@
-@import "../../../globalStyles/mixin.scss";
+@import "../../../globalStyles/main.scss";
+@import "../../../globalStyles/color.scss";
 
 .dashboard-conatiner {
     height: 100%;
     width: 100%;
 
-    .content {
+    .dashboard-wrapper {
         display: flex;
         flex-direction: column;
-        gap: rem(24);
+        gap: rem(32);
         padding: rem(24);
+
+        .header {
+            color: $title-color;
+            width: 100%;
+            font-family: "Marmelad", sans-serif !important;
+            font-weight: 500;
+            font-size: rem(32);
+            margin: 0 rem(12);
+        }
+
+        .profile-wrapper {
+            width: min(100%, 35%);
+            border-radius: rem(12);
+            box-shadow: $shadow;
+        }
+
+        .menu-wrapper {
+            width: min(100%, calc(65% - rem(32)));
+        }
     }
 }

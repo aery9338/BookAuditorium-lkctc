@@ -1,3 +1,5 @@
+@import "../../globalStyles/color.scss";
+
 .loading-wrapper {
     align-items: center;
     display: flex;
@@ -20,7 +22,7 @@
             -webkit-animation: spin 1.2s linear infinite;
             border: 2px solid transparent;
             border-radius: 50%;
-            border-top: 4px solid #3d88ff;
+            border-top: 4px solid $blue;
             height: 50px;
             width: 50px;
         }
@@ -29,7 +31,7 @@
             animation: spin 1s reverse linear infinite;
             -webkit-animation: spin 1s reverse linear infinite;
             border: 2px solid transparent;
-            border-bottom: 4px solid #3d88ff;
+            border-bottom: 4px solid $blue;
             border-radius: 50%;
             height: 30px;
             position: absolute;
@@ -58,7 +60,7 @@
                 width: 24px;
             }
         }
-        
+
         .loading-text {
             font-size: medium;
         }

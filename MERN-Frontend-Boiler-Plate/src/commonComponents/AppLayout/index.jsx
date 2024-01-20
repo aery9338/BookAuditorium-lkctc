@@ -5,7 +5,7 @@ import Footer from "commonComponents/Footer"
 import Header from "commonComponents/Header"
 import Sidebar from "commonComponents/Sidebar"
 import { isBoolean } from "lodash"
-import { selectIsLoggedIn } from "reduxStore/selectors"
+import { selectIsLoggedIn, selectViewMode } from "reduxStore/selectors"
 import "./styles.scss"
 
 const validateProps = ({ hideLayout, hideHeader, hideSidebar = true, children }) => {
@@ -19,15 +19,16 @@ const validateProps = ({ hideLayout, hideHeader, hideSidebar = true, children })
 const AppLayout = (props) => {
     const { hideHeader, hideSidebar, children } = validateProps(props)
     const isLoggedIn = useSelector(selectIsLoggedIn)
+    const viewMode = useSelector(selectViewMode)
     const navigate = useNavigate()
 
     useEffect(() => {
-        // if (!isLoggedIn) navigate("/login")
+        if (!isLoggedIn) navigate("/login")
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isLoggedIn])
 
     return (
-        <div className="app-layout-wrapper">
+        <div className={`app-layout-wrapper ${viewMode === "dark" ? "dark" : ""}`}>
             <div className="app-layout-container">
                 {!hideHeader ? (
                     <div className="app-header-wrapper">

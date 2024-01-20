@@ -11,3 +11,5 @@ export const selectEmailAddress = (state) => state.user.userData.email
 export const selectUserData = (state) => state.user.userData
 
 export const selectIsUserLoading = (state) => state.user.loading
+
+export const selectViewMode = (state) => state.user.viewMode

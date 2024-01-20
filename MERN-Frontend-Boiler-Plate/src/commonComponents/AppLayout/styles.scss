@@ -1,8 +1,8 @@
-@import "../../globalStyles/mixin.scss";
-@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,400;1,700;1,800;1,900&display=swap");
+@import "../../globalStyles/main.scss";
+@import "../../globalStyles/color.scss";
 
 .app-layout-wrapper {
-    box-shadow: 0 0 40px -10px rgba(#141322, 0.2);
+    box-shadow: 0 0 40px -10px rgba($dark, 0.2);
     font-family: "Poppins", sans-serif;
     margin: 0 auto;
     max-width: 1920px;
@@ -10,7 +10,7 @@
     width: 100%;
 
     .app-layout-container {
-        background: white;
+        background-color: $card-background;
         display: flex;
         flex-direction: column;
         height: 100vh;
@@ -24,7 +24,7 @@
         }
 
         .app-content-wrapper {
-            background-color: #f1f6ff;
+            background-color: $background;
             display: flex;
             height: 100%;
             height: calc(100vh - rem(120));

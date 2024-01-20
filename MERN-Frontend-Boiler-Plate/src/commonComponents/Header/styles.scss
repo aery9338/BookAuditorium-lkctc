@@ -1,8 +1,8 @@
-@import "../../globalStyles/mixin.scss";
+@import "../../globalStyles/main.scss";
+@import "../../globalStyles/color.scss";
 
 .header-wrapper {
     align-items: center;
-    color: $white;
     display: flex;
     justify-content: space-between;
     padding: rem(16) rem(24);
@@ -18,7 +18,7 @@
         }
 
         article {
-            color: black;
+            color: $title-color;
             font-size: rem(18);
             font-weight: 600;
             text-align: center;
@@ -32,7 +32,7 @@
             gap: rem(14);
 
             & .ant-divider {
-                border-color: #707070;
+                border-color: $muted;
                 height: 20px;
                 margin: 0;
             }
@@ -52,7 +52,7 @@
             }
 
             svg {
-                color: black;
+                color: $sub-title-color;
                 font-size: rem(36);
                 width: rem(36);
             }
@@ -71,12 +71,13 @@
         }
 
         li:last-child {
-            border-top: 1px solid #00000030;
+            border-top: 1px solid $grey;
         }
     }
     .menu-btn {
         width: 100%;
         text-align: start;
+        padding: rem(1) rem(5);
         span {
             color: $primary;
             font-size: rem(18);

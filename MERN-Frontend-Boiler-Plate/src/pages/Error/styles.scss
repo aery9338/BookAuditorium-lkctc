@@ -1,5 +1,5 @@
-@import "../../globalStyles/mixin.scss";
-
+@import "../../globalStyles/main.scss";
+@import "../../globalStyles/color.scss";
 .Error {
     align-items: center;
     display: flex;
@@ -10,14 +10,15 @@
 
     &-container {
         align-items: center;
-        background-color: white;
-        border: 1px solid #f1f1f1;
+        background-color: $card-background;
+        border: 1px solid $grey-2;
         border-radius: 15px;
         color: $dark;
         display: flex;
         flex-direction: column;
         justify-content: center;
         max-width: rem(600);
+        box-shadow: $shadow-4;
         padding: rem(30);
         text-align: center;
 
@@ -27,7 +28,7 @@
             margin-bottom: rem(15);
             white-space: pre-wrap;
         }
-        
+
         .Error-text {
             font-size: rem(20);
             white-space: pre-wrap;

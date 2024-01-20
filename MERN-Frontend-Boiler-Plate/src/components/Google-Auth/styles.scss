@@ -1,4 +1,5 @@
-@import "../../globalStyles/mixin.scss";
+@import "../../globalStyles/main.scss";
+@import "../../globalStyles/color.scss";
 
 .social-buttons {
     display: flex;
@@ -8,7 +9,7 @@
     .social-button {
         align-items: center;
         aspect-ratio: 1/1;
-        border: 1px solid #ddd !important;
+        border: 1px solid $grey-2 !important;
         border-radius: 5px;
         display: flex;
         height: rem(120);

@@ -9,7 +9,7 @@ const Footer = () => {
         <div className="footer-wrapper">
             <div className="footer">
                 <Fragment>
-                    &#169; 2023 LKCTC Inc.{" "}
+                    &#169; 2023 LKCTC Inc.
                     <Typography.Link href="https://github.com/aery9338">Avinav Aery</Typography.Link>
                 </Fragment>
                 <div className="footer-social-icons">

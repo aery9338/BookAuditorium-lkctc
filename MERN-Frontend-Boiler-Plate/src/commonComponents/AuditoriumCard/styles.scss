@@ -1,23 +1,18 @@
-@import "../../globalStyles/mixin.scss";
+@import "../../globalStyles/main.scss";
+@import "../../globalStyles/color.scss";
 
 .auditorium-container {
-    background-color: white;
-    border-radius: rem(12);
-    box-shadow: $shadow-4;
+    border-radius: rem(14);
+    box-shadow: $shadow-3;
     display: flex;
     flex-direction: column;
     gap: rem(8);
     transition: 0.5s ease-in;
 
     &:hover {
-        box-shadow: $shadow;
-    }
+        box-shadow: $shadow-5;
 
-    .image-container {
-        bottom: 0;
-        position: relative;
-
-        &:hover {
+        .image-container {
             .image {
                 filter: brightness(0.85) blur(1.25px);
             }
@@ -45,12 +40,16 @@
                 }
             }
         }
+    }
+
+    .image-container {
+        bottom: 0;
+        position: relative;
 
         .image {
             aspect-ratio: 2/1.4;
             border-top-left-radius: rem(14);
             border-top-right-radius: rem(14);
-            box-shadow: $shadow-2;
             margin: 0 0 -12px;
             object-fit: cover;
             overflow: hidden;
@@ -125,7 +124,7 @@
         z-index: 10;
 
         .auditorium-details {
-            background-color: white;
+            background-color: $card-background;
             border-top-left-radius: rem(14);
             border-top-right-radius: rem(14);
             display: flex;
@@ -133,7 +132,7 @@
             flex-direction: column;
             gap: rem(14);
             margin-top: -6px;
-            padding: rem(16);
+            padding: rem(20);
             padding-top: rem(24);
 
             .title {
@@ -168,21 +167,23 @@
                 margin-top: 8px;
 
                 .feature {
-                    background-color: #e3f3fe;
+                    background-color: $tinted-blue-1;
                     border-radius: 12px;
                     color: $title-color;
                     font-size: rem(15);
-                    font-size: 500;
+                    font-weight: 500;
                     padding: 2px 15px;
                 }
             }
         }
 
         & .auditorium-actions {
+            background-color: $card-background;
+            border-bottom-left-radius: rem(14);
+            border-bottom-right-radius: rem(14);
             display: flex;
             gap: 10px;
-            margin-top: rem(6);
-            padding: rem(16);
+            padding: rem(20);
 
             button {
                 width: 50%;
