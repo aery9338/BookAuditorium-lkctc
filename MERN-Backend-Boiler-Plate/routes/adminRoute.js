@@ -104,6 +104,7 @@ router.put("/update/user", async (req, res) => {
 })
 
 router.delete("/delete/user", async(req, res)=>{
+    const session = await mongoose.startSession()
     try{
         await session.withTransaction(async () => {
             const { id } = req.body
