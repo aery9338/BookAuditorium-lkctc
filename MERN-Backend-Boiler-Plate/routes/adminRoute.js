@@ -18,7 +18,7 @@ router.post("/user/all", adminTokenAuth, async (req, res) => {
     return res.json({ data: { tableData: users, tableCount: users.length }, error: false })
 })
 
-router.post("/create/users", async (req, res) => {
+router.post("/create/users", adminTokenAuth, async (req, res) => {
     const session = await mongoose.startSession()
     try {
         await session.withTransaction(async () => {
@@ -81,12 +81,11 @@ router.post("/create/users", async (req, res) => {
     }
 })
 
-router.put("/update/user", async (req, res) => {
+router.put("/update/user", adminTokenAuth, async (req, res) => {
     const session = await mongoose.startSession()
     try {
         await session.withTransaction(async () => {
             const { id, ...updateData } = req.body
-            console.log(updateData)
             const exists = await User.findById(id).session(session)
             if (exists) {
                 const user = await User.findByIdAndUpdate(id, updateData, { new: true })
@@ -103,22 +102,22 @@ router.put("/update/user", async (req, res) => {
     }
 })
 
-router.delete("/delete/user", async(req, res)=>{
+router.delete("/delete/user", adminTokenAuth, async (req, res) => {
     const session = await mongoose.startSession()
-    try{
+    try {
         await session.withTransaction(async () => {
             const { id } = req.body
             const exists = await User.findById(id).session(session)
-            if(exists){
-                const user  = await User.findByIdAndDelete(id)
-                return res.json({ data: user, error: false})
+            if (exists) {
+                const user = await User.findByIdAndDelete(id)
+                return res.json({ data: user, error: false })
             } else {
                 return res.json({ error: true, message: "user not found" })
             }
-        } )
-    } catch(error){
+        })
+    } catch (error) {
         console.error(error)
-        return res.status(500).json({ error : true, message: "Something failed!" })
+        return res.status(500).json({ error: true, message: "Something failed!" })
     } finally {
         session.endSession()
     }
