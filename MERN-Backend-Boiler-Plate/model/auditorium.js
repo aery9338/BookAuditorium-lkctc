@@ -2,7 +2,7 @@ const mongoose = require("mongoose")
 
 const destinationSchema = new mongoose.Schema(
     {
-        block: { type: String, unique: true},
+        block: { type: String},
         floor: {type: String},
         name: {type: String, required: true, unique: true}
     }
