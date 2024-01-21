@@ -9,11 +9,11 @@ const { User } = require("../model/user")
 const { validateUserCreateReq } = require("../validation/user")
 
 router.post("/user/all", adminTokenAuth, async (req, res) => {
-    const { filter = {}, limit = 10, size = 1 } = req.body
+    const { filter = {}, limit = 10, page = 0 } = req.body
     let users = []
     if (limit === -1) users = await User.find(filter)
     users = await User.find(filter)
-        .skip(size * limit)
+        .skip(page * limit)
         .limit(limit)
     return res.json({ data: { tableData: users, tableCount: users.length }, error: false })
 })
@@ -76,6 +76,48 @@ router.post("/create/users", async (req, res) => {
     } catch (error) {
         console.error(error)
         return res.status(500).json({ error: true, message: "Something failed!" })
+    } finally {
+        session.endSession()
+    }
+})
+
+router.put("/update/user", async (req, res) => {
+    const session = await mongoose.startSession()
+    try {
+        await session.withTransaction(async () => {
+            const { id, ...updateData } = req.body
+            console.log(updateData)
+            const exists = await User.findById(id).session(session)
+            if (exists) {
+                const user = await User.findByIdAndUpdate(id, updateData, { new: true })
+                return res.json({ data: user, error: false })
+            } else {
+                return res.json({ error: true, message: "User not found" })
+            }
+        })
+    } catch (error) {
+        console.error(error)
+        return res.status(500).json({ error: true, message: "Something failed!" })
+    } finally {
+        session.endSession()
+    }
+})
+
+router.delete("/delete/user", async(req, res)=>{
+    try{
+        await session.withTransaction(async () => {
+            const { id } = req.body
+            const exists = await User.findById(id).session(session)
+            if(exists){
+                const user  = await User.findByIdAndDelete(id)
+                return res.json({ data: user, error: false})
+            } else {
+                return res.json({ error: true, message: "user not found" })
+            }
+        } )
+    } catch(error){
+        console.error(error)
+        return res.status(500).json({ error : true, message: "Something failed!" })
     } finally {
         session.endSession()
     }
