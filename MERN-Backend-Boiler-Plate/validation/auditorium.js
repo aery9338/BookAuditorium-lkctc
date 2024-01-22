@@ -17,6 +17,26 @@ const validateAuditoriumCreateReq = (auditorium) => {
         }),
     }).validate(auditorium)
 }
+
+const validateAuditoriumUpdateReq = (auditorium) => {
+    return Joi.object({
+        tittle: Joi.string(),
+        image: Joi.string(),
+        destination: Joi.object({
+            block: Joi.string(),
+            floor: Joi.string(),
+            name: Joi.string(),
+        }),
+        description: Joi.string(),
+        capacity: Joi.number(),
+        features: Joi.array().items({
+            name: Joi.string().valid("TV", "Mic", "Projector"),
+            description: Joi.string(),
+        }),
+    }).validate(auditorium)
+}
+
 module.exports = {
     validateAuditoriumCreateReq,
+    validateAuditoriumUpdateReq,
 }

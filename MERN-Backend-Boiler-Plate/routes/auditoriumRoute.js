@@ -4,7 +4,7 @@ const router = express.Router()
 const { isArray } = require("lodash")
 const { adminTokenAuth } = require("../middleware/tokenAuth")
 const Auditorium = require("../model/auditorium")
-const { validateAuditoriumCreateReq } = require("../validation/auditorium")
+const { validateAuditoriumCreateReq, validateAuditoriumUpdateReq } = require("../validation/auditorium")
 
 router.post("/all", async (req, res) => {
     const { filter = {}, limit = 10, page = 0 } = req.body
@@ -57,9 +57,10 @@ router.post("/create", async (req, res) => {
                         },
                         { session }
                     )
-                    return res.json({ data: auditoriumCreated, error: false })
+                    console.log(i++, ": Auditorium created := ", auditoriumCreated)
                 })
             )
+            return res.json({ error: false, message: "auditoriums created" })
         })
     } catch (err) {
         console.error(err)
@@ -74,9 +75,12 @@ router.put("/update", adminTokenAuth, async (req, res) => {
     try {
         await session.withTransaction(async () => {
             const { id, ...updateData } = req.body
-            const auditorium = await Auditorium.findById({ id }).session(session)
+            if (!id) return res.json({ error: true, message: "id not found" })
+            const error = validateAuditoriumUpdateReq(updateData)
+            if (error) return res.json({ error: true, message: error })
+            const auditorium = await Auditorium.findById(id).session(session)
             if (!auditorium) return res.json({ error: true, message: "Auditorium not found" })
-            const auditoriumUpdated = await Auditorium.findByIdandUpdate(id, updateData, { new: true })
+            const auditoriumUpdated = await Auditorium.findByIdAndUpdate(id, updateData, { new: true })
             return res.json({ data: auditoriumUpdated, error: false })
         })
     } catch (error) {
@@ -92,7 +96,7 @@ router.delete("/delete", adminTokenAuth, async (req, res) => {
     try {
         await session.withTransaction(async () => {
             const { id } = req.body
-            const auditorium = await Auditorium.findById({ id }).session(session)
+            const auditorium = await Auditorium.findById(id).session(session)
             if (!auditorium) return res.json({ error: true, message: "Auditorium not found" })
             const auditoriumDeleted = await Auditorium.findByIdAndDelete(id)
             return res.json({ data: auditoriumDeleted, error: false })

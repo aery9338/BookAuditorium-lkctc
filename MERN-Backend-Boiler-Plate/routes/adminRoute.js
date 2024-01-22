@@ -6,7 +6,7 @@ const { isArray } = require("lodash")
 const { adminTokenAuth } = require("../middleware/tokenAuth")
 const appConfig = require("../startup/config")
 const { User } = require("../model/user")
-const { validateUserCreateReq } = require("../validation/user")
+const { validateUserCreateReq, validateUserUpdateReq, validateUserRoleUpdateReq } = require("../validation/user")
 
 router.post("/user/all", adminTokenAuth, async (req, res) => {
     const { filter = {}, limit = 10, page = 0 } = req.body
@@ -86,6 +86,10 @@ router.put("/update/user", adminTokenAuth, async (req, res) => {
     try {
         await session.withTransaction(async () => {
             const { id, ...updateData } = req.body
+            const error = validateUserUpdateReq(updateData)
+            if (error) {
+                return res.json({ error: true, message: error })
+            }
             const exists = await User.findById(id).session(session)
             if (exists) {
                 const user = await User.findByIdAndUpdate(id, updateData, { new: true })
@@ -97,6 +101,29 @@ router.put("/update/user", adminTokenAuth, async (req, res) => {
     } catch (error) {
         console.error(error)
         return res.status(500).json({ error: true, message: "Something failed!" })
+    } finally {
+        session.endSession()
+    }
+})
+
+router.put("/update/userrole", async (req, res) => {
+    const session = await mongoose.startSession()
+    try {
+        await session.withTransaction(async () => {
+            const { id, role } = req.body
+            const error = validateUserRoleUpdateReq(role)
+            if (error) return res.json({ error: true, message: role })
+            const exists = await User.findById(id).session(session)
+            if (exists) {
+                const user = await User.findByIdAndUpdate(id, { roles: role }, { new: true })
+                return res.json({ data: user, error: false })
+            } else {
+                return res.json({ error: true, message: "User Not Found" })
+            }
+        })
+    } catch (error) {
+        console.error(error)
+        return res.json({ error: true, message: "Something failed" })
     } finally {
         session.endSession()
     }
