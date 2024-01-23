@@ -47,9 +47,10 @@ router.post("/create/users", adminTokenAuth, async (req, res) => {
                         gender = "",
                         registeredDate = new Date().toDateString(),
                     } = user
-                    if (!username || !displayname || !email)
-                        return console.log(i++, ": Error: User values not found := ", user)
-
+                    if (!username || !displayname || !email) {
+                        console.log(i++, ": Error: User values not found := ", user)
+                        throw new Error("User values not found")
+                    }
                     const blastUser = await User.findOne({ email }).session(session)
                     if (blastUser && blastUser?._id) return console.log(i++, ": User already exists")
                     const userCreated = await User.create(

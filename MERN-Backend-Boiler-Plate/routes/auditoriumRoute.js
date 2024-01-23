@@ -41,8 +41,10 @@ router.post("/create", async (req, res) => {
                         capacity = 0,
                         features = [],
                     } = auditorium
-                    if (!tittle || !destination || !description || !capacity)
-                        return console.log(i++, ": Error: Auditorium values not found := ", auditorium)
+                    if (!tittle || !destination || !description || !capacity){
+                        console.log(i++, ": Error: Auditorium values not found := ", auditorium)
+                        throw new Error("Auditorium values not found")
+                    }
 
                     const blastAuditorium = await Auditorium.findOne({ tittle }).session(session)
                     if (blastAuditorium && blastAuditorium?._id) return console.log(i++, ": Auditorium already exists")
@@ -70,14 +72,17 @@ router.post("/create", async (req, res) => {
     }
 })
 
-router.put("/update", adminTokenAuth, async (req, res) => {
+router.put("/update", async (req, res) => {
     const session = await mongoose.startSession()
     try {
         await session.withTransaction(async () => {
             const { id, ...updateData } = req.body
             if (!id) return res.json({ error: true, message: "id not found" })
             const error = validateAuditoriumUpdateReq(updateData)
-            if (error) return res.json({ error: true, message: error })
+            if (error) {
+                console.error(error)
+                return res.json({ error: true, message: "error occures in validation" })
+            }
             const auditorium = await Auditorium.findById(id).session(session)
             if (!auditorium) return res.json({ error: true, message: "Auditorium not found" })
             const auditoriumUpdated = await Auditorium.findByIdAndUpdate(id, updateData, { new: true })
