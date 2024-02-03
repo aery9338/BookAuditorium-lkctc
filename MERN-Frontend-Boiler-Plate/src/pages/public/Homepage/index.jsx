@@ -1,18 +1,18 @@
 import React from "react"
 import { Helmet } from "react-helmet"
-import { CgCloseO } from "react-icons/cg"
-import { Button, Typography } from "antd"
+import { useSelector } from "react-redux"
+// import { CgCloseO } from "react-icons/cg"
+// import { Button, Typography } from "antd"
 import AuditoriumCard from "commonComponents/AuditoriumCard"
 import { Spin } from "customComponents"
-import { mockupAuditoriumsData } from "utils/mockup"
+import { selectAllAuditoriums } from "reduxStore/selectors"
 import "./styles.scss"
 
 const Homepage = () => {
     const [loading, setLoading] = React.useState(true)
-    const [auditoriumsData, setAuditoriumsData] = React.useState([])
+    const auditoriums = useSelector(selectAllAuditoriums)
 
     React.useEffect(() => {
-        if (mockupAuditoriumsData?.length) setAuditoriumsData(mockupAuditoriumsData)
         setLoading(false)
     }, [])
 
@@ -26,7 +26,7 @@ const Homepage = () => {
                 <Spin size="small" />
             ) : (
                 <div className="content">
-                    <div className="banner">
+                    {/* <div className="banner">
                         <div className="header-content">
                             <CgCloseO className="close-icon" />
                             <Typography className="header">Lyallpur Khalsa College Technical Campus (LKCTC)</Typography>
@@ -37,19 +37,19 @@ const Homepage = () => {
                         <div className="action-content">
                             <Button type="primary">Visit Website</Button>
                         </div>
-                    </div>
+                    </div> */}
 
                     <div className="main-container">
                         <div className="header-content">
-                            <div className="header">Meeting Rooms (13)</div>
+                            <div className="header">Meeting Rooms ({auditoriums.length ?? 0})</div>
                             <div className="description">
                                 Here you can choose a suitable meeting room, <br />
-                                book and invite employees for a meeting.
+                                book and invite students for a meeting.
                             </div>
                         </div>
 
                         <div className="auditoriums-container">
-                            {auditoriumsData?.map((auditorium, index) => {
+                            {auditoriums?.map((auditorium, index) => {
                                 return <AuditoriumCard key={index} auditorium={auditorium} />
                             })}
                         </div>

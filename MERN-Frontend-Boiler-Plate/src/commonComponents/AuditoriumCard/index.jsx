@@ -1,27 +1,31 @@
-import React from "react"
+import React, { useState } from "react"
+import { useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import { MdOutlineLocationCity, MdOutlineOpenInNew } from "react-icons/md"
 import { PiMicrophoneStageThin, PiTelevisionDuotone } from "react-icons/pi"
 import { RiProjector2Fill } from "react-icons/ri"
-import { Button, Tooltip, Typography } from "antd"
+import { Button, Popover, Tooltip, Typography } from "antd"
+import { selectIsAdmin } from "reduxStore/selectors"
 import "./styles.scss"
 
-const AuditoriumCard = ({ auditorium }) => {
+const AuditoriumCard = ({ auditorium, onEdit }) => {
     const navigate = useNavigate()
+    const isAdmin = useSelector(selectIsAdmin)
+    const [deletePopover, setDeletePopover] = useState(false)
 
     let includesTv = false
     let includesMic = false
     let includesProjector = false
     auditorium?.features?.forEach((feature) => {
-        if (!includesTv && ["tv", "television"]?.includes(feature?.toLowerCase())) includesTv = true
-        if (!includesMic && ["mic", "microphone"]?.includes(feature?.toLowerCase())) includesMic = true
-        if (!includesProjector && ["projector"]?.includes(feature?.toLowerCase())) includesProjector = true
+        if (!includesTv && ["tv", "television", "smart tv"]?.includes(feature?.name?.toLowerCase())) includesTv = true
+        if (!includesMic && ["mic", "microphone"]?.includes(feature?.name?.toLowerCase())) includesMic = true
+        if (!includesProjector && ["projector"]?.includes(feature?.name?.toLowerCase())) includesProjector = true
     })
 
     return (
         <div className="auditorium-container">
             <div className="image-container">
-                <img className="image" src={auditorium?.image} alt={""} />
+                <img className="image" src={auditorium?.images?.[0]} alt={""} />
                 <Button
                     onClick={() => navigate(`/auditorium/${auditorium.id}?view=true`)}
                     className="preview-image-main-action"
@@ -85,26 +89,36 @@ const AuditoriumCard = ({ auditorium }) => {
                     <div className="title">{auditorium?.title}</div>
                     <div className="sub-title overflow-ellipsis">{auditorium?.description}</div>
                     <div className="description">
-                        <MdOutlineLocationCity /> &nbsp; {auditorium?.destination}
+                        <MdOutlineLocationCity /> &nbsp; {auditorium?.destination?.block}
                     </div>
                     <div className="description">Capacity: {auditorium?.capacity} people</div>
                     <div className="features">
                         {auditorium?.features?.map((feature, index) => {
                             return (
                                 <div key={index} className="feature">
-                                    {feature}
+                                    {feature?.name}
                                 </div>
                             )
                         })}
                     </div>
                 </div>
-                <div className="auditorium-actions">
-                    <Button onClick={() => navigate(`/auditorium/${auditorium.id}?view=true`)}>Details</Button>
-                    <Button onClick={() => navigate(`/auditorium/${auditorium.id}?view=false`)} type="primary">
-                        Book
-                    </Button>
-                </div>
+                {isAdmin ? (
+                    <div className="auditorium-actions">
+                        <Button onClick={() => setDeletePopover()}>Delete</Button>
+                        <Button onClick={() => onEdit(auditorium)} type="primary">
+                            Edit
+                        </Button>
+                    </div>
+                ) : (
+                    <div className="auditorium-actions">
+                        <Button onClick={() => navigate(`/auditorium/${auditorium._id}?view=true`)}>Details</Button>
+                        <Button onClick={() => navigate(`/auditorium/${auditorium._id}?view=false`)} type="primary">
+                            Book
+                        </Button>
+                    </div>
+                )}
             </div>
+            <Popover open={deletePopover} title={"Delete " + auditorium.title}></Popover>
         </div>
     )
 }

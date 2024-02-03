@@ -1,8 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit"
 import { connectRouter, routerMiddleware } from "connected-react-router"
-import { logger } from "redux-logger"
+// import { logger } from "redux-logger"
 import createSagaMiddleware from "redux-saga"
-import { AppConfig } from "startup/config"
+// import { AppConfig } from "startup/config"
 import localStorage from "store"
 import { insertIf } from "utils/helper"
 
@@ -14,7 +14,11 @@ import userSlice from "./user"
 const createReduxStore = (history) => {
     const sagaMiddleware = createSagaMiddleware()
     const routeMiddleware = routerMiddleware(history)
-    const middlewares = [sagaMiddleware, routeMiddleware, ...insertIf(AppConfig.isEnvDev, [logger])]
+    const middlewares = [
+        sagaMiddleware,
+        routeMiddleware,
+        // ...insertIf(AppConfig.isEnvDev, [logger])
+    ]
     const persistedState = localStorage.get("reduxState") ? JSON.parse(localStorage.get("reduxState")) : {}
     const ignoredKeys = ["globalModal", "router"]
     const filteredPersistedState = Object.keys(persistedState).reduce((acc, key) => {

@@ -12,7 +12,6 @@ const Protected = ({ redirect, roles = [], children }) => {
 
     useEffect(() => {
         const authorized = isAuthorized(userRoles, roles)
-        console.log({ authorized, userRoles, roles })
         if (!loggedIn) navigate("/login")
         else if (loggedIn && !authorized) {
             if (redirect) navigate(redirect)

@@ -1,8 +1,10 @@
 const express = require("express")
+const Auditorium = require("../model/auditorium")
 const router = express.Router()
 
 router.get("/", async (req, res) => {
-    return res.json({ error: false, data: {} })
+    const auditoriums = await Auditorium.find()
+    return res.json({ error: false, data: { auditoriums } })
 })
 
 module.exports = router

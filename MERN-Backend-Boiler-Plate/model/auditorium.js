@@ -1,23 +1,22 @@
 const mongoose = require("mongoose")
 
-const destinationSchema = new mongoose.Schema({
-    block: { type: String },
-    floor: { type: String },
-    name: { type: String, required: true, unique: true },
-})
-const featureSchema = new mongoose.Schema({
-    name: { type: String, enum: ["TV", "Mic", "Projector"] },
-    description: { type: String },
-})
-
 const auditoriumSchema = new mongoose.Schema(
     {
-        tittle: { type: String, required: true, unique: true },
-        image: { type: String },
-        destination: destinationSchema,
+        title: { type: String, required: true, unique: true },
+        images: [{ type: String }],
+        destination: {
+            block: { type: String },
+            floor: { type: String },
+            name: { type: String, required: true, unique: true },
+        },
         description: { type: String, required: true },
         capacity: { type: Number, required: true },
-        features: [featureSchema],
+        features: [
+            {
+                name: { type: String, enum: ["TV", "Smart Tv", "Mic", "Projector"] },
+                description: { type: String },
+            },
+        ],
     },
     {
         timestamps: { createdAt: "createdon", updatedAt: "modifiedon" },

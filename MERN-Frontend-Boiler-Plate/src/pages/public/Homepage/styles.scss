@@ -73,8 +73,8 @@
 
             & .auditoriums-container {
                 display: grid;
-                gap: rem(36) rem(24);
-                grid-template-columns: repeat(auto-fill, minmax(rem(360), 1fr));
+                gap: rem(48);
+                grid-template-columns: repeat(auto-fill, minmax(rem(500), 1fr));
             }
         }
     }

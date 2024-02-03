@@ -34,23 +34,23 @@ router.post("/create", async (req, res) => {
             await Promise.all(
                 auditoriums.map(async (auditorium) => {
                     const {
-                        tittle = "",
+                        title = "",
                         image = "",
                         destination = {},
                         description = "",
                         capacity = 0,
                         features = [],
                     } = auditorium
-                    if (!tittle || !destination || !description || !capacity) {
+                    if (!title || !destination || !description || !capacity) {
                         console.log(i++, ": Error: Auditorium values not found := ", auditorium)
                         throw new Error("Auditorium values not found")
                     }
 
-                    const blastAuditorium = await Auditorium.findOne({ tittle }).session(session)
+                    const blastAuditorium = await Auditorium.findOne({ title }).session(session)
                     if (blastAuditorium && blastAuditorium?._id) return console.log(i++, ": Auditorium already exists")
                     const auditoriumCreated = await Auditorium.create(
                         {
-                            tittle,
+                            title,
                             image,
                             destination,
                             description,

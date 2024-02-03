@@ -2,7 +2,7 @@ const Joi = require("joi")
 
 const validateAuditoriumCreateReq = (auditorium) => {
     return Joi.object({
-        tittle: Joi.string().required(),
+        title: Joi.string().required(),
         image: Joi.string(),
         destination: Joi.object({
             block: Joi.string(),
@@ -20,7 +20,7 @@ const validateAuditoriumCreateReq = (auditorium) => {
 
 const validateAuditoriumUpdateReq = (auditorium) => {
     return Joi.object({
-        tittle: Joi.string(),
+        title: Joi.string(),
         image: Joi.string(),
         destination: Joi.object({
             block: Joi.string(),

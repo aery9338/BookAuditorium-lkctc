@@ -3,14 +3,14 @@
 
 .auditorium-container {
     border-radius: rem(14);
-    box-shadow: $shadow-3;
+    box-shadow: $shadow-2;
     display: flex;
     flex-direction: column;
     gap: rem(8);
     transition: 0.5s ease-in;
 
     &:hover {
-        box-shadow: $shadow-5;
+        box-shadow: $shadow-3;
 
         .image-container {
             .image {
@@ -187,6 +187,32 @@
 
             button {
                 width: 50%;
+            }
+        }
+    }
+}
+
+.add-edit-auditorium-modal {
+    .ant-modal-body {
+        display: flex;
+
+        .ant-upload {
+            width: 100%;
+            .upload-image-container {
+                width: 100%;
+            }
+
+            .upload-card {
+                margin: 0;
+                width: 100%;
+
+                .ant-card-body {
+                    align-items: center;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 12px;
+                    justify-content: center;
+                }
             }
         }
     }

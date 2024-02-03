@@ -1,3 +1,5 @@
+import { isIncluded } from "utils/helper"
+
 export const selectIsLoggedIn = (state) => state.user.loggedIn
 
 export const selectUserRoles = (state) => state.user.userData.roles
@@ -15,3 +17,6 @@ export const selectIsUserLoading = (state) => state.user.loading
 export const selectIsUserInitialLoading = (state) => state.user.initialLoading
 
 export const selectViewMode = (state) => state.user.viewMode
+
+export const selectIsAdmin = (state) =>
+    state.user.userData.roles?.some(({ rolename, isinvoked }) => !isinvoked && isIncluded(rolename, "admin", true))

@@ -8,26 +8,53 @@
     .dashboard-wrapper {
         display: flex;
         flex-direction: column;
-        gap: rem(32);
+        gap: rem(24);
         padding: rem(24);
 
         .header {
             color: $title-color;
-            width: 100%;
             font-family: "Marmelad", sans-serif !important;
-            font-weight: 500;
             font-size: rem(32);
+            font-weight: 700;
             margin: 0 rem(12);
+            width: 100%;
         }
 
-        .profile-wrapper {
-            width: min(100%, 35%);
+        .custom-tab {
+            background-color: $dark-3;
             border-radius: rem(12);
-            box-shadow: $shadow;
+            overflow: hidden;
+            margin: rem(16);
+            position: relative;
+            min-height: 70vh;
+            padding: 0;
+
+            .ant-tabs-nav {
+                position: sticky;
+                top: 0;
+                z-index: 10;
+                background-color: $dark-3;
+            }
         }
 
-        .menu-wrapper {
-            width: min(100%, calc(65% - rem(32)));
+        .auditorium-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: rem(32);
+            padding: rem(16) rem(32);
+
+            .header-section {
+                display: flex;
+                padding: rem(0) rem(12);
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            .list-container {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+                gap: rem(48);
+            }
         }
     }
 }

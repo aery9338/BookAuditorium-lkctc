@@ -29,7 +29,7 @@ const routes = [
         hideLayout: false,
         path: "/",
         redirect: "/dashboard",
-        roles: ["faculty"],
+        roles: ["admin", "faculty"],
     },
     {
         auth: true,
