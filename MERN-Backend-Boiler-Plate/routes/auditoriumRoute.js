@@ -41,7 +41,7 @@ router.post("/create", async (req, res) => {
                         capacity = 0,
                         features = [],
                     } = auditorium
-                    if (!tittle || !destination || !description || !capacity){
+                    if (!tittle || !destination || !description || !capacity) {
                         console.log(i++, ": Error: Auditorium values not found := ", auditorium)
                         throw new Error("Auditorium values not found")
                     }

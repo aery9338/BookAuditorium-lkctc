@@ -1,7 +1,6 @@
 const Joi = require("joi")
 const { password, name, username } = require("../utils/limit")
 
-
 const validateUserCreateReq = (user) => {
     return Joi.object({
         username: Joi.string().regex(username.regex).required(),
