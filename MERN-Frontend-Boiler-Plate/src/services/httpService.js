@@ -12,9 +12,9 @@ const http = axios.create({
 
 http.interceptors.request.use(
     (config) => {
-        const { internetConnection, serverConnection } = reduxStore.getState().config
-        if ((AppConfig.useInternetSocket && !internetConnection) || (AppConfig.useServerSocket && !serverConnection)) {
-            if (AppConfig.useInternetSocket || AppConfig.useServerSocket) return
+        const { internetConnection } = reduxStore.getState().config
+        if (AppConfig.useInternetSocket && !internetConnection) {
+            if (AppConfig.useInternetSocket) return
             const errorMessage = "Request failed, No connection to the server"
             notification.error({
                 message: "Request failed",

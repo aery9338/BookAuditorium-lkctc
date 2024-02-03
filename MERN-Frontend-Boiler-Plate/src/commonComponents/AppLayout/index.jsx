@@ -18,10 +18,10 @@ const validateProps = ({ hideLayout, hideHeader, hideSidebar = true, children })
 
 const AppLayout = (props) => {
     const { hideHeader, hideSidebar, children } = validateProps(props)
-    const path = window.location.pathname
-    const isLoggedIn = useSelector(selectIsLoggedIn)
     const viewMode = useSelector(selectViewMode)
+    const isLoggedIn = useSelector(selectIsLoggedIn)
     const navigate = useNavigate()
+    const path = window.location.pathname
 
     useEffect(() => {
         if (!isLoggedIn) navigate("/login")
@@ -29,6 +29,7 @@ const AppLayout = (props) => {
     }, [isLoggedIn])
 
     if (!isLoggedIn && !path.includes("/login")) return null
+
     return (
         <div className={`app-layout-wrapper ${viewMode === "dark" ? "dark" : ""}`}>
             <div className="app-layout-container">

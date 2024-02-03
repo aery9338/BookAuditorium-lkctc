@@ -16,7 +16,6 @@ const googleClientId = process.env.REACT_APP_GOOGLE_OAUTH2_CLIENT_ID
 
 // const useIdleTimer = false process.env.REACT_APP_USE_IDLE_TIMER
 const useIdleTimer = false
-const useServerSocket = process.env.REACT_APP_USE_SERVER_SOCKET
 const useInternetSocket = process.env.REACT_APP_USE_INTERNET_SOCKET
 
 export const AppConfig = {
@@ -31,6 +30,5 @@ export const AppConfig = {
     googleClientId,
 
     useIdleTimer: trueValues?.includes(useIdleTimer?.toString()?.toLowerCase()),
-    useServerSocket: trueValues?.includes(useServerSocket?.toString()?.toLowerCase()),
     useInternetSocket: trueValues?.includes(useInternetSocket?.toString()?.toLowerCase()),
 }
