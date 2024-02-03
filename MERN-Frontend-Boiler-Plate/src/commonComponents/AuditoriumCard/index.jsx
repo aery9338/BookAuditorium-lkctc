@@ -26,7 +26,7 @@ const AuditoriumCard = ({ auditorium, onEdit }) => {
         <div className="auditorium-container">
             <div className="image-container">
                 <img className="image" src={auditorium?.images?.[0]} alt={""} />
-                <Button
+                {/* <Button
                     onClick={() => navigate(`/auditorium/${auditorium.id}?view=true`)}
                     className="preview-image-main-action"
                     size="small"
@@ -82,7 +82,7 @@ const AuditoriumCard = ({ auditorium, onEdit }) => {
                             </Button>
                         </Tooltip>
                     )}
-                </div>
+                </div> */}
             </div>
             <div className="auditorium-content">
                 <div className="auditorium-details">
