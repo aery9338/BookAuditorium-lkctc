@@ -7,6 +7,12 @@ const { adminTokenAuth } = require("../middleware/tokenAuth")
 const appConfig = require("../startup/config")
 const { User } = require("../model/user")
 const { validateUserCreateReq, validateUserUpdateReq, validateUserRoleUpdateReq } = require("../validation/user")
+const { validateAuditoriumCreateReq, validateAuditoriumUpdateReq } = require("../validation/auditorium")
+const Auditorium = require("../model/auditorium")
+
+router.get("/", adminTokenAuth, async (req, res) => {
+    return res.json({ data: { adminData: {} }, error: false })
+})
 
 router.post("/user/all", adminTokenAuth, async (req, res) => {
     const { filter = {}, limit = 10, page = 0 } = req.body
@@ -146,6 +152,62 @@ router.delete("/delete/user", adminTokenAuth, async (req, res) => {
     } catch (error) {
         console.error(error)
         return res.status(500).json({ error: true, message: "Something failed!" })
+    } finally {
+        session.endSession()
+    }
+})
+
+router.post("/auditorium", async (req, res) => {
+    const session = await mongoose.startSession()
+    try {
+        await session.withTransaction(async () => {
+            const auditorium = req.body
+            const { error } = validateAuditoriumCreateReq(auditorium)
+            if (error) return res.json({ message: error.details[0].message, error: true })
+            await Auditorium.create([auditorium], { session })
+            await session.commitTransaction()
+            return res.json({ error: false, message: "Auditorium created successfully" })
+        })
+    } catch (err) {
+        console.error(err)
+        return res.status(500).json({ error: true, message: "something went wrong" })
+    } finally {
+        session.endSession()
+    }
+})
+
+router.put("/auditorium/:id", async (req, res) => {
+    const session = await mongoose.startSession()
+    try {
+        await session.withTransaction(async () => {
+            const auditorium = req.body
+            const { id } = req.params
+            const { error } = validateAuditoriumUpdateReq(auditorium)
+            if (error) return res.json({ message: error.details[0].message, error: true })
+            await Auditorium.findByIdAndUpdate(id, auditorium, { session })
+            await session.commitTransaction()
+            return res.json({ error: false, message: "Auditorium updated successfully" })
+        })
+    } catch (err) {
+        console.error(err)
+        return res.status(500).json({ error: true, message: "something went wrong" })
+    } finally {
+        session.endSession()
+    }
+})
+
+router.delete("/auditorium/:id", async (req, res) => {
+    const session = await mongoose.startSession()
+    try {
+        await session.withTransaction(async () => {
+            const { id } = req.params
+            await Auditorium.findByIdAndUpdate(id, { isdeleted: true }, { session })
+            await session.commitTransaction()
+            return res.json({ error: false, message: "Auditorium deleted successfully" })
+        })
+    } catch (err) {
+        console.error(err)
+        return res.status(500).json({ error: true, message: "something went wrong" })
     } finally {
         session.endSession()
     }

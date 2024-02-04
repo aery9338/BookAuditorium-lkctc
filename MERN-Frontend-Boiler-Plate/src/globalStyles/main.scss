@@ -183,7 +183,7 @@ a {
 .ant-popover {
     .ant-popover-buttons {
         display: flex;
-        justify-content: end;
+        justify-content: flex-end;
     }
 }
 
@@ -210,7 +210,12 @@ a.ant-typography {
     height: auto;
     justify-content: center;
     letter-spacing: 0.8px;
-    padding: rem(12) rem(36);
+    padding: rem(8) rem(28);
+
+    > svg {
+        width: rem(24);
+        height: rem(24);
+    }
 
     > span {
         align-items: center;
@@ -249,8 +254,12 @@ a.ant-typography {
     }
 
     &.ant-btn-sm {
+        padding: rem(12) rem(36);
+    }
+    &.ant-btn-sm {
         height: rem(40) !important;
         letter-spacing: unset;
+        padding: rem(6) rem(24);
 
         > span {
             align-items: center;
@@ -260,10 +269,10 @@ a.ant-typography {
     }
 
     &.ant-btn-default {
-        height: rem(54);
         background-color: transparent;
         border-color: $primary;
         color: $primary;
+        height: rem(54);
     }
 
     &.ant-btn-primary {

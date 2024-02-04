@@ -22,15 +22,15 @@ const routes = [
     // },
 
     // Private Pages
-    {
-        auth: true,
-        Component: lazy(() => import("pages/public/Homepage")),
-        exact: true,
-        hideLayout: false,
-        path: "/",
-        redirect: "/dashboard",
-        roles: ["admin", "faculty"],
-    },
+    // {
+    //     auth: true,
+    //     Component: lazy(() => import("pages/public/Homepage")),
+    //     exact: true,
+    //     hideLayout: false,
+    //     path: "/",
+    //     redirect: "/dashboard",
+    //     roles: ["admin", "faculty"],
+    // },
     {
         auth: true,
         Component: lazy(() => import("pages/public/Auditorium")),
@@ -40,12 +40,12 @@ const routes = [
         roles: ["admin", "faculty"],
     },
     {
-        path: "/dashboard",
-        Component: lazy(() => import("pages/public/Dashboard")),
-        hideLayout: false,
         auth: true,
-        roles: ["admin", "faculty", "staff"],
+        Component: lazy(() => import("pages/public/Dashboard")),
         exact: true,
+        hideLayout: false,
+        path: "/",
+        roles: ["admin", "faculty", "staff"],
     },
 
     // Error Pages

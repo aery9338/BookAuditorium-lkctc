@@ -11,15 +11,6 @@
         gap: rem(24);
         padding: rem(24);
 
-        .header {
-            color: $title-color;
-            font-family: "Marmelad", sans-serif !important;
-            font-size: rem(32);
-            font-weight: 700;
-            margin: 0 rem(12);
-            width: 100%;
-        }
-
         .custom-tab {
             background-color: $dark-3;
             border-radius: rem(12);
@@ -48,19 +39,28 @@
                 display: flex;
                 justify-content: space-between;
                 padding: rem(0) rem(12);
+
+                .header {
+                    color: $title-color;
+                    font-family: "Marmelad", sans-serif !important;
+                    font-size: rem(24);
+                    font-weight: 600;
+                    margin: 0 rem(12);
+                    width: 100%;
+                }
             }
 
             .list-container {
                 display: grid;
                 gap: rem(48);
-                grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
             }
         }
     }
 }
 
 .add-edit-auditorium-modal {
-    width: clamp(320px, 85vh, 900px) !important;
+    width: clamp(rem(320), 85vh, rem(1200)) !important;
 
     .ant-modal-body {
         .modal-container {
@@ -101,6 +101,11 @@
 
                     .main-image {
                         position: relative;
+
+                        .ant-image {
+                            width: 100%;
+                            display: flex;
+                        }
                     }
                 }
 
@@ -120,6 +125,12 @@
                     }
                 }
             }
+
+            .modal-container {
+                button {
+                    
+                }
+            }
         }
 
         .uploaded-image {
@@ -136,6 +147,7 @@
             .upload-card {
                 .upload-icon {
                     width: rem(200);
+                    margin: 0 auto;
                 }
             }
         }
@@ -143,6 +155,10 @@
         .image-action-btn {
             display: flex;
             justify-content: space-between;
+
+            svg {
+                width: rem(20);
+            }
         }
 
         .upload-card {
@@ -193,6 +209,10 @@
                     }
                     button {
                         padding: rem(16);
+
+                        svg {
+                            width: rem(20);
+                        }
                     }
                 }
                 textarea {
@@ -202,7 +222,7 @@
         }
 
         .features-action {
-            align-items: end;
+            align-items: flex-end;
             display: flex;
             flex-direction: column;
             margin-top: rem(32);

@@ -3,33 +3,35 @@
 .Error {
     align-items: center;
     display: flex;
-    height: 100%;
-    width: 100%;
     flex: 1;
+    height: 100%;
     justify-content: center;
+    width: 100%;
 
     &-container {
         align-items: center;
         background-color: $card-background;
         border: 1px solid $grey-2;
         border-radius: 15px;
+        box-shadow: $shadow-4;
         color: $dark;
         display: flex;
         flex-direction: column;
         justify-content: center;
         max-width: rem(600);
-        box-shadow: $shadow-4;
         padding: rem(30);
         text-align: center;
 
         .Error-heading {
-            font-weight: bold;
+            color: $title-color;
             font-size: rem(28);
+            font-weight: bold;
             margin-bottom: rem(15);
             white-space: pre-wrap;
         }
-
+        
         .Error-text {
+            color: $title-color;
             font-size: rem(20);
             white-space: pre-wrap;
         }

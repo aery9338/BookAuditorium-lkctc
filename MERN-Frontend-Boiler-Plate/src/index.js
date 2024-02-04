@@ -1,7 +1,6 @@
 import React from "react"
 import { Provider } from "react-redux"
 import "antd/dist/antd.min.css"
-import GlobalModal from "commonComponents/GlobalModal"
 import { createBrowserHistory } from "history"
 import ReactDOM from "react-dom/client"
 import { AppConfig } from "startup/config"
@@ -19,7 +18,6 @@ root.render(
     <Provider store={reduxStore}>
         {AppConfig?.useIdleTimer && <IdleTimer />}
         {AppConfig?.useInternetSocket && <InternetSocket />}
-        <GlobalModal />
         <Router history={history} />
     </Provider>
 )

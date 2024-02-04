@@ -36,7 +36,6 @@ const Dashboard = () => {
                 <Spin />
             ) : (
                 <div className="dashboard-wrapper">
-                    <div className="header">{tabsItems[defaultTab].label}</div>
                     <Tabs
                         defaultActiveKey={defaultTab}
                         onChange={(value) => navigate("#" + value)}

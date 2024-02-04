@@ -2,21 +2,19 @@ const mongoose = require("mongoose")
 
 const auditoriumSchema = new mongoose.Schema(
     {
-        title: { type: String, required: true, unique: true },
+        title: { type: String, required: true },
         images: [{ type: String }],
         destination: {
             block: { type: String },
             floor: { type: String },
-            name: { type: String, required: true, unique: true },
         },
         description: { type: String, required: true },
         capacity: { type: Number, required: true },
-        features: [
-            {
-                name: { type: String, enum: ["TV", "Smart Tv", "Mic", "Projector"] },
-                description: { type: String },
-            },
-        ],
+        features: [{ _id: false, name: { type: String }, description: { type: String } }],
+        isdeleted: {
+            type: Boolean,
+            default: false,
+        },
     },
     {
         timestamps: { createdAt: "createdon", updatedAt: "modifiedon" },

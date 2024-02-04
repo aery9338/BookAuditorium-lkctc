@@ -3,10 +3,9 @@ import { useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import { MdOutlineLocationCity } from "react-icons/md"
 import { MdOutlineOpenInNew } from "react-icons/md"
-import { PiMicrophoneStageThin, PiTelevisionDuotone } from "react-icons/pi"
-import { RiProjector2Fill } from "react-icons/ri"
-import { Button, Popconfirm, Tooltip, Typography } from "antd"
+import { Button, Popconfirm } from "antd"
 import { selectIsAdmin } from "reduxStore/selectors"
+import { Features } from "utils/constants"
 import "./styles.scss"
 
 const AuditoriumCard = ({ auditorium, onEdit = () => null, onDelete = () => null }) => {
@@ -15,7 +14,7 @@ const AuditoriumCard = ({ auditorium, onEdit = () => null, onDelete = () => null
 
     return (
         <div className="auditorium-container">
-            <div className="image-container">
+            <div className={`image-container ${isAdmin ? "" : "show-preview"}`}>
                 <img className="image" src={auditorium?.images?.[0]} alt={""} />
                 <Button
                     onClick={() => navigate(`/auditorium/${auditorium.id}?view=true`)}
@@ -24,60 +23,6 @@ const AuditoriumCard = ({ auditorium, onEdit = () => null, onDelete = () => null
                 >
                     View &nbsp; <MdOutlineOpenInNew />
                 </Button>
-                <div className="preview-actions">
-                    {auditorium?.capacity && (
-                        <Tooltip
-                            title={
-                                <Typography className="preview-image-action-tooltip-title">
-                                    {auditorium?.capacity} seats
-                                </Typography>
-                            }
-                            placement="right"
-                        >
-                            <Button className="preview-action" size="small">
-                                <Typography>{auditorium.capacity}</Typography>
-                            </Button>
-                        </Tooltip>
-                    )}
-                    {auditorium?.features?.length > 0 &&
-                        auditorium?.features?.map((feature, index) => {
-                            let includesTv = false
-                            let includesMic = false
-                            let includesProjector = false
-
-                            if (!includesTv && ["tv", "television", "smart tv"]?.includes(feature?.name?.toLowerCase()))
-                                includesTv = true
-                            if (!includesMic && ["mic", "microphone"]?.includes(feature?.name?.toLowerCase()))
-                                includesMic = true
-                            if (!includesProjector && ["projector"]?.includes(feature?.name?.toLowerCase()))
-                                includesProjector = true
-
-                            if (includesTv || includesMic || includesProjector) return null
-                            return (
-                                <Tooltip
-                                    key={index}
-                                    title={
-                                        <Typography className="preview-image-action-tooltip-title">
-                                            Includes {feature?.name}
-                                        </Typography>
-                                    }
-                                    placement="right"
-                                >
-                                    <Button className="preview-action" size="small">
-                                        {includesMic.includes(feature?.name?.toLowerCase()) ? (
-                                            <PiMicrophoneStageThin />
-                                        ) : includesProjector ? (
-                                            <RiProjector2Fill />
-                                        ) : includesTv ? (
-                                            <PiTelevisionDuotone />
-                                        ) : (
-                                            <></>
-                                        )}
-                                    </Button>
-                                </Tooltip>
-                            )
-                        })}
-                </div>
             </div>
             <div className="auditorium-content">
                 <div className="auditorium-details">
@@ -93,7 +38,7 @@ const AuditoriumCard = ({ auditorium, onEdit = () => null, onDelete = () => null
                         {auditorium?.features?.map((feature, index) => {
                             return (
                                 <div key={index} className="feature">
-                                    {feature?.name}
+                                    {Features[feature?.name]}
                                 </div>
                             )
                         })}
@@ -104,11 +49,11 @@ const AuditoriumCard = ({ auditorium, onEdit = () => null, onDelete = () => null
                         <Popconfirm
                             title={`Are you sure you want to delete ${auditorium.title}`}
                             okText="Delete"
-                            onConfirm={() => onDelete(auditorium._id)}
+                            onConfirm={onDelete}
                         >
                             <Button>Delete</Button>
                         </Popconfirm>
-                        <Button onClick={() => onEdit(auditorium)} type="primary">
+                        <Button onClick={onEdit} type="primary">
                             Edit
                         </Button>
                     </div>

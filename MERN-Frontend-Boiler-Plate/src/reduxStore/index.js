@@ -6,8 +6,8 @@ import createSagaMiddleware from "redux-saga"
 import localStorage from "store"
 import { insertIf } from "utils/helper"
 
+import adminSlice from "./admin"
 import configSlice from "./config"
-import globalModalSlice from "./globalModal"
 import sagas from "./sagas"
 import userSlice from "./user"
 
@@ -20,7 +20,7 @@ const createReduxStore = (history) => {
         // ...insertIf(AppConfig.isEnvDev, [logger])
     ]
     const persistedState = localStorage.get("reduxState") ? JSON.parse(localStorage.get("reduxState")) : {}
-    const ignoredKeys = ["globalModal", "router"]
+    const ignoredKeys = ["router"]
     const filteredPersistedState = Object.keys(persistedState).reduce((acc, key) => {
         if (!ignoredKeys.includes(key)) {
             const initialLoading = persistedState[key].hasOwnProperty("initialLoading")
@@ -32,8 +32,8 @@ const createReduxStore = (history) => {
         reducer: {
             router: connectRouter(history),
             [userSlice.name]: userSlice.reducer,
+            [adminSlice.name]: adminSlice.reducer,
             [configSlice.name]: configSlice.reducer,
-            [globalModalSlice.name]: globalModalSlice.reducer,
         },
         middleware: (getDefaultMiddleware) =>
             getDefaultMiddleware({
@@ -54,7 +54,7 @@ const createReduxStore = (history) => {
 }
 
 export const userActions = userSlice.actions
-export const globalModalActions = globalModalSlice.actions
+export const adminActions = adminSlice.actions
 export const configActions = configSlice.actions
 
 export { createReduxStore }

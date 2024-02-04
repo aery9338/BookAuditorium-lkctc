@@ -13,30 +13,14 @@
         box-shadow: $shadow-3;
 
         .image-container {
-            .image {
-                filter: brightness(0.85) blur(1.25px);
-            }
-
-            .preview-image-main-action {
-                bottom: 0;
-                visibility: visible;
-            }
-
-            .preview-actions {
-                right: 8px;
-                visibility: visible;
-
-                @keyframes fadeIn {
-                    0% {
-                        opacity: 0;
-                    }
-                    100% {
-                        opacity: 0.75;
-                    }
+            .show-preview {
+                .image {
+                    filter: brightness(0.85) blur(1.25px);
                 }
 
-                .preview-action {
-                    animation: fadeIn 0.25s forwards;
+                .preview-image-main-action {
+                    bottom: 0;
+                    visibility: visible;
                 }
             }
         }
@@ -79,40 +63,6 @@
             }
             > svg {
                 font-size: rem(20);
-            }
-        }
-
-        .preview-actions {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            position: absolute;
-            right: -12px;
-            top: 8px;
-            transition: right 0.5s ease;
-
-            @for $i from 1 through 10 {
-                .preview-action:nth-child(#{$i}) {
-                    animation-delay: 0.25s * $i;
-                }
-            }
-
-            .preview-action {
-                background-color: transparent;
-                border-color: white;
-                box-shadow: none;
-                color: white;
-                opacity: 0;
-                padding: rem(14) rem(10);
-
-                &:hover {
-                    opacity: 1 !important;
-                }
-
-                > article {
-                    color: white;
-                    font-size: rem(20);
-                }
             }
         }
     }
@@ -187,32 +137,6 @@
 
             button {
                 width: 50%;
-            }
-        }
-    }
-}
-
-.add-edit-auditorium-modal {
-    .ant-modal-body {
-        display: flex;
-
-        .ant-upload {
-            width: 100%;
-            .upload-image-container {
-                width: 100%;
-            }
-
-            .upload-card {
-                margin: 0;
-                width: 100%;
-
-                .ant-card-body {
-                    align-items: center;
-                    display: flex;
-                    flex-direction: column;
-                    gap: 12px;
-                    justify-content: center;
-                }
             }
         }
     }
