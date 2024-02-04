@@ -23,17 +23,17 @@
         .custom-tab {
             background-color: $dark-3;
             border-radius: rem(12);
-            overflow: hidden;
             margin: rem(16);
-            position: relative;
             min-height: 70vh;
+            overflow: hidden;
             padding: 0;
+            position: relative;
 
             .ant-tabs-nav {
+                background-color: $dark-3;
                 position: sticky;
                 top: 0;
                 z-index: 10;
-                background-color: $dark-3;
             }
         }
 
@@ -44,17 +44,168 @@
             padding: rem(16) rem(32);
 
             .header-section {
-                display: flex;
-                padding: rem(0) rem(12);
                 align-items: center;
+                display: flex;
                 justify-content: space-between;
+                padding: rem(0) rem(12);
             }
 
             .list-container {
                 display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
                 gap: rem(48);
+                grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
             }
+        }
+    }
+}
+
+.add-edit-auditorium-modal {
+    width: clamp(320px, 85vh, 900px) !important;
+
+    .ant-modal-body {
+        .modal-container {
+            display: flex;
+            flex-direction: column;
+            gap: rem(24);
+            position: relative;
+            width: 100%;
+
+            .images-section {
+                display: flex;
+                gap: rem(24);
+                width: 100%;
+
+                .counter {
+                    align-items: center;
+                    background-color: $primary;
+                    border-radius: 50%;
+                    color: white;
+                    display: flex;
+                    height: rem(32);
+                    justify-content: center;
+                    left: rem(12);
+                    position: absolute;
+                    top: rem(12);
+                    width: rem(32);
+                    z-index: 10;
+                }
+
+                .main-image-frame {
+                    display: flex;
+                    flex: 1;
+                    flex-direction: column;
+                    gap: rem(26);
+                    height: 65vh;
+                    overflow-y: auto;
+                    padding-right: rem(8);
+
+                    .main-image {
+                        position: relative;
+                    }
+                }
+
+                .secondary-images-container {
+                    display: flex;
+                    flex-direction: column;
+                    gap: rem(16);
+                    height: 65vh;
+                    overflow-y: auto;
+                    padding-bottom: rem(8);
+                    padding-right: rem(8);
+                    width: calc(33.33% - rem(6));
+
+                    .secondary-images-frame {
+                        cursor: pointer;
+                        position: relative;
+                    }
+                }
+            }
+        }
+
+        .uploaded-image {
+            aspect-ratio: 1.4/1;
+            border-radius: rem(12);
+            object-fit: fill;
+        }
+
+        .ant-upload {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            .upload-card {
+                .upload-icon {
+                    width: rem(200);
+                }
+            }
+        }
+
+        .image-action-btn {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .upload-card {
+            margin: 0 !important;
+            padding: rem(12);
+
+            .upload-icon {
+                width: rem(120);
+            }
+
+            .ant-card-body {
+                align-items: center;
+                aspect-ratio: 1.4/1;
+                display: flex;
+                flex-direction: column;
+                gap: rem(12);
+                justify-content: center;
+            }
+        }
+
+        .ant-upload-text {
+            font-size: rem(15);
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .files-name {
+            display: flex;
+            flex-direction: row;
+            gap: rem(24);
+        }
+
+        .features-conatiner {
+            display: flex;
+            flex-direction: column;
+            gap: rem(24);
+
+            > div {
+                display: flex;
+                flex-direction: column;
+                gap: rem(20);
+
+                .action {
+                    display: flex;
+                    justify-content: space-between;
+                    .counter {
+                        position: unset;
+                    }
+                    button {
+                        padding: rem(16);
+                    }
+                }
+                textarea {
+                    height: rem(96);
+                }
+            }
+        }
+
+        .features-action {
+            align-items: end;
+            display: flex;
+            flex-direction: column;
+            margin-top: rem(32);
         }
     }
 }

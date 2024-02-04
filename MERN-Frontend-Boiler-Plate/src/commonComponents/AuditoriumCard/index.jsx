@@ -1,32 +1,23 @@
-import React, { useState } from "react"
+import React from "react"
 import { useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
-import { MdOutlineLocationCity, MdOutlineOpenInNew } from "react-icons/md"
+import { MdOutlineLocationCity } from "react-icons/md"
+import { MdOutlineOpenInNew } from "react-icons/md"
 import { PiMicrophoneStageThin, PiTelevisionDuotone } from "react-icons/pi"
 import { RiProjector2Fill } from "react-icons/ri"
-import { Button, Popover, Tooltip, Typography } from "antd"
+import { Button, Popconfirm, Tooltip, Typography } from "antd"
 import { selectIsAdmin } from "reduxStore/selectors"
 import "./styles.scss"
 
-const AuditoriumCard = ({ auditorium, onEdit }) => {
+const AuditoriumCard = ({ auditorium, onEdit = () => null, onDelete = () => null }) => {
     const navigate = useNavigate()
     const isAdmin = useSelector(selectIsAdmin)
-    const [deletePopover, setDeletePopover] = useState(false)
-
-    let includesTv = false
-    let includesMic = false
-    let includesProjector = false
-    auditorium?.features?.forEach((feature) => {
-        if (!includesTv && ["tv", "television", "smart tv"]?.includes(feature?.name?.toLowerCase())) includesTv = true
-        if (!includesMic && ["mic", "microphone"]?.includes(feature?.name?.toLowerCase())) includesMic = true
-        if (!includesProjector && ["projector"]?.includes(feature?.name?.toLowerCase())) includesProjector = true
-    })
 
     return (
         <div className="auditorium-container">
             <div className="image-container">
                 <img className="image" src={auditorium?.images?.[0]} alt={""} />
-                {/* <Button
+                <Button
                     onClick={() => navigate(`/auditorium/${auditorium.id}?view=true`)}
                     className="preview-image-main-action"
                     size="small"
@@ -48,41 +39,45 @@ const AuditoriumCard = ({ auditorium, onEdit }) => {
                             </Button>
                         </Tooltip>
                     )}
-                    {includesMic && (
-                        <Tooltip
-                            title={<Typography className="preview-image-action-tooltip-title">Includes mic</Typography>}
-                            placement="right"
-                        >
-                            <Button className="preview-action" size="small">
-                                <PiMicrophoneStageThin />
-                            </Button>
-                        </Tooltip>
-                    )}
-                    {includesProjector && (
-                        <Tooltip
-                            title={
-                                <Typography className="preview-image-action-tooltip-title">
-                                    Includes projector
-                                </Typography>
-                            }
-                            placement="right"
-                        >
-                            <Button className="preview-action" size="small">
-                                <RiProjector2Fill />
-                            </Button>
-                        </Tooltip>
-                    )}
-                    {includesTv && (
-                        <Tooltip
-                            title={<Typography className="preview-image-action-tooltip-title">Includes TV</Typography>}
-                            placement="right"
-                        >
-                            <Button className="preview-action" size="small">
-                                <PiTelevisionDuotone />
-                            </Button>
-                        </Tooltip>
-                    )}
-                </div> */}
+                    {auditorium?.features?.length > 0 &&
+                        auditorium?.features?.map((feature, index) => {
+                            let includesTv = false
+                            let includesMic = false
+                            let includesProjector = false
+
+                            if (!includesTv && ["tv", "television", "smart tv"]?.includes(feature?.name?.toLowerCase()))
+                                includesTv = true
+                            if (!includesMic && ["mic", "microphone"]?.includes(feature?.name?.toLowerCase()))
+                                includesMic = true
+                            if (!includesProjector && ["projector"]?.includes(feature?.name?.toLowerCase()))
+                                includesProjector = true
+
+                            if (includesTv || includesMic || includesProjector) return null
+                            return (
+                                <Tooltip
+                                    key={index}
+                                    title={
+                                        <Typography className="preview-image-action-tooltip-title">
+                                            Includes {feature?.name}
+                                        </Typography>
+                                    }
+                                    placement="right"
+                                >
+                                    <Button className="preview-action" size="small">
+                                        {includesMic.includes(feature?.name?.toLowerCase()) ? (
+                                            <PiMicrophoneStageThin />
+                                        ) : includesProjector ? (
+                                            <RiProjector2Fill />
+                                        ) : includesTv ? (
+                                            <PiTelevisionDuotone />
+                                        ) : (
+                                            <></>
+                                        )}
+                                    </Button>
+                                </Tooltip>
+                            )
+                        })}
+                </div>
             </div>
             <div className="auditorium-content">
                 <div className="auditorium-details">
@@ -90,6 +85,8 @@ const AuditoriumCard = ({ auditorium, onEdit }) => {
                     <div className="sub-title overflow-ellipsis">{auditorium?.description}</div>
                     <div className="description">
                         <MdOutlineLocationCity /> &nbsp; {auditorium?.destination?.block}
+                        {auditorium?.destination?.block && auditorium?.destination?.floor && ", "}
+                        {auditorium?.destination?.floor}
                     </div>
                     <div className="description">Capacity: {auditorium?.capacity} people</div>
                     <div className="features">
@@ -104,7 +101,13 @@ const AuditoriumCard = ({ auditorium, onEdit }) => {
                 </div>
                 {isAdmin ? (
                     <div className="auditorium-actions">
-                        <Button onClick={() => setDeletePopover()}>Delete</Button>
+                        <Popconfirm
+                            title={`Are you sure you want to delete ${auditorium.title}`}
+                            okText="Delete"
+                            onConfirm={() => onDelete(auditorium._id)}
+                        >
+                            <Button>Delete</Button>
+                        </Popconfirm>
                         <Button onClick={() => onEdit(auditorium)} type="primary">
                             Edit
                         </Button>
@@ -118,7 +121,6 @@ const AuditoriumCard = ({ auditorium, onEdit }) => {
                     </div>
                 )}
             </div>
-            <Popover open={deletePopover} title={"Delete " + auditorium.title}></Popover>
         </div>
     )
 }

@@ -50,3 +50,12 @@ export const ApplicationTypes = Object.freeze({
     seminar: "Seminar",
     other: "Other",
 })
+
+export const Features = Object.freeze({
+    mic: "Mic",
+    microphone: "Microphone",
+    wirelessMic: "Wireless Mic",
+    projetor: "Projector",
+    smartTV: "Smart TV",
+    soundBox: "Sound Box",
+})

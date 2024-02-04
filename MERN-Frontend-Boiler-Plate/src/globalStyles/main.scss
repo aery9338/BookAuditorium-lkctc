@@ -179,6 +179,14 @@ a {
     }
 }
 
+.ant-popconfirm,
+.ant-popover {
+    .ant-popover-buttons {
+        display: flex;
+        justify-content: end;
+    }
+}
+
 .ant-form-item-has-error {
     * {
         border-color: $red-1 !important;
@@ -202,8 +210,7 @@ a.ant-typography {
     height: auto;
     justify-content: center;
     letter-spacing: 0.8px;
-    padding: rem(6) rem(20);
-    padding: rem(7) rem(28);
+    padding: rem(12) rem(36);
 
     > span {
         align-items: center;
@@ -226,6 +233,13 @@ a.ant-typography {
         padding: rem(4) rem(8);
     }
 
+    &.ant-btn-dashed {
+        background-color: transparent !important;
+        border-color: $primary !important ;
+        color: $primary;
+        padding: rem(4) rem(8);
+    }
+
     &.ant-btn-ghost {
         background-color: transparent !important;
         border: 0;
@@ -235,11 +249,18 @@ a.ant-typography {
     }
 
     &.ant-btn-sm {
-        height: rem(34);
+        height: rem(40) !important;
         letter-spacing: unset;
+
+        > span {
+            align-items: center;
+            display: flex;
+            font-size: rem(18);
+        }
     }
 
     &.ant-btn-default {
+        height: rem(54);
         background-color: transparent;
         border-color: $primary;
         color: $primary;
@@ -787,5 +808,19 @@ textarea {
                 margin-left: rem(60);
             }
         }
+    }
+}
+
+.hide-scrollbar {
+    &::-webkit-scrollbar {
+        visibility: hidden;
+    }
+
+    &::-webkit-scrollbar-track {
+        visibility: hidden;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        visibility: hidden;
     }
 }

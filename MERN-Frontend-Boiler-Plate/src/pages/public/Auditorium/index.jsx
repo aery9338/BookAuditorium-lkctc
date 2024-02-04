@@ -1,6 +1,7 @@
 /* eslint-disable max-len */
 import React, { Fragment } from "react"
 import { Helmet } from "react-helmet"
+import { useSelector } from "react-redux"
 import { useNavigate, useParams } from "react-router-dom"
 import { BiChevronDown, BiSolidPaperPlane } from "react-icons/bi"
 import { BsAsterisk } from "react-icons/bs"
@@ -13,9 +14,9 @@ import AuditoriumCard from "commonComponents/AuditoriumCard"
 import { Spin } from "customComponents"
 import moment from "moment"
 import store from "store"
+import { selectAllAuditoriums } from "reduxStore/selectors"
 import { ApplicationTypes, Departments } from "utils/constants"
 import { compare, getQueryParams } from "utils/helper"
-import { mockupAuditoriumsData } from "utils/mockup"
 import "./styles.scss"
 
 const AuditoriumPage = () => {
@@ -24,12 +25,9 @@ const AuditoriumPage = () => {
     const search = getQueryParams()
     const [loading, setLoading] = React.useState(true)
     const [AuditoriumView, setAuditoriumView] = React.useState()
-    const [auditoriumsData, setAuditoriumsData] = React.useState([])
     const [auditoriumData, setAuditoriumData] = React.useState({})
 
-    React.useEffect(() => {
-        if (mockupAuditoriumsData?.length) setAuditoriumsData(mockupAuditoriumsData)
-    }, [])
+    const auditoriums = useSelector(selectAllAuditoriums)
 
     React.useEffect(() => {
         // TODO: Change with api hit for id
@@ -38,14 +36,14 @@ const AuditoriumPage = () => {
             navigate("", { replace: true, search: null })
         }
 
-        if (auditoriumsData?.length && params?.id) {
-            const auditoriumData = auditoriumsData?.find(({ id }) => compare(id, params?.id))
-            if (auditoriumData?.id) setAuditoriumData(auditoriumData)
+        if (auditoriums?.length && params?.id) {
+            const auditoriumData = auditoriums?.find(({ _id }) => compare(_id, params?.id))
+            if (auditoriumData?._id) setAuditoriumData(auditoriumData)
             else navigate("/")
             setLoading(false)
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [search, params, auditoriumsData])
+    }, [search, params, auditoriums])
 
     const onFinish = (values) => {
         const newApplication = {
@@ -81,7 +79,7 @@ const AuditoriumPage = () => {
                                 <div className="title">{auditoriumData?.title}</div>
                                 <div className="sub-title">{auditoriumData?.description}</div>
                                 <div className="description">
-                                    <MdOutlineLocationCity /> &nbsp; {auditoriumData?.destination}
+                                    <MdOutlineLocationCity /> &nbsp; {auditoriumData?.destination?.block}
                                 </div>
                                 <div className="divider">
                                     <BsAsterisk />
@@ -110,11 +108,22 @@ const AuditoriumPage = () => {
                                             let includesMic = false
                                             let includesProjector = false
 
-                                            if (!includesTv && ["tv", "television"]?.includes(feature?.toLowerCase()))
+                                            if (
+                                                !includesTv &&
+                                                ["tv", "television" < "Smart TV"]?.includes(
+                                                    feature?.name?.toLowerCase()
+                                                )
+                                            )
                                                 includesTv = true
-                                            if (!includesMic && ["mic", "microphone"]?.includes(feature?.toLowerCase()))
+                                            if (
+                                                !includesMic &&
+                                                ["mic", "microphone"]?.includes(feature?.name?.toLowerCase())
+                                            )
                                                 includesMic = true
-                                            if (!includesProjector && ["projector"]?.includes(feature?.toLowerCase()))
+                                            if (
+                                                !includesProjector &&
+                                                ["projector"]?.includes(feature?.name?.toLowerCase())
+                                            )
                                                 includesProjector = true
 
                                             return (
@@ -176,8 +185,8 @@ const AuditoriumPage = () => {
                                 <div className="more-auditorium-container">
                                     <Typography className="title">Related Auditorium</Typography>
                                     <div className="auditoriums-container">
-                                        {auditoriumsData?.map((auditorium, index) => {
-                                            if (compare(auditorium?.id, params?.id)) return null
+                                        {auditoriums?.map((auditorium, index) => {
+                                            if (compare(auditorium?._id, params?.id)) return null
                                             return <AuditoriumCard key={index} auditorium={auditorium} />
                                         })}
                                     </div>
