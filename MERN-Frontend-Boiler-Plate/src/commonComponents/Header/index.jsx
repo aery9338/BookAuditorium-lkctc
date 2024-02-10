@@ -3,10 +3,13 @@ import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import { BsPersonCircle } from "react-icons/bs"
 import { IoNotificationsOutline } from "react-icons/io5"
-import { RiMoonClearFill, RiSunFill } from "react-icons/ri"
+// import { RiMoonClearFill, RiSunFill } from "react-icons/ri"
 import { Button, Dropdown, Typography } from "antd"
 import { userActions } from "reduxStore"
-import { selectUserData, selectViewMode } from "reduxStore/selectors"
+import {
+    selectUserData,
+    // selectViewMode
+} from "reduxStore/selectors"
 import { images } from "assets/images"
 import "./styles.scss"
 
@@ -15,7 +18,7 @@ const Header = () => {
     const navigate = useNavigate()
     // eslint-disable-next-line no-unused-vars
     const userData = useSelector(selectUserData)
-    const viewMode = useSelector(selectViewMode)
+    // const viewMode = useSelector(selectViewMode)
 
     return (
         <div className="header-wrapper">
@@ -74,7 +77,7 @@ const Header = () => {
                             </div>
                         </Button>
                     </Dropdown>
-                    {viewMode === "dark" ? (
+                    {/* {viewMode === "dark" ? (
                         <Button type="link">
                             <RiSunFill onClick={() => dispatch(userActions.toggleViewMode())} />
                         </Button>
@@ -82,7 +85,7 @@ const Header = () => {
                         <Button type="link">
                             <RiMoonClearFill onClick={() => dispatch(userActions.toggleViewMode())} />
                         </Button>
-                    )}
+                    )} */}
                     <IoNotificationsOutline className="notification" />
                 </div>
             </div>

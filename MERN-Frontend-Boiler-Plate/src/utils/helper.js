@@ -1,3 +1,5 @@
+import { message } from "antd"
+
 const {
     isUndefined,
     isNull,
@@ -218,7 +220,7 @@ export const processHtmlString = (string, extractBodyContent = false) => {
     }
 }
 
-export const isAuthorized = (userRoles, rolesToCheck) =>
+export const isAuthorized = (userRoles = [], rolesToCheck) =>
     userRoles.some(({ rolename, isinvoked }) => !isinvoked && isIncluded(rolename, rolesToCheck))
 
 export const getQueryParams = () => {
@@ -238,3 +240,12 @@ export const compare = (valueA, valueB, strict = false) =>
 
 export const isIncluded = (searchString, array, strict = false) =>
     includes(array, searchString, (item, search) => compare(item, search, strict))
+
+export const fileSizeCheck = (file, maxFileSizeMb) => {
+    const fileSizeMb = file.size / 1000000
+    if (fileSizeMb > maxFileSizeMb) {
+        message.error(`Max File Size Exceeded : ${maxFileSizeMb} MB`)
+        return false
+    }
+    return true
+}

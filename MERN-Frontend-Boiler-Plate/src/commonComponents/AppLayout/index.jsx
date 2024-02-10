@@ -23,12 +23,12 @@ const AppLayout = (props) => {
     const navigate = useNavigate()
     const path = window.location.pathname
 
-    useEffect(() => {
-        if (!isLoggedIn) navigate("/login")
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isLoggedIn])
+    // useEffect(() => {
+    //     if (!isLoggedIn) navigate("/login")
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [isLoggedIn])
 
-    if (!isLoggedIn && !path.includes("/login")) return null
+    // if (!isLoggedIn && !path.includes("/login")) return null
 
     return (
         <div className={`app-layout-wrapper ${viewMode === "dark" ? "dark" : ""}`}>

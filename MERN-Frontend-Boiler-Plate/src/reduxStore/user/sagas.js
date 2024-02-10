@@ -1,6 +1,6 @@
 import { notification } from "antd"
 import { all, call, put, select, takeEvery } from "redux-saga/effects"
-import { userActions } from "reduxStore"
+import { configActions, userActions } from "reduxStore"
 import userAuthService from "services/userAuthService"
 import initialState from "./initialState"
 import { selectViewMode } from "./selectors"
@@ -35,7 +35,7 @@ export function* toggleViewMode() {
 export function* loginUser({ payload }) {
     try {
         yield put(userActions.setState({ loading: true }))
-        const { data, error, message } = yield call(userAuthService.login, payload)
+        const { data, error } = yield call(userAuthService.login, payload)
         if (!error) {
             const { userData, access_token, refresh_token } = data
             userAuthService.setAccessToken(access_token)
@@ -47,9 +47,10 @@ export function* loginUser({ payload }) {
                     loading: false,
                 })
             )
+            yield put(configActions.getConfigData())
             notification.success({
                 message: "Login successful",
-                description: message,
+                // description: message,
             })
         } else {
             notification.error({
@@ -82,9 +83,10 @@ export function* signupUser({ payload }) {
                     loggedIn: true,
                 })
             )
+            yield put(configActions.getConfigData())
             notification.success({
                 message: "Account registered",
-                description: "Please complete email verification to complete account setup",
+                // description: "Please complete email verification to complete account setup",
             })
         } else {
             notification.error({

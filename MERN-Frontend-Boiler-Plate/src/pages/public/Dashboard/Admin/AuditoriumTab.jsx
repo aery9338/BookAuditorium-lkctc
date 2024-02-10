@@ -4,17 +4,19 @@ import { BiChevronDown, BiSolidPaperPlane } from "react-icons/bi"
 import { HiPlus } from "react-icons/hi"
 import { RiDeleteBin5Line } from "react-icons/ri"
 import { Button, Card, Form, Image, Input, Modal, notification, Select, Upload } from "antd"
+import ImgCrop from "antd-img-crop"
 import AuditoriumCard from "commonComponents/AuditoriumCard"
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
 import { configActions } from "reduxStore"
-import { selectAllAuditoriums } from "reduxStore/selectors"
+import { selectAllAuditoriums, selectIsAdmin } from "reduxStore/selectors"
 import adminService from "services/adminService"
 import { Features } from "utils/constants"
 import storage from "utils/firebase"
-import { settingsDiff } from "utils/helper"
+import { fileSizeCheck, settingsDiff } from "utils/helper"
 
 const AuditoriumTab = () => {
     const dispatch = useDispatch()
+    const isAdmin = useSelector(selectIsAdmin)
     const auditoriums = useSelector(selectAllAuditoriums)
     const [openAuditoriumModal, setOpenAuditoriumModal] = useState(false)
     const [editAuditorium, setEditAuditorium] = useState(null)
@@ -104,11 +106,13 @@ const AuditoriumTab = () => {
         <div className="auditorium-wrapper">
             <div className="header-section">
                 <div className="header">Auditorium ({auditoriums.length})</div>
-                <div>
-                    <Button type="primary" onClick={() => setOpenAuditoriumModal(true)}>
-                        <HiPlus size={20} /> &nbsp; Create new
-                    </Button>
-                </div>
+                {isAdmin && (
+                    <div className="action-button">
+                        <Button type="primary" onClick={() => setOpenAuditoriumModal(true)}>
+                            <HiPlus size={20} /> &nbsp; Create new
+                        </Button>
+                    </div>
+                )}
             </div>
             <div className="list-container">
                 {auditoriums?.length > 0 &&
@@ -136,90 +140,169 @@ const AuditoriumTab = () => {
                         <Form
                             initialValues={editAuditorium}
                             onFinish={submitAuditoriumForm}
-                            layout="vertical"
                             className="book-auditorium-form"
                         >
                             <div className="images-section">
                                 <div className="main-image-frame hide-scrollbar">
-                                    <div className="main-image">
-                                        <div className="counter">{selectedIndex + 1}</div>
-                                        {typeof files[selectedIndex] === "string" ? (
-                                            <Image
-                                                className="uploaded-image"
-                                                preview={false}
-                                                src={files[selectedIndex]}
-                                            />
-                                        ) : files[selectedIndex]?.type?.includes("image/") ? (
-                                            <Image
-                                                className="uploaded-image"
-                                                preview={false}
-                                                src={URL.createObjectURL(files[selectedIndex])}
-                                            />
-                                        ) : (
-                                            <UploadComponent
-                                                onChange={(file) =>
-                                                    setFiles((prevValues) => {
-                                                        return { ...prevValues, [selectedIndex]: file }
-                                                    })
-                                                }
-                                            />
-                                        )}
-                                    </div>
-                                    <div className="image-action-btn">
-                                        {typeof files[selectedIndex] === "string" ||
-                                        files[selectedIndex]?.type?.includes("image/") ? (
-                                            <Button
-                                                size="small"
-                                                onClick={() =>
-                                                    setFiles((prevValues) => {
-                                                        return { ...prevValues, [selectedIndex]: {} }
-                                                    })
-                                                }
-                                            >
-                                                <RiDeleteBin5Line /> &nbsp; Remove
-                                            </Button>
-                                        ) : Object.keys(files).length > 3 ? (
-                                            <Button
-                                                size="small"
-                                                onClick={() =>
-                                                    setFiles((prevValues) => {
-                                                        const newData = {}
-                                                        for (const key in prevValues) {
-                                                            if (key < selectedIndex) {
-                                                                newData[key] = prevValues[key]
-                                                            } else if (key > selectedIndex) {
-                                                                newData[key - 1] = prevValues[key]
+                                    <div className="main-section">
+                                        <div className="main-right-section">
+                                            <div className="main-image">
+                                                <div className="counter">{selectedIndex + 1}</div>
+                                                <UploadComponent
+                                                    onChange={(file) =>
+                                                        setFiles((prevValues) => {
+                                                            return {
+                                                                ...prevValues,
+                                                                [selectedIndex]: file,
                                                             }
-                                                        }
-                                                        if (selectedIndex + 1 === Object.keys(files).length) {
-                                                            setSelectedIndex(selectedIndex - 1)
-                                                        }
-                                                        return newData
-                                                    })
-                                                }
-                                            >
-                                                Delete
-                                            </Button>
-                                        ) : (
-                                            <div />
-                                        )}
-                                        <Upload
-                                            accept={".jpeg, .png, .jpg, .gif"}
-                                            showUploadList={false}
-                                            beforeUpload={() => false}
-                                            onChange={(info) =>
-                                                setFiles((prevValues) => {
-                                                    return { ...prevValues, [selectedIndex]: info?.file ?? {} }
-                                                })
-                                            }
-                                        >
-                                            <Button size="small" type="primary">
+                                                        })
+                                                    }
+                                                >
+                                                    {typeof files[selectedIndex] === "string" ? (
+                                                        <Image
+                                                            className="uploaded-image"
+                                                            preview={false}
+                                                            src={files[selectedIndex]}
+                                                        />
+                                                    ) : files[selectedIndex]?.type?.includes("image/") ? (
+                                                        <Image
+                                                            className="uploaded-image"
+                                                            preview={false}
+                                                            src={URL.createObjectURL(files[selectedIndex])}
+                                                        />
+                                                    ) : (
+                                                        <Card className="upload-card">
+                                                            <Image
+                                                                className="upload-icon"
+                                                                preview={false}
+                                                                src={require("assets/images/Upload.png")}
+                                                            />
+                                                            <p className="ant-upload-text">
+                                                                Select a "JPG, PNG, JPEG or GIF" file to Upload <br />
+                                                                or drag & drop it here
+                                                            </p>
+                                                        </Card>
+                                                    )}
+                                                </UploadComponent>
+                                            </div>
+
+                                            <div className="image-action-btn">
                                                 {typeof files[selectedIndex] === "string" ||
-                                                files[selectedIndex]?.type?.includes("image/")
-                                                    ? "Change"
-                                                    : "Upload"}
-                                            </Button>
-                                        </Upload>
+                                                files[selectedIndex]?.type?.includes("image/") ? (
+                                                    <Button
+                                                        size="small"
+                                                        onClick={() =>
+                                                            setFiles((prevValues) => {
+                                                                return { ...prevValues, [selectedIndex]: {} }
+                                                            })
+                                                        }
+                                                    >
+                                                        <RiDeleteBin5Line /> &nbsp; Remove
+                                                    </Button>
+                                                ) : Object.keys(files).length > 3 ? (
+                                                    <Button
+                                                        size="small"
+                                                        onClick={() =>
+                                                            setFiles((prevValues) => {
+                                                                const newData = {}
+                                                                for (const key in prevValues) {
+                                                                    if (key < selectedIndex) {
+                                                                        newData[key] = prevValues[key]
+                                                                    } else if (key > selectedIndex) {
+                                                                        newData[key - 1] = prevValues[key]
+                                                                    }
+                                                                }
+                                                                if (selectedIndex + 1 === Object.keys(files).length) {
+                                                                    setSelectedIndex(selectedIndex - 1)
+                                                                }
+                                                                return newData
+                                                            })
+                                                        }
+                                                    >
+                                                        Delete
+                                                    </Button>
+                                                ) : (
+                                                    <div />
+                                                )}
+
+                                                <UploadComponent
+                                                    onChange={(file) =>
+                                                        setFiles((prevValues) => {
+                                                            return {
+                                                                ...prevValues,
+                                                                [selectedIndex]: file,
+                                                            }
+                                                        })
+                                                    }
+                                                >
+                                                    <Button size="small" type="primary">
+                                                        {typeof files[selectedIndex] === "string" ||
+                                                        files[selectedIndex]?.type?.includes("image/")
+                                                            ? "Change"
+                                                            : "Upload"}
+                                                    </Button>
+                                                </UploadComponent>
+                                            </div>
+                                        </div>
+
+                                        <div className="secondary-images-container hide-scrollbar">
+                                            <div className="hide-scrollbar">
+                                                {Object.values(files)?.flatMap((file, index) => {
+                                                    if (index === selectedIndex) return []
+                                                    return (
+                                                        <div key={index} className="secondary-images-frame">
+                                                            <div className="counter">{index + 1}</div>
+                                                            <div onClick={() => setSelectedIndex(index)}>
+                                                                {typeof file === "string" ? (
+                                                                    <Image
+                                                                        className="uploaded-image"
+                                                                        preview={false}
+                                                                        src={file}
+                                                                    />
+                                                                ) : file?.type?.includes("image/") ? (
+                                                                    <Image
+                                                                        className="uploaded-image"
+                                                                        preview={false}
+                                                                        src={URL.createObjectURL(file)}
+                                                                    />
+                                                                ) : (
+                                                                    <Card className="upload-card">
+                                                                        <Image
+                                                                            className="upload-icon"
+                                                                            preview={false}
+                                                                            src={require("assets/images/Upload.png")}
+                                                                        />
+                                                                    </Card>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    )
+                                                })}
+                                                <div className="secondary-images-frame">
+                                                    <div className="counter">
+                                                        <HiPlus size={16} />
+                                                    </div>
+                                                    <Card
+                                                        className="upload-card"
+                                                        onClick={() => {
+                                                            setFiles((prevValues) => {
+                                                                setSelectedIndex(Object.keys(prevValues).length)
+                                                                return {
+                                                                    ...prevValues,
+                                                                    [Object.keys(prevValues).length]: {},
+                                                                }
+                                                            })
+                                                        }}
+                                                    >
+                                                        <Image
+                                                            className="upload-icon"
+                                                            preview={false}
+                                                            src={require("assets/images/Upload.png")}
+                                                        />
+                                                    </Card>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
 
                                     {/*Title*/}
@@ -354,55 +437,6 @@ const AuditoriumTab = () => {
                                         </div>
                                     </Form.Item>
                                 </div>
-                                <div className="secondary-images-container hide-scrollbar">
-                                    {Object.values(files)?.flatMap((file, index) => {
-                                        if (index === selectedIndex) return []
-                                        return (
-                                            <div key={index} className="secondary-images-frame">
-                                                <div className="counter">{index + 1}</div>
-                                                <div onClick={() => setSelectedIndex(index)}>
-                                                    {typeof file === "string" ? (
-                                                        <Image className="uploaded-image" preview={false} src={file} />
-                                                    ) : file?.type?.includes("image/") ? (
-                                                        <Image
-                                                            className="uploaded-image"
-                                                            preview={false}
-                                                            src={URL.createObjectURL(file)}
-                                                        />
-                                                    ) : (
-                                                        <Card className="upload-card">
-                                                            <Image
-                                                                className="upload-icon"
-                                                                preview={false}
-                                                                src={require("assets/images/Upload.png")}
-                                                            />
-                                                        </Card>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        )
-                                    })}
-                                    <div className="secondary-images-frame">
-                                        <div className="counter">
-                                            <HiPlus size={16} />
-                                        </div>
-                                        <Card
-                                            className="upload-card"
-                                            onClick={() => {
-                                                setFiles((prevValues) => {
-                                                    setSelectedIndex(Object.keys(prevValues).length)
-                                                    return { ...prevValues, [Object.keys(prevValues).length]: {} }
-                                                })
-                                            }}
-                                        >
-                                            <Image
-                                                className="upload-icon"
-                                                preview={false}
-                                                src={require("assets/images/Upload.png")}
-                                            />
-                                        </Card>
-                                    </div>
-                                </div>
                             </div>
                             <div className="footer">
                                 <Button onClick={closeModal}>Cancel</Button>
@@ -418,22 +452,20 @@ const AuditoriumTab = () => {
     )
 }
 
-const UploadComponent = ({ onChange }) => {
+const UploadComponent = ({ onChange, children }) => {
     return (
-        <Upload
-            accept={".jpeg, .png, .jpg, .gif"}
-            showUploadList={false}
-            beforeUpload={() => false}
-            onChange={(info) => onChange(info?.file ?? null)}
-        >
-            <Card className="upload-card">
-                <Image className="upload-icon" preview={false} src={require("assets/images/Upload.png")} />
-                <p className="ant-upload-text">
-                    Select a "JPG, PNG, JPEG or GIF" file to Upload <br />
-                    or drag & drop it here
-                </p>
-            </Card>
-        </Upload>
+        <ImgCrop beforeCrop={(file) => fileSizeCheck(file, 5)} cropShape={"rect"} quality={1} aspect={1.4}>
+            <Upload
+                accept={".jpeg, .png, .jpg, .gif"}
+                maxCount={1}
+                listType="picture"
+                beforeUpload={(file) => fileSizeCheck(file, 5)}
+                showUploadList={false}
+                onChange={(info) => onChange(info?.file?.originFileObj ?? null)}
+            >
+                {children}
+            </Upload>
+        </ImgCrop>
     )
 }
 

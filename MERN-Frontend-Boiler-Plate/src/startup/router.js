@@ -14,12 +14,12 @@ const routes = [
         hideLayout: true,
         path: "/login",
     },
-    // {
-    //     Component: lazy(() => import("pages/auth/SignUp")),
-    //     exact: true,
-    //     hideLayout: true,
-    //     path: "/signup",
-    // },
+    {
+        Component: lazy(() => import("pages/auth/SignUp")),
+        exact: true,
+        hideLayout: true,
+        path: "/signup",
+    },
 
     // Private Pages
     // {

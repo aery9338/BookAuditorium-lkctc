@@ -33,6 +33,8 @@ body {
     -moz-osx-font-smoothing: grayscale;
     line-height: 1.5;
     margin: 0;
+    min-height: 100vh;
+    min-width: 280px;
     overflow: hidden;
 }
 
@@ -44,11 +46,6 @@ html {
     display: flex;
     flex-direction: column;
     min-height: 100%;
-
-    > .Content {
-        min-height: 100vh;
-        min-width: 320px;
-    }
 }
 
 .container {
@@ -150,13 +147,13 @@ a {
 .ant-tabs-nav {
     .ant-tabs-nav-wrap {
         border-bottom: 1px solid $muted;
-        padding: 0 40px;
+        padding: 0 rem(40);
 
         .ant-tabs-nav-list {
             .ant-tabs-tab {
                 .ant-tabs-tab-btn {
                     color: $title-color;
-                    font-size: 17px;
+                    font-size: rem(20);
                     font-weight: 500;
                     letter-spacing: 0.5px;
                 }
@@ -213,8 +210,8 @@ a.ant-typography {
     padding: rem(8) rem(28);
 
     > svg {
-        width: rem(24);
         height: rem(24);
+        width: rem(24);
     }
 
     > span {
@@ -512,16 +509,26 @@ a.ant-typography {
     flex-direction: column;
     gap: 16px;
 
-    .ant-form-item {
+    .ant-form-item,
+    .ant-form-item-row {
+        align-items: flex-start;
         display: flex;
         flex-direction: column;
         gap: rem(12);
         margin: 0;
 
-        label {
+        .ant-form-item-row {
+            width: 100%;
+        }
+
+        .ant-form-item-label > label {
             color: $title-color;
             font-size: rem(20);
             font-weight: 500;
+        }
+
+        .ant-form-item-control {
+            width: clamp(rem(200), 100%, rem(600));
         }
 
         .optional-text {
@@ -531,6 +538,10 @@ a.ant-typography {
 
         textarea {
             height: rem(144);
+        }
+
+        @media (width < 575px) {
+            flex-direction: row;
         }
     }
 }
@@ -666,32 +677,6 @@ textarea {
     gap: 20px;
     justify-content: flex-end;
     margin-top: 16px;
-}
-
-.preview {
-    .ant-modal-body {
-        align-items: center;
-        display: flex;
-        height: 100%;
-        justify-content: center;
-        min-height: 50vh;
-        min-width: 50vh;
-        width: 100%;
-
-        .preview-container {
-            height: 100%;
-            width: 100%;
-
-            p {
-                text-align: center;
-            }
-
-            img {
-                object-fit: contain;
-                width: 100%;
-            }
-        }
-    }
 }
 
 .counter-wrapper {
@@ -831,5 +816,46 @@ textarea {
 
     &::-webkit-scrollbar-thumb {
         visibility: hidden;
+    }
+}
+
+.ant-modal-root {
+    .ant-modal {
+        .ant-modal-content {
+            .ant-modal-header {
+                padding: rem(24);
+
+                .ant-modal-title {
+                    font-size: rem(24);
+                    line-height: rem(30);
+                }
+            }
+            .ant-modal-body {
+                align-items: center;
+                display: flex;
+                flex-direction: column;
+                font-size: rem(18);
+                height: 100%;
+                justify-content: center;
+                min-height: 50vh;
+                min-width: 50vw;
+                padding: rem(24);
+                width: 100%;
+
+                .preview-container {
+                    height: 100%;
+                    width: 100%;
+
+                    p {
+                        text-align: center;
+                    }
+
+                    img {
+                        object-fit: contain;
+                        width: 100%;
+                    }
+                }
+            }
+        }
     }
 }

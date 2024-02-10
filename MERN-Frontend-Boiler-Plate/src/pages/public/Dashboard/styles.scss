@@ -1,4 +1,5 @@
 @import "../../../globalStyles/main.scss";
+@import "../../../globalStyles/media.scss";
 @import "../../../globalStyles/color.scss";
 
 .dashboard-conatiner {
@@ -37,6 +38,8 @@
             .header-section {
                 align-items: center;
                 display: flex;
+                flex-wrap: wrap;
+                gap: rem(24);
                 justify-content: space-between;
                 padding: rem(0) rem(12);
 
@@ -46,21 +49,37 @@
                     font-size: rem(24);
                     font-weight: 600;
                     margin: 0 rem(12);
-                    width: 100%;
+                    width: fit-content;
+                }
+
+                .action-button {
+                    margin-left: auto;
                 }
             }
 
             .list-container {
                 display: grid;
                 gap: rem(48);
-                grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(312px, 1fr));
+            }
+        }
+    }
+
+    @media (width < 425px) {
+        .dashboard-wrapper {
+            padding: 0;
+            .auditorium-wrapper {
+                .list-container {
+                    display: flex;
+                    flex-direction: column;
+                }
             }
         }
     }
 }
 
 .add-edit-auditorium-modal {
-    width: clamp(rem(320), 85vh, rem(1200)) !important;
+    width: clamp(rem(320), 90vh, rem(1200)) !important;
 
     .ant-modal-body {
         .modal-container {
@@ -99,42 +118,58 @@
                     overflow-y: auto;
                     padding-right: rem(8);
 
-                    .main-image {
-                        position: relative;
+                    .main-section {
+                        display: flex;
+                        gap: rem(32);
 
-                        .ant-image {
-                            width: 100%;
+                        .main-right-section {
                             display: flex;
+                            flex-direction: column;
+                            gap: rem(24);
+                            width: calc(67% - rem(32));
+
+                            .main-image {
+                                position: relative;
+
+                                .ant-image {
+                                    display: flex;
+                                    width: 100%;
+                                }
+                            }
+                        }
+
+                        .secondary-images-container {
+                            aspect-ratio: 1/1;
+                            overflow: auto;
+                            width: 33%;
+
+                            .hide-scrollbar {
+                                display: flex;
+                                flex-direction: column;
+                                gap: rem(18);
+                                padding-bottom: rem(8);
+                                padding-right: rem(8);
+
+                                .secondary-images-frame {
+                                    aspect-ratio: 1.4;
+                                    cursor: pointer;
+                                    position: relative;
+                                    width: 100%;
+
+                                    .ant-image {
+                                        display: flex;
+                                        width: 100%;
+                                    }
+                                }
+                            }
                         }
                     }
-                }
-
-                .secondary-images-container {
-                    display: flex;
-                    flex-direction: column;
-                    gap: rem(16);
-                    height: 65vh;
-                    overflow-y: auto;
-                    padding-bottom: rem(8);
-                    padding-right: rem(8);
-                    width: calc(33.33% - rem(6));
-
-                    .secondary-images-frame {
-                        cursor: pointer;
-                        position: relative;
-                    }
-                }
-            }
-
-            .modal-container {
-                button {
-                    
                 }
             }
         }
 
         .uploaded-image {
-            aspect-ratio: 1.4/1;
+            aspect-ratio: 1.4;
             border-radius: rem(12);
             object-fit: fill;
         }
@@ -147,7 +182,6 @@
             .upload-card {
                 .upload-icon {
                     width: rem(200);
-                    margin: 0 auto;
                 }
             }
         }
@@ -162,16 +196,17 @@
         }
 
         .upload-card {
+            aspect-ratio: 1.4;
             margin: 0 !important;
-            padding: rem(12);
 
             .upload-icon {
+                margin: 0 auto;
                 width: rem(120);
             }
 
             .ant-card-body {
                 align-items: center;
-                aspect-ratio: 1.4/1;
+                aspect-ratio: 1.4;
                 display: flex;
                 flex-direction: column;
                 gap: rem(12);
@@ -226,6 +261,37 @@
             display: flex;
             flex-direction: column;
             margin-top: rem(32);
+        }
+    }
+
+    @media (width < $tablet-min-width) {
+        .ant-modal-body {
+            .modal-container {
+                .images-section {
+                    .main-image-frame {
+                        .main-section {
+                            flex-direction: column;
+
+                            .main-right-section {
+                                width: 100%;
+                            }
+
+                            .secondary-images-container {
+                                aspect-ratio: unset;
+                                height: rem(224);
+                                width: 100%;
+
+                                .hide-scrollbar {
+                                    flex-direction: row;
+                                    height: 100%;
+                                    padding-bottom: 1.2rem;
+                                    width: 100%;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
