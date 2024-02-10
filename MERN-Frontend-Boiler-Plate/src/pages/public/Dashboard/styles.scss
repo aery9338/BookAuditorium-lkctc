@@ -79,7 +79,7 @@
 }
 
 .add-edit-auditorium-modal {
-    width: clamp(rem(320), 90vh, rem(1200)) !important;
+    width: clamp(rem(320), 90vw, rem(1200)) !important;
 
     .ant-modal-body {
         .modal-container {
