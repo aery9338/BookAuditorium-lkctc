@@ -59,3 +59,10 @@ export const Features = Object.freeze({
     smartTV: "Smart TV",
     soundBox: "Sound Box",
 })
+
+export const UserRoles = Object.freeze({
+    admin: "Admin",
+    superadmin: "Super Admin",
+    faculty: "Faculty",
+    staff: "Staff",
+})

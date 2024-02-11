@@ -73,23 +73,6 @@ a {
     color: $light;
 }
 
-.ant-modal-root {
-    .ant-modal-wrap {
-        .ant-modal-content {
-            border: 1px solid $primary-1;
-            border-radius: 12px;
-            box-shadow: $shadow;
-            overflow: hidden;
-
-            .ant-modal-footer {
-                display: flex;
-                gap: 12px;
-                justify-content: flex-end;
-            }
-        }
-    }
-}
-
 .card,
 .ant-card {
     background-color: white;
@@ -221,6 +204,32 @@ a.ant-typography {
         font-weight: 500;
     }
 
+    &.ant-btn-default {
+        background-color: transparent;
+        border-color: $primary;
+        color: $primary;
+        height: rem(54);
+
+        &:where(:active, :hover, :focus-visible) {
+            border-color: $primary-1 !important;
+            color: $primary-2 !important;
+        }
+    }
+
+    &.ant-btn-primary {
+        background-color: $primary;
+        border-color: $primary;
+        color: $light;
+
+        &:where(:active, :hover) {
+            background-color: $primary-1 !important;
+        }
+        &:where(:focus-visible) {
+            outline-color: $primary-2 !important;
+        }
+        // &:where(:focus, :active, :hover, :focus-visible) {}
+    }
+
     &.ant-btn-text {
         background-color: transparent !important;
         box-shadow: none !important;
@@ -233,6 +242,10 @@ a.ant-typography {
         box-shadow: none !important;
         color: $secondary;
         padding: rem(4) rem(8);
+
+        &:where(:focus-visible) {
+            outline-color: $primary-2 !important;
+        }
     }
 
     &.ant-btn-dashed {
@@ -248,11 +261,18 @@ a.ant-typography {
         border-color: $dark;
         box-shadow: none !important;
         padding: rem(4) rem(8);
+
+        &:where(:focus, :active) {
+            box-shadow: none !important;
+            color: black !important;
+        }
+
+        &:where(:hover) {
+            box-shadow: 3px 3px 10px -2px rgba(0, 0, 0, 0.4) !important;
+            color: $secondary !important;
+        }
     }
 
-    &.ant-btn-sm {
-        padding: rem(12) rem(36);
-    }
     &.ant-btn-sm {
         height: rem(40) !important;
         letter-spacing: unset;
@@ -263,19 +283,6 @@ a.ant-typography {
             display: flex;
             font-size: rem(18);
         }
-    }
-
-    &.ant-btn-default {
-        background-color: transparent;
-        border-color: $primary;
-        color: $primary;
-        height: rem(54);
-    }
-
-    &.ant-btn-primary {
-        background-color: $primary;
-        border-color: $primary;
-        color: $light;
     }
 
     &.ant-btn-primary[disabled] {
@@ -289,19 +296,6 @@ a.ant-typography {
 
     &:where(:hover) {
         box-shadow: 3px 3px 10px -2px $primary-1;
-    }
-
-    &.ant-btn-ghost:where(:focus, :active) {
-        box-shadow: none !important;
-        color: black !important;
-    }
-    &.ant-btn-link:where(:hover) {
-        color: $secondary !important;
-    }
-
-    &.ant-btn-ghost:where(:hover) {
-        box-shadow: 3px 3px 10px -2px rgba(0, 0, 0, 0.4) !important;
-        color: $secondary !important;
     }
 }
 
@@ -328,8 +322,41 @@ a.ant-typography {
 }
 
 .ant-select {
-    display: flex;
-    padding: rem(8) rem(24);
+    background-color: $gray-2;
+    border: 1px solid $grey-2;
+    border-radius: rem(8);
+    box-shadow: $shadow-2 !important;
+    color: $title-color !important;
+    font-size: rem(21);
+    gap: rem(10);
+    height: rem(54);
+    outline: none !important;
+    padding: 0;
+    width: 100%;
+
+    &:where(:hover, :active, :focus, :focus-within) {
+        background-color: transparent;
+        border: 1px solid $primary-3 !important;
+    }
+
+    .ant-select-selection-placeholder {
+        color: $description-color !important;
+        font-size: rem(21) !important;
+    }
+
+    .ant-select-selection-overflow-item-suffix {
+        .ant-select-selection-search input {
+            font-size: rem(21);
+        }
+    }
+
+    &.ant-select-multiple .ant-select-selector {
+        padding: 0 !important;
+    }
+
+    &.ant-select-single .ant-select-selection-item {
+        font-size: rem(21);
+    }
 
     .ant-select-selector {
         align-items: center;
@@ -337,34 +364,26 @@ a.ant-typography {
         border: none !important;
         box-shadow: none !important;
         display: flex;
-        height: auto !important;
+        height: 100% !important;
         outline: none !important;
-        padding: 0 !important;
+        padding: 0 rem(8);
 
-        .ant-select-selection-search {
-            left: 0;
-            top: rem(-10);
+        .ant-select-selection-overflow {
+            padding: rem(0) rem(8);
         }
+    }
 
-        .ant-select-selection-item,
-        .ant-select-selection-placeholder {
-            align-items: center;
-            display: flex;
-            font-size: rem(21);
-        }
+    .ant-select-selection-item-remove svg {
+        font-size: rem(16);
+    }
 
-        .ant-select-selection-placeholder {
-            color: $description-color !important;
-        }
+    svg {
+        font-size: rem(24);
+    }
 
-        > *,
-        > *::after,
-        > *::after,
-        &::after,
-        input {
-            height: rem(54) !important;
-            line-height: normal !important;
-        }
+    .ant-select-clear {
+        margin-top: -10px;
+        margin-right: -14px;
     }
 
     .ant-select-arrow {
@@ -549,7 +568,6 @@ a.ant-typography {
 .ant-input-affix-wrapper,
 .ant-picker,
 .ant-input,
-.ant-select,
 textarea {
     background-color: $gray-2;
     border: 1px solid $grey-2;
@@ -567,7 +585,7 @@ textarea {
         font-size: rem(24);
     }
 
-    &:where(:hover, :active, :focus) {
+    &:where(:hover, :active, :focus, :focus-within) {
         border: 1px solid $primary-3 !important;
     }
 
@@ -822,7 +840,14 @@ textarea {
 .ant-modal-root {
     .ant-modal {
         .ant-modal-content {
+            border: 1px solid $primary-1;
+            border-radius: 12px;
+            box-shadow: $shadow;
+            overflow: hidden;
+            padding: 0;
+
             .ant-modal-header {
+                margin: 0;
                 padding: rem(24);
 
                 .ant-modal-title {
@@ -830,6 +855,7 @@ textarea {
                     line-height: rem(30);
                 }
             }
+
             .ant-modal-body {
                 align-items: center;
                 display: flex;
@@ -837,8 +863,6 @@ textarea {
                 font-size: rem(18);
                 height: 100%;
                 justify-content: center;
-                min-height: 50vh;
-                min-width: 50vw;
                 padding: rem(24);
                 width: 100%;
 
@@ -855,6 +879,12 @@ textarea {
                         width: 100%;
                     }
                 }
+            }
+
+            .ant-modal-footer {
+                display: flex;
+                gap: 12px;
+                justify-content: flex-end;
             }
         }
     }

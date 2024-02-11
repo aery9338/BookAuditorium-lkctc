@@ -63,6 +63,35 @@
                 grid-template-columns: repeat(auto-fill, minmax(312px, 1fr));
             }
         }
+
+        .faculty-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: rem(32);
+            padding: rem(16) rem(32);
+
+            .header-section {
+                align-items: center;
+                display: flex;
+                flex-wrap: wrap;
+                gap: rem(24);
+                justify-content: space-between;
+                padding: rem(0) rem(12);
+
+                .header {
+                    color: $title-color;
+                    font-family: "Marmelad", sans-serif !important;
+                    font-size: rem(24);
+                    font-weight: 600;
+                    margin: 0 rem(12);
+                    width: fit-content;
+                }
+
+                .action-button {
+                    margin-left: auto;
+                }
+            }
+        }
     }
 
     @media (width < 425px) {
@@ -292,6 +321,29 @@
                     }
                 }
             }
+        }
+    }
+}
+
+.add-edit-faculty-modal {
+    .faculty-tab {
+        width: 100%;
+        .custom-tab {
+            width: 100%;
+
+            .ant-tabs-nav-list {
+                width: 100%;
+                gap: rem(20);
+
+                > div {
+                    width: calc(50% - rem(10));
+                    justify-content: center;
+                }
+            }
+        }
+
+        .faculty-form {
+            width: 100%;
         }
     }
 }

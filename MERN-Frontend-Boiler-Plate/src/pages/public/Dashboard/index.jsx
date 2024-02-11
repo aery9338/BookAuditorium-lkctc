@@ -2,7 +2,8 @@ import React from "react"
 import { useNavigate } from "react-router-dom"
 import { Tabs } from "antd"
 import { Spin } from "customComponents"
-import AuditoriumTab from "./Admin/AuditoriumTab"
+import AllAuditoriumsTab from "./AllAuditoriumsTab"
+import FacultyTab from "./FacultyTab"
 import "./styles.scss"
 
 const Dashboard = () => {
@@ -14,9 +15,9 @@ const Dashboard = () => {
     }, [])
 
     const tabsItems = {
-        auditoriums: {
-            label: "Auditoriums",
-            children: <AuditoriumTab />,
+        allAuditoriums: {
+            label: "All Auditoriums",
+            children: <AllAuditoriumsTab />,
         },
         requests: {
             label: "Requests",
@@ -24,7 +25,7 @@ const Dashboard = () => {
         },
         faculty: {
             label: "Faculty",
-            children: <></>,
+            children: <FacultyTab />,
         },
     }
 

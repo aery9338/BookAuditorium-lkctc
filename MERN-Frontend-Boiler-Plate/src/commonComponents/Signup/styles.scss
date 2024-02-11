@@ -1,0 +1,51 @@
+@import "../../globalStyles/main.scss";
+@import "../../globalStyles/color.scss";
+
+.signup-wrapper {
+    align-items: center;
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    min-height: fit-content;
+    min-width: rem(420);
+    width: 100%;
+
+    .signup-card {
+        display: flex;
+        flex-direction: column;
+        gap: rem(16);
+        width: 100%;
+
+        .checkbox-text {
+            font-size: rem(20);
+        }
+
+        .sub-title {
+            color: black;
+            font-size: rem(26);
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .signup-form {
+            display: flex;
+            flex-direction: column;
+            gap: rem(24);
+        }
+
+        .auth-button {
+            height: rem(52);
+            > span {
+                font-size: rem(21);
+            }
+        }
+
+        .toggle-auth-action {
+            align-items: center;
+            display: flex;
+            font-size: rem(18);
+            gap: rem(6);
+            justify-content: flex-end;
+        }
+    }
+}

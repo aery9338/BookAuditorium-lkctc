@@ -3,6 +3,7 @@ const initialState = {
     initialLoading: true,
     internetConnection: false,
     auditoriums: [],
+    faculties: [],
 }
 
 export default initialState

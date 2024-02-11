@@ -3,18 +3,18 @@ const { password, name, username } = require("../utils/limit")
 
 const validateUserCreateReq = (user) => {
     return Joi.object({
-        username: Joi.string().regex(username.regex).required(),
+        username: Joi.string().regex(username.regex),
         displayname: Joi.string().regex(name.regex).required(),
-        dob: Joi.string(),
-        gender: Joi.string().valid("male", "female", "other"),
+        // dob: Joi.string(),
+        // gender: Joi.string().valid("male", "female", "other"),
         email: Joi.string().required().min(5).max(255).email(),
         password: Joi.string().regex(password.regex).required().min(8).max(1024),
-        phone: Joi.string().allow(""),
-        address: Joi.string().allow(""),
-        city: Joi.string().allow(""),
-        state: Joi.string().allow(""),
-        zip: Joi.string().allow(""),
-        country: Joi.string().allow(""),
+        // phone: Joi.string().allow(""),
+        // address: Joi.string().allow(""),
+        // city: Joi.string().allow(""),
+        // state: Joi.string().allow(""),
+        // zip: Joi.string().allow(""),
+        // country: Joi.string().allow(""),
         roles: Joi.array().items({
             rolename: Joi.string(),
             isarchived: Joi.boolean(),
@@ -27,11 +27,11 @@ const validateUserCreateReq = (user) => {
 
 const validateUserSignUpReq = (user) => {
     return Joi.object({
-        username: Joi.string().regex(username.regex).required(),
+        username: Joi.string().regex(username.regex),
         displayname: Joi.string().regex(name.regex).required(),
         email: Joi.string().required().min(5).max(255).email(),
         password: Joi.string().regex(password.regex).required().min(8).max(1024),
-        phone: Joi.string().allow(""),
+        // phone: Joi.string().allow(""),
         roles: Joi.array().items({
             rolename: Joi.string(),
             isinvoked: Joi.boolean(),

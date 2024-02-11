@@ -1,6 +1,5 @@
 import React from "react"
 import { Provider } from "react-redux"
-import "antd/dist/antd.min.css"
 import { createBrowserHistory } from "history"
 import ReactDOM from "react-dom/client"
 import { AppConfig } from "startup/config"

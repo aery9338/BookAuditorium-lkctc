@@ -7,7 +7,7 @@ const roleSchema = new mongoose.Schema({
 
 const userSchema = new mongoose.Schema(
     {
-        username: { type: String, required: true, unique: true },
+        username: { type: String, unique: true },
         displayname: { type: String, required: true },
         email: {
             type: String,
@@ -16,11 +16,17 @@ const userSchema = new mongoose.Schema(
             maxLength: 255,
             unique: true,
         },
-        phone: Number,
+        // phone: Number,
         password: { type: String, required: true, select: false, min: 8, max: 1024 },
         roles: [roleSchema],
-        createdby: String,
-        modifiedby: String,
+        createdby: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+        },
+        modifiedby: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+        },
     },
     {
         timestamps: { createdAt: "createdon", updatedAt: "modifiedon" },
