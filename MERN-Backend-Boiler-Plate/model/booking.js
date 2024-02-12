@@ -51,6 +51,10 @@ const bookingSchema = new mongoose.Schema({
         enum: ["pending", "approved", "rejected"],
         default: "pending",
     },
+    isdeleted: {
+        type: Boolean,
+        default: false,
+    },
     createdby: {
         type: String,
         required: true,

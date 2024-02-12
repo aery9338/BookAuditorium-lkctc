@@ -1,17 +1,19 @@
 import React, { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { BiChevronDown } from "react-icons/bi"
+import { BiChevronDown, BiSolidEditAlt } from "react-icons/bi"
 import { HiPlus } from "react-icons/hi"
-import { Button, Flex, Form, Input, Modal, notification, Select, Tabs } from "antd"
+import { RiDeleteBin4Fill } from "react-icons/ri"
+import { Avatar, Button, Flex, Form, Input, Modal, notification, Popconfirm, Select, Table, Tabs, Tooltip } from "antd"
 import { configActions } from "reduxStore"
-import { selectAllFaculties, selectIsAdmin } from "reduxStore/selectors"
+import { selectAllFaculties, selectIsAdmin, selectUserData } from "reduxStore/selectors"
 import adminService from "services/adminService"
 import { limits } from "utils"
 import { UserRoles } from "utils/constants"
-import { settingsDiff } from "utils/helper"
+import { getFirstLetters, getRandomHexColor, settingsDiff } from "utils/helper"
 
 const FacultyTab = () => {
     const isAdmin = useSelector(selectIsAdmin)
+    const userData = useSelector(selectUserData)
     const dispatch = useDispatch()
     const faculties = useSelector(selectAllFaculties)
     const [form] = Form.useForm()
@@ -24,14 +26,23 @@ const FacultyTab = () => {
         setEditFaculty({})
         setOpenFacultyModal(false)
         setIsBtnLoading(false)
+        // form.resetFields()
     }
+
+    const onDelete = async (facultyId) => {
+        const { error, message } = await adminService.deleteFaculty(facultyId)
+        if (error) return notification.error({ message })
+        notification.success({ message })
+        dispatch(configActions.getConfigData())
+    }
+
     const onFinishingCreatingSingleFaculty = async (values) => {
         const settingsDifferences = settingsDiff(values, editFaculty ?? {})
         if (settingsDifferences.changed) {
             const auditoriumId = editFaculty?._id ?? null
             const { error, message } = auditoriumId
-                ? await adminService.updateAuditorium(auditoriumId, settingsDifferences.changedSettings)
-                : await adminService.createAuditorium(settingsDifferences.changedSettings)
+                ? await adminService.updateFaculty(auditoriumId, settingsDifferences.changedSettings)
+                : await adminService.createFaculty(settingsDifferences.changedSettings)
             if (!error) {
                 notification.success({ message })
                 dispatch(configActions.getConfigData())
@@ -39,6 +50,73 @@ const FacultyTab = () => {
         }
         closeModal()
     }
+
+    const columns = [
+        {
+            title: <Flex />,
+            dataIndex: "displayname",
+            key: "key",
+            render: (displayname) => {
+                return <Avatar style={getRandomHexColor()}>{getFirstLetters(displayname)}</Avatar>
+            },
+        },
+        {
+            title: "Name",
+            dataIndex: "displayname",
+            key: "displayname",
+        },
+        {
+            title: "Email",
+            dataIndex: "email",
+            key: "email",
+        },
+        {
+            title: "Role",
+            dataIndex: "roles",
+            key: "roles",
+            render: (_, { roles }) => {
+                return roles?.map((role) => UserRoles[role.rolename])?.join(", ")
+            },
+        },
+        {
+            title: "Action",
+            dataIndex: "-",
+            key: "action",
+            render: (_, faculty) => {
+                const isSelf = faculty._id === userData._id
+                return (
+                    <Flex gap="middle">
+                        <Tooltip arrow={false} title={isSelf ? "You can't make changes to your own account" : ""}>
+                            <Button
+                                disabled={isSelf}
+                                type="ghost"
+                                onClick={() => {
+                                    setEditFaculty({
+                                        ...faculty,
+                                        roles: faculty?.roles?.map(({ rolename }) => rolename),
+                                    })
+                                    setOpenFacultyModal(true)
+                                }}
+                            >
+                                <BiSolidEditAlt />
+                            </Button>
+                        </Tooltip>
+                        <Tooltip arrow={false} title={isSelf ? "You can't make changes to your own account" : ""}>
+                            <Popconfirm
+                                title={`Are you sure you want to delete ${faculty.displayname}`}
+                                okText="Delete"
+                                onConfirm={onDelete}
+                            >
+                                <Button type="ghost" disabled={isSelf}>
+                                    <RiDeleteBin4Fill />
+                                </Button>
+                            </Popconfirm>
+                        </Tooltip>
+                    </Flex>
+                )
+            },
+        },
+    ]
 
     return (
         <Flex className="faculty-wrapper">
@@ -51,6 +129,9 @@ const FacultyTab = () => {
                         </Button>
                     </Flex>
                 )}
+            </Flex>
+            <Flex className="faculties-container">
+                <Table pagination={false} dataSource={faculties} columns={columns} />
             </Flex>
             {openFacultyModal && (
                 <Modal
@@ -67,6 +148,7 @@ const FacultyTab = () => {
                                 form={form}
                                 editFaculty={editFaculty}
                                 isBtnLoading={isBtnLoading}
+                                onCancel={closeModal}
                                 onFinish={onFinishingCreatingSingleFaculty}
                             />
                         ) : (
@@ -81,6 +163,7 @@ const FacultyTab = () => {
                                         children: (
                                             <CreateFaculty
                                                 form={form}
+                                                onCancel={closeModal}
                                                 isBtnLoading={isBtnLoading}
                                                 onFinish={onFinishingCreatingSingleFaculty}
                                             />
@@ -104,7 +187,7 @@ const FacultyTab = () => {
 
 export default FacultyTab
 
-const CreateFaculty = ({ form, editFaculty, onFinish, isBtnLoading }) => {
+const CreateFaculty = ({ form, editFaculty = {}, onFinish, isBtnLoading, onCancel }) => {
     return (
         <Form form={form} layout="vertical" className="faculty-form" onFinish={onFinish} initialValues={editFaculty}>
             {/*Name*/}
@@ -157,7 +240,9 @@ const CreateFaculty = ({ form, editFaculty, onFinish, isBtnLoading }) => {
             </Form.Item>
 
             <Flex gap="middle" justify="flex-end">
-                <Button disabled={isBtnLoading}>Cancel</Button>
+                <Button disabled={isBtnLoading} onClick={onCancel}>
+                    Cancel
+                </Button>
                 <Button type="primary" htmlType="submit" loading={isBtnLoading}>
                     {editFaculty?._id ? "Update" : "Create"}
                 </Button>

@@ -1,22 +1,21 @@
 import React from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
-import { BsPersonCircle } from "react-icons/bs"
 import { IoNotificationsOutline } from "react-icons/io5"
 // import { RiMoonClearFill, RiSunFill } from "react-icons/ri"
-import { Button, Dropdown, Typography } from "antd"
+import { Avatar, Button, Dropdown, Typography } from "antd"
 import { userActions } from "reduxStore"
 import {
     selectUserData,
     // selectViewMode
 } from "reduxStore/selectors"
+import { getFirstLetters } from "utils/helper"
 import { images } from "assets/images"
 import "./styles.scss"
 
 const Header = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    // eslint-disable-next-line no-unused-vars
     const userData = useSelector(selectUserData)
     // const viewMode = useSelector(selectViewMode)
 
@@ -72,8 +71,7 @@ const Header = () => {
                     >
                         <Button type="link">
                             <div className="user-profile">
-                                <BsPersonCircle className="profle" size={32} />
-                                {/* <Typography>{userData?.displayname}</Typography> */}
+                                <Avatar>{getFirstLetters(userData.displayname)}</Avatar>
                             </div>
                         </Button>
                     </Dropdown>

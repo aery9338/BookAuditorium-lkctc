@@ -249,3 +249,28 @@ export const fileSizeCheck = (file, maxFileSizeMb) => {
     }
     return true
 }
+
+export const getFirstLetters = (name) => {
+    let firstLetterName = ""
+    name.split(" ").forEach((word) => {
+        const firstLetter = word.trim().charAt(0).toUpperCase()
+        if (firstLetter.match(/[A-Z]/)) firstLetterName += firstLetter
+    })
+    return firstLetterName
+}
+
+export const getRandomHexColor = () => {
+    // Generate a random hex color
+    const randomColor = Math.floor(Math.random() * 16777215).toString(16)
+
+    // Calculate the brightness of the color
+    const r = parseInt(randomColor.substr(0, 2), 16)
+    const g = parseInt(randomColor.substr(2, 2), 16)
+    const b = parseInt(randomColor.substr(4, 2), 16)
+    const brightness = (r * 299 + g * 587 + b * 114) / 1000
+
+    // Set the text color based on the brightness
+    const textColor = brightness > 125 ? "#000000" : "#ffffff"
+
+    return { backgroundColor: `#${randomColor}`, textColor }
+}

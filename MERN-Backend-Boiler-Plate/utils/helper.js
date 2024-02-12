@@ -12,6 +12,7 @@ const {
     cloneDeep,
     pull,
     forOwn,
+    includes,
 } = require("lodash")
 
 const containsObject = (obj, list) => {
@@ -154,6 +155,17 @@ const yearToWeekMonth = (years) => {
     }
 }
 
+const compare = (valueA, valueB, strict = false) =>
+    strict
+        ? valueA?.toString() === valueB?.toString()
+        : valueA?.toString()?.toLowerCase() === valueB?.toString()?.toLowerCase()
+
+const isIncluded = (searchString, array, strict = false) =>
+    includes(array, searchString, (item, search) => compare(item, search, strict))
+
+const isAuthorized = (userRoles = [], rolesToCheck) =>
+    userRoles.some(({ rolename, isinvoked }) => !isinvoked && isIncluded(rolename, rolesToCheck))
+
 module.exports = {
     containsObject,
     getParameterCaseInsensitive,
@@ -172,4 +184,7 @@ module.exports = {
     toTitleCase,
     weekToMonthYear,
     yearToWeekMonth,
+    compare,
+    isIncluded,
+    isAuthorized,
 }

@@ -41,9 +41,13 @@
                 display: flex;
                 align-items: center;
 
-                article {
-                    font-size: rem(14);
-                    font-weight: 600;
+                .ant-avatar {
+                    background-color: $primary;
+                    
+                    span {
+                        font-size: rem(20);
+                        font-weight: 500;
+                    }
                 }
             }
 

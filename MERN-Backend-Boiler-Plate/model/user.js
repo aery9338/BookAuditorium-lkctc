@@ -1,7 +1,7 @@
 const mongoose = require("mongoose")
 
 const roleSchema = new mongoose.Schema({
-    rolename: { type: String, enum: ["admin", "faculty", "staff"], default: "faculty", required: true },
+    rolename: { type: String, enum: ["superadmin", "admin", "faculty", "staff"], default: "faculty", required: true },
     isinvoked: { type: Boolean, default: false },
 })
 
@@ -19,6 +19,10 @@ const userSchema = new mongoose.Schema(
         // phone: Number,
         password: { type: String, required: true, select: false, min: 8, max: 1024 },
         roles: [roleSchema],
+        isdeleted: {
+            type: Boolean,
+            default: false,
+        },
         createdby: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",

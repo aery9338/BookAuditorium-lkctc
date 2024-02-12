@@ -157,7 +157,7 @@ router.delete("/delete/user", adminTokenAuth, async (req, res) => {
     }
 })
 
-router.post("/auditorium", async (req, res) => {
+router.post("/auditorium", adminTokenAuth, async (req, res) => {
     const session = await mongoose.startSession()
     try {
         await session.withTransaction(async () => {
@@ -176,7 +176,7 @@ router.post("/auditorium", async (req, res) => {
     }
 })
 
-router.put("/auditorium/:id", async (req, res) => {
+router.put("/auditorium/:id", adminTokenAuth, async (req, res) => {
     const session = await mongoose.startSession()
     try {
         await session.withTransaction(async () => {
@@ -196,7 +196,7 @@ router.put("/auditorium/:id", async (req, res) => {
     }
 })
 
-router.delete("/auditorium/:id", async (req, res) => {
+router.delete("/auditorium/:id", adminTokenAuth, async (req, res) => {
     const session = await mongoose.startSession()
     try {
         await session.withTransaction(async () => {
@@ -208,6 +208,50 @@ router.delete("/auditorium/:id", async (req, res) => {
     } catch (err) {
         console.error(err)
         return res.status(500).json({ error: true, message: "something went wrong" })
+    } finally {
+        session.endSession()
+    }
+})
+
+router.post("/faculty", adminTokenAuth, async (req, res) => {
+    console.log("---1---", req.body)
+    const session = await mongoose.startSession()
+    try {
+        await session.withTransaction(async () => {
+            const reqBody = {
+                ...req?.body,
+                roles: req?.body?.[{ rolename: "faculty" }],
+                createdby: "self",
+                modifiedby: "self",
+            }
+            const { error } = validateUserSignUpReq(reqBody)
+            if (error) return res.json({ message: error.details[0].message, error: true })
+            let userData = await User.findOne({
+                email: req.body.email,
+            })
+            if (userData) return res.json({ message: "User already exist", error: true })
+            const salt = await bcrypt.genSalt(12)
+            const hashedPassword = await bcrypt.hash(req.body.password, salt)
+            userData = new User({
+                ...reqBody,
+                password: hashedPassword,
+            })
+            userData = await userData.save({ session })
+            userData = _.pick(userData, ["_id", "displayname", "username", "roles", "email"])
+            await session.commitTransaction()
+        })
+        
+        return res.json({
+            data: {
+                // userData: userData,
+                // access_token: createJWToken(userData),
+                // refresh_token: createRefreshJWToken(userData),
+            },
+            error: false,
+            message: "Added new faculty member",
+        })
+    } catch (error) {
+        return res.json({ error: true, message: `Something failed: ${error}` })
     } finally {
         session.endSession()
     }
