@@ -1,52 +1,81 @@
-import React, { useState } from "react"
+import React, { useMemo, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { BiChevronDown, BiSolidEditAlt } from "react-icons/bi"
 import { HiPlus } from "react-icons/hi"
 import { RiDeleteBin4Fill } from "react-icons/ri"
-import { Avatar, Button, Flex, Form, Input, Modal, notification, Popconfirm, Select, Table, Tabs, Tooltip } from "antd"
+import {
+    Avatar,
+    Button,
+    Flex,
+    Form,
+    Input,
+    message,
+    Modal,
+    notification,
+    Popconfirm,
+    Select,
+    Table,
+    Tabs,
+    Tooltip,
+} from "antd"
+import Upload from "customComponents/Upload"
 import { configActions } from "reduxStore"
 import { selectAllFaculties, selectIsAdmin, selectUserData } from "reduxStore/selectors"
 import adminService from "services/adminService"
-import { limits } from "utils"
-import { UserRoles } from "utils/constants"
+import { constants, limits } from "utils"
 import { getFirstLetters, getRandomHexColor, settingsDiff } from "utils/helper"
+
+const { UserRoles } = constants
+const { isValidRegex } = limits
+
+const initialEmptyFacultyState = {
+    displayname: "",
+    email: "",
+    roles: [],
+}
 
 const FacultyTab = () => {
     const isAdmin = useSelector(selectIsAdmin)
     const userData = useSelector(selectUserData)
     const dispatch = useDispatch()
     const faculties = useSelector(selectAllFaculties)
-    const [form] = Form.useForm()
 
     const [openFacultyModal, setOpenFacultyModal] = useState(false)
-    const [editFaculty, setEditFaculty] = useState({})
+    const [editFaculty, setEditFaculty] = useState(initialEmptyFacultyState)
+    const [selectedFaculty, setSelectedFaculty] = useState(initialEmptyFacultyState)
     const [isBtnLoading, setIsBtnLoading] = useState(false)
 
+    const avatarColors = useMemo(() => {
+        return Array.from({ length: faculties.length + 1 }, () => {
+            return getRandomHexColor()
+        })
+    }, [faculties])
+
     const closeModal = () => {
-        setEditFaculty({})
+        setEditFaculty(initialEmptyFacultyState)
+        setSelectedFaculty(initialEmptyFacultyState)
         setOpenFacultyModal(false)
         setIsBtnLoading(false)
-        // form.resetFields()
     }
 
     const onDelete = async (facultyId) => {
         const { error, message } = await adminService.deleteFaculty(facultyId)
         if (error) return notification.error({ message })
-        notification.success({ message })
+        notification.success({ description: message })
         dispatch(configActions.getConfigData())
     }
 
-    const onFinishingCreatingSingleFaculty = async (values) => {
-        const settingsDifferences = settingsDiff(values, editFaculty ?? {})
+    const onFinishingCreatingSingleFaculty = async () => {
+        const settingsDifferences = settingsDiff(editFaculty, selectedFaculty)
         if (settingsDifferences.changed) {
             const auditoriumId = editFaculty?._id ?? null
             const { error, message } = auditoriumId
                 ? await adminService.updateFaculty(auditoriumId, settingsDifferences.changedSettings)
                 : await adminService.createFaculty(settingsDifferences.changedSettings)
             if (!error) {
-                notification.success({ message })
+                notification.success({ description: message })
                 dispatch(configActions.getConfigData())
-            } else notification.error({ message })
+            } else notification.error({ description: message })
         }
         closeModal()
     }
@@ -56,8 +85,8 @@ const FacultyTab = () => {
             title: <Flex />,
             dataIndex: "displayname",
             key: "key",
-            render: (displayname) => {
-                return <Avatar style={getRandomHexColor()}>{getFirstLetters(displayname)}</Avatar>
+            render: (displayname, _, index) => {
+                return <Avatar style={avatarColors[index]}>{getFirstLetters(displayname)}</Avatar>
             },
         },
         {
@@ -75,7 +104,7 @@ const FacultyTab = () => {
             dataIndex: "roles",
             key: "roles",
             render: (_, { roles }) => {
-                return roles?.map((role) => UserRoles[role.rolename])?.join(", ")
+                return roles?.map((role) => UserRoles[role])?.join(", ")
             },
         },
         {
@@ -83,7 +112,7 @@ const FacultyTab = () => {
             dataIndex: "-",
             key: "action",
             render: (_, faculty) => {
-                const isSelf = faculty._id === userData._id
+                const isSelf = (faculty._id === userData._id) & false
                 return (
                     <Flex gap="middle">
                         <Tooltip arrow={false} title={isSelf ? "You can't make changes to your own account" : ""}>
@@ -91,10 +120,8 @@ const FacultyTab = () => {
                                 disabled={isSelf}
                                 type="ghost"
                                 onClick={() => {
-                                    setEditFaculty({
-                                        ...faculty,
-                                        roles: faculty?.roles?.map(({ rolename }) => rolename),
-                                    })
+                                    setEditFaculty(faculty)
+                                    setSelectedFaculty(faculty)
                                     setOpenFacultyModal(true)
                                 }}
                             >
@@ -105,7 +132,7 @@ const FacultyTab = () => {
                             <Popconfirm
                                 title={`Are you sure you want to delete ${faculty.displayname}`}
                                 okText="Delete"
-                                onConfirm={onDelete}
+                                onConfirm={() => onDelete(faculty._id)}
                             >
                                 <Button type="ghost" disabled={isSelf}>
                                     <RiDeleteBin4Fill />
@@ -144,8 +171,12 @@ const FacultyTab = () => {
                 >
                     <Flex className="faculty-tab">
                         {editFaculty?._id ? (
-                            <CreateFaculty
-                                form={form}
+                            <CreateEditFaculty
+                                setFacultyValue={(key, value) =>
+                                    setEditFaculty((prevValue) => {
+                                        return { ...prevValue, [key]: value }
+                                    })
+                                }
                                 editFaculty={editFaculty}
                                 isBtnLoading={isBtnLoading}
                                 onCancel={closeModal}
@@ -161,8 +192,12 @@ const FacultyTab = () => {
                                     {
                                         label: "Create",
                                         children: (
-                                            <CreateFaculty
-                                                form={form}
+                                            <CreateEditFaculty
+                                                setFacultyValue={(key, value) =>
+                                                    setEditFaculty((prevValue) => {
+                                                        return { ...prevValue, [key]: value }
+                                                    })
+                                                }
                                                 onCancel={closeModal}
                                                 isBtnLoading={isBtnLoading}
                                                 onFinish={onFinishingCreatingSingleFaculty}
@@ -172,7 +207,7 @@ const FacultyTab = () => {
                                     },
                                     {
                                         label: "Upload",
-                                        children: <></>,
+                                        children: <UploadFacultyData />,
                                         key: 1,
                                     },
                                 ]}
@@ -187,9 +222,9 @@ const FacultyTab = () => {
 
 export default FacultyTab
 
-const CreateFaculty = ({ form, editFaculty = {}, onFinish, isBtnLoading, onCancel }) => {
+const CreateEditFaculty = ({ editFaculty = {}, setFacultyValue, onFinish, isBtnLoading, onCancel }) => {
     return (
-        <Form form={form} layout="vertical" className="faculty-form" onFinish={onFinish} initialValues={editFaculty}>
+        <Form layout="vertical" className="faculty-form" onFinish={onFinish} initialValues={editFaculty}>
             {/*Name*/}
             <Form.Item
                 name="displayname"
@@ -210,7 +245,13 @@ const CreateFaculty = ({ form, editFaculty = {}, onFinish, isBtnLoading, onCance
                     },
                 ]}
             >
-                <Input placeholder="Name" maxLength={limits.name.max} className="input-field" />
+                <Input
+                    placeholder="Name"
+                    value={editFaculty.displayname}
+                    onChange={({ target: { value } }) => setFacultyValue("displayname", value)}
+                    maxLength={limits.name.max}
+                    className="input-field"
+                />
             </Form.Item>
 
             {/*Email*/}
@@ -222,7 +263,15 @@ const CreateFaculty = ({ form, editFaculty = {}, onFinish, isBtnLoading, onCance
                     { type: "email", message: "Please enter your email address" },
                 ]}
             >
-                <Input placeholder="E-mail address" maxLength={120} className="input-field" autoComplete="email" />
+                <Input
+                    placeholder="E-mail address"
+                    readOnly={editFaculty._id}
+                    maxLength={120}
+                    value={editFaculty.email}
+                    onChange={({ target: { value } }) => setFacultyValue("email", value)}
+                    className="input-field"
+                    autoComplete="email"
+                />
             </Form.Item>
 
             <Form.Item name="roles" hasFeedback rules={[{ required: true, message: "Please select faculty role" }]}>
@@ -230,6 +279,8 @@ const CreateFaculty = ({ form, editFaculty = {}, onFinish, isBtnLoading, onCance
                     mode="multiple"
                     allowClear
                     name="role"
+                    value={editFaculty.roles}
+                    onChange={(value) => setFacultyValue("roles", value)}
                     maxTagCount="responsive"
                     placeholder="Select roles"
                     options={Object?.keys(UserRoles)?.map((key) => {
@@ -248,5 +299,53 @@ const CreateFaculty = ({ form, editFaculty = {}, onFinish, isBtnLoading, onCance
                 </Button>
             </Flex>
         </Form>
+    )
+}
+
+const UploadFacultyData = () => {
+    const [files, setFiles] = useState([])
+
+    const facultyData = useMemo(() => {
+        return files.reduce((filteredData, { data, type, file }) => {
+            if (type === "json" && Array.isArray(data))
+                data?.forEach((faculty) => {
+                    if ((isValidRegex(faculty.name, limits.name), faculty.email))
+                        filteredData.push({
+                            ...faculty,
+                            roles: (faculty.roles ?? "faculty")
+                                ?.split(",")
+                                ?.flatMap((role) => (UserRoles[role.trim()] ? role.trim() : [])),
+                        })
+                })
+            else if (type === "excel" && Array.isArray(data))
+                data?.reduce((sheetsData, sheet) => {
+                    const filteredSheetData = Object.values(sheet)
+                    console.log(filteredSheetData)
+                    return sheetsData
+                }, [])?.forEach((faculty) => {
+                    if ((isValidRegex(faculty.name, limits.name), faculty.email))
+                        filteredData.push({
+                            ...faculty,
+                            roles: (faculty.roles ?? "faculty")
+                                ?.split(",")
+                                ?.flatMap((role) => (UserRoles[role.trim()] ? role.trim() : [])),
+                        })
+                })
+            else message.error(`${file.name} is not compatible`)
+            return filteredData
+        }, [])
+    }, [files])
+
+    console.log({ files, facultyData })
+
+    return (
+        <Flex className="bulk-container">
+            <Upload
+                onChange={setFiles}
+                fileTypeName="JSON or excel file"
+                accept=".json, .csv, .xls, .xlsx"
+                listType={"text"}
+            />
+        </Flex>
     )
 }

@@ -26,9 +26,7 @@ router.get("/", userTokenAuth, async (req, res) => {
                 $match: {
                     roles: {
                         $not: {
-                            $elemMatch: {
-                                role: "superadmin",
-                            },
+                            $elemMatch: { $eq: "superadmin" },
                         },
                     },
                     isdeleted: false,

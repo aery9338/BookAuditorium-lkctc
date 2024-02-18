@@ -62,7 +62,6 @@ export const Features = Object.freeze({
 
 export const UserRoles = Object.freeze({
     admin: "Admin",
-    superadmin: "Super Admin",
     faculty: "Faculty",
     staff: "Staff",
 })

@@ -1,13 +1,9 @@
 const mongoose = require("mongoose")
 
-const roleSchema = new mongoose.Schema({
-    rolename: { type: String, enum: ["superadmin", "admin", "faculty", "staff"], default: "faculty", required: true },
-    isinvoked: { type: Boolean, default: false },
-})
-
+const rolesEnum = ["faculty", "staff", "admin", "superadmin"]
 const userSchema = new mongoose.Schema(
     {
-        username: { type: String, unique: true },
+        username: { type: String, unique: true, sparse: true },
         displayname: { type: String, required: true },
         email: {
             type: String,
@@ -18,7 +14,12 @@ const userSchema = new mongoose.Schema(
         },
         // phone: Number,
         password: { type: String, required: true, select: false, min: 8, max: 1024 },
-        roles: [roleSchema],
+        roles: {
+            type: [String],
+            required: true,
+            default: ["faculty"],
+            enum: rolesEnum,
+        },
         isdeleted: {
             type: Boolean,
             default: false,

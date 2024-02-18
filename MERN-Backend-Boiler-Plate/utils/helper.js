@@ -163,8 +163,7 @@ const compare = (valueA, valueB, strict = false) =>
 const isIncluded = (searchString, array, strict = false) =>
     includes(array, searchString, (item, search) => compare(item, search, strict))
 
-const isAuthorized = (userRoles = [], rolesToCheck) =>
-    userRoles.some(({ rolename, isinvoked }) => !isinvoked && isIncluded(rolename, rolesToCheck))
+const isAuthorized = (userRoles = [], rolesToCheck) => userRoles.some((role) => isIncluded(role, rolesToCheck))
 
 module.exports = {
     containsObject,

@@ -28,7 +28,7 @@ router.put("/create", userTokenAuth, async (req, res) => {
     try {
         await session.withTransaction(async () => {
             const { bookings = [] } = req.body
-            if (!isArray(bookings)) return res.json({ error: true, message: "bookings must be an array" })
+            if (!isArray(bookings)) return res.status(400).json({ error: true, message: "bookings must be an array" })
             const validBookings = []
             let i = 1
             const invalidBookings = []
@@ -74,7 +74,7 @@ router.put("/create", userTokenAuth, async (req, res) => {
         })
     } catch (error) {
         console.error(error)
-        return res.json({ error: true, message: "Something failed!" })
+        return res.status(400).json({ error: true, message: "Something failed!" })
     } finally {
         mongoose.endSession()
     }
@@ -86,7 +86,7 @@ router.put("/update", userTokenAuth, async (req, res) => {
         session.withTransaction(async () => {
             const { id, ...updateData } = req.body
             const exists = await Booking.findById(id).session(session)
-            if (!exists) return res.json({ error: true, message: "Booking not found" })
+            if (!exists) return res.status(400).json({ error: true, message: "Booking not found" })
             const bookingUpdated = await Booking.findByIdAndUpdate(id, updateData, { new: true }).session(session)
             return res.json({ error: false, message: bookingUpdated })
         })
@@ -104,7 +104,7 @@ router.delete("/delete", userTokenAuth, async (req, res) => {
         session.withTransaction(async () => {
             const { id } = req.body
             const exists = await Booking.findById(id).session(session)
-            if (!exists) return res.json({ error: true, message: "Booking not found" })
+            if (!exists) return res.status(400).json({ error: true, message: "Booking not found" })
             const bookingDeleted = await Booking.findByIdAndDelete(id).session(session)
             return res.json({ error: false, message: bookingDeleted })
         })

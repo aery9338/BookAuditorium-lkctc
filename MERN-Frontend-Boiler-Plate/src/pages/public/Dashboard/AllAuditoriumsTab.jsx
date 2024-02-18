@@ -150,6 +150,7 @@ const AllAuditoriumsTab = () => {
                                             <div className="main-image">
                                                 <div className="counter">{selectedIndex + 1}</div>
                                                 <Upload
+                                                    aspectRatio={1.4}
                                                     onChange={(file) =>
                                                         setFiles((prevValues) => {
                                                             return {
@@ -227,6 +228,7 @@ const AllAuditoriumsTab = () => {
                                                 )}
 
                                                 <Upload
+                                                    aspectRatio={1.4}
                                                     onChange={(file) =>
                                                         setFiles((prevValues) => {
                                                             return {

@@ -1,0 +1,17 @@
+@import "../../globalStyles/main.scss";
+
+.ant-upload-wrapper,
+.ant-upload {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: rem(20);
+    
+    .upload-card {
+
+        .ant-upload-text {
+            text-align: center;
+        }
+    }
+}
+

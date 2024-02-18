@@ -22,7 +22,8 @@ router.post("/create", async (req, res) => {
     try {
         await session.withTransaction(async () => {
             const { auditoriums = [] } = req.body
-            if (!isArray(auditoriums)) return res.json({ error: true, message: "auditoriums must be an array" })
+            if (!isArray(auditoriums))
+                return res.status(400).json({ error: true, message: "auditoriums must be an array" })
             const validAuditoriums = []
             let i = 1
             const invalidAuditoriums = []
@@ -77,14 +78,14 @@ router.put("/update", async (req, res) => {
     try {
         await session.withTransaction(async () => {
             const { id, ...updateData } = req.body
-            if (!id) return res.json({ error: true, message: "id not found" })
+            if (!id) return res.status(400).json({ error: true, message: "id not found" })
             const error = validateAuditoriumUpdateReq(updateData)
             if (error) {
                 console.error(error)
-                return res.json({ error: true, message: "error occures in validation" })
+                return res.status(400).json({ error: true, message: "error occures in validation" })
             }
             const auditorium = await Auditorium.findById(id).session(session)
-            if (!auditorium) return res.json({ error: true, message: "Auditorium not found" })
+            if (!auditorium) return res.status(400).json({ error: true, message: "Auditorium not found" })
             const auditoriumUpdated = await Auditorium.findByIdAndUpdate(id, updateData, { new: true })
             return res.json({ data: auditoriumUpdated, error: false })
         })
@@ -102,7 +103,7 @@ router.delete("/delete", adminTokenAuth, async (req, res) => {
         await session.withTransaction(async () => {
             const { id } = req.body
             const auditorium = await Auditorium.findById(id).session(session)
-            if (!auditorium) return res.json({ error: true, message: "Auditorium not found" })
+            if (!auditorium) return res.status(400).json({ error: true, message: "Auditorium not found" })
             const auditoriumDeleted = await Auditorium.findByIdAndDelete(id)
             return res.json({ data: auditoriumDeleted, error: false })
         })

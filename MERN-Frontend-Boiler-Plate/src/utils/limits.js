@@ -20,3 +20,10 @@ export const username = {
     max: 30,
     regex: new RegExp("^(?!.*__.*)[a-zA-Z0-9][a-zA-Z0-9_]+[a-zA-Z0-9]$"),
 }
+
+export const isValidRegex = (string, regexType) => {
+    string = String(string)
+    if (!regexType) return false
+    const { min, max, regex } = regexType
+    return string.length >= min && string.length <= max && regex.test(string)
+}

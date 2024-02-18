@@ -17,7 +17,7 @@ import { userActions } from "reduxStore"
 import { selectIsLoggedIn, selectIsUserLoading } from "reduxStore/selectors"
 import "./styles.scss"
 
-const Login = ({ onSignup }) => {
+const Login = () => {
     const navigate = useNavigate()
     const isUserLoading = useSelector(selectIsUserLoading)
     const isLoggedIn = useSelector(selectIsLoggedIn)
@@ -39,7 +39,7 @@ const Login = ({ onSignup }) => {
 
     // On form submission (failure)
     const onFinishFailed = ({ values }) => {
-        notification.error({ message: "Error in submitting values" })
+        notification.error({ description: "Error in submitting values" })
     }
 
     return (

@@ -15,7 +15,7 @@ const Protected = ({ redirect, roles = [], children }) => {
         if (!loggedIn) navigate("/login")
         else if (loggedIn && !authorized) {
             if (redirect) navigate(redirect)
-            else notification.warn({ message: "Access denied", description: "You are not authorized" })
+            else notification.warning({ message: "Access denied", description: "You are not authorized" })
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])

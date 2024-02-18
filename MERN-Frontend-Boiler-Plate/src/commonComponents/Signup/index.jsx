@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom"
 import { Button, Checkbox, Divider, Form, Input, Typography } from "antd"
 import { Spin } from "customComponents"
 import _ from "lodash"
-import GoogleAuth from "components/Google-Auth"
 import { userActions } from "reduxStore"
 import { selectIsLoggedIn, selectIsUserLoading } from "reduxStore/selectors"
 import userAuthService from "services/userAuthService"
@@ -58,11 +57,6 @@ const Signup = ({ onLogin = () => null, onAuthenticated = () => null }) => {
             ) : (
                 <div className="signup-card">
                     <span className="sub-title">Signup</span>
-                    <GoogleAuth />
-
-                    <Divider plain className="divider-text text-muted m-0">
-                        or sign up with your email
-                    </Divider>
 
                     <Form
                         form={form}

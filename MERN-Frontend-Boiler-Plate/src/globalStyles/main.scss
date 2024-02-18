@@ -161,7 +161,8 @@ a {
 
 .ant-popconfirm,
 .ant-popover {
-    .ant-popconfirm-buttons, .ant-popover-buttons {
+    .ant-popconfirm-buttons,
+    .ant-popover-buttons {
         display: flex;
         justify-content: flex-end;
     }
@@ -243,7 +244,6 @@ a.ant-typography {
         color: $secondary;
         padding: rem(4) rem(8);
 
-        
         &:where(:focus, :active) {
             box-shadow: none !important;
             color: $secondary !important;
@@ -818,16 +818,22 @@ textarea {
         width: clamp(rem(450), 45vw, 100vw - 48px);
 
         .ant-notification-notice-content {
-            .ant-notification-notice-icon > svg {
-                font-size: rem(32);
+            .ant-notification-notice-icon {
+                top: 50%;
+                transform: translateY(-50%);
+
+                > svg {
+                    font-size: rem(28);
+                }
             }
             .ant-notification-notice-message {
                 font-size: rem(24);
-                margin-left: rem(60);
+                margin-bottom: 0px;
+                margin-left: rem(44);
             }
             .ant-notification-notice-description {
                 font-size: rem(18);
-                margin-left: rem(60);
+                margin-left: rem(44);
             }
         }
     }
@@ -893,8 +899,9 @@ textarea {
 
             .ant-modal-footer {
                 display: flex;
-                gap: 12px;
+                gap: rem(16);
                 justify-content: flex-end;
+                padding: rem(24);
             }
         }
     }

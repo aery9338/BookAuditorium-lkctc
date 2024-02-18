@@ -69,7 +69,10 @@ http.interceptors.response.use(
             notification.error("Oops! we are facing high traffic at this moment. Please retry after 5 minutes")
         }
         const expectedError = error.response && error.response.status >= 400 && error.response.status < 500
-        const errorResponse = { error: true, message: processHtmlString(error?.response?.data || error?.message, true) }
+        const errorResponse = {
+            error: true,
+            message: processHtmlString(error?.response?.data?.message ?? "", true),
+        }
         console.log("Api Error: ", { ...error, errorResponse, expectedError })
         return errorResponse
     }
