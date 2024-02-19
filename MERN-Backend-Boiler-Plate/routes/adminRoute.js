@@ -12,6 +12,7 @@ const {
     validateAuditoriumDeleteReq,
     validateAdminUserUpdateReq,
     validateAdminUserDeleteReq,
+    validateAdminUserCreateBulkReq,
 } = require("../validation/auditorium")
 const Auditorium = require("../model/auditorium")
 
@@ -80,6 +81,45 @@ router.delete("/auditorium/:id", adminTokenAuth, async (req, res) => {
     }
 })
 
+router.post("/faculty/bulk", adminTokenAuth, async (req, res) => {
+    const session = await mongoose.startSession()
+    try {
+        await session.withTransaction(async () => {
+            let reqBody = req?.body?.data
+            const { error } = validateAdminUserCreateBulkReq(reqBody)
+            if (error) return res.status(400).json({ error: true, message: error.details[0].message })
+            reqBody = reqBody?.map((faculty) => {
+                return {
+                    ...faculty,
+                    createdby: req.userData._id,
+                }
+            })
+            let errors = []
+            await Promise.all(
+                reqBody.map(async (user) => {
+                    let userData = await User.findOne({ email: user.email, isdeleted: false })
+                    if (userData?._id) return errors.push(user.displayname + " already exist with same email")
+                    const salt = await bcrypt.genSalt(12)
+                    const hashedPassword = await bcrypt.hash(appConfig.defaultPassword, salt)
+                    userData = new User({
+                        ...user,
+                        password: hashedPassword,
+                    })
+                    userData = await userData.save({ session })
+                })
+            )
+            await session.commitTransaction()
+            return res.status(errors?.length > 0 ? 400 : 200).json({
+                error: errors?.length > 0,
+                message: errors?.length > 0 ? errors?.join(", ") : "Faculties added successfully",
+            })
+        })
+    } catch (error) {
+        return res.status(400).json({ error: true, message: `Something failed: ${error}` })
+    } finally {
+        session.endSession()
+    }
+})
 router.post("/faculty", adminTokenAuth, async (req, res) => {
     const session = await mongoose.startSession()
     try {

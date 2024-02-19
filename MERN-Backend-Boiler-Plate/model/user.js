@@ -38,6 +38,12 @@ const userSchema = new mongoose.Schema(
     }
 )
 
+userSchema.pre("save", async function (next) {
+    const existingUser = await this.constructor.findOne({ email: this.email, isdeleted: true })
+    if (existingUser) await this.constructor.deleteOne({ _id: existingUser._id })
+    next()
+})
+
 const User = mongoose.model("User", userSchema)
 
 module.exports.User = User

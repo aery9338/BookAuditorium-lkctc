@@ -53,6 +53,16 @@ const validateAdminUserCreateReq = (faculty) => {
     }).validate(faculty)
 }
 
+const validateAdminUserCreateBulkReq = (bulkFacultyData) => {
+    return Joi.array()
+        .items({
+            displayname: Joi.string().regex(name.regex).required(),
+            email: Joi.string().required().min(5).max(255).email(),
+            roles: Joi.array(),
+        })
+        .validate(bulkFacultyData)
+}
+
 const validateAdminUserUpdateReq = (faculty) => {
     return Joi.object({
         displayname: Joi.string().regex(name.regex),
@@ -72,6 +82,7 @@ module.exports = {
     validateAuditoriumCreateReq,
     validateAuditoriumUpdateReq,
     validateAuditoriumDeleteReq,
+    validateAdminUserCreateBulkReq,
     validateAdminUserCreateReq,
     validateAdminUserUpdateReq,
     validateAdminUserDeleteReq,

@@ -132,17 +132,9 @@
                 width: 100%;
 
                 .counter {
-                    align-items: center;
-                    background-color: $primary;
-                    border-radius: 50%;
-                    color: white;
-                    display: flex;
-                    height: rem(32);
-                    justify-content: center;
                     left: rem(12);
                     position: absolute;
                     top: rem(12);
-                    width: rem(32);
                     z-index: 10;
                 }
 
@@ -350,12 +342,52 @@
             }
         }
 
-        .faculty-form {
-            width: 100%;
-        }
-
         .bulk-container {
-            
+            .upload-card {
+                margin: 0;
+            }
+
+            .files-container {
+                padding: rem(12);
+
+                .file-container {
+                    .file-name {
+                        font-size: rem(20);
+                        font-weight: 500;
+                        color: $primary;
+                    }
+                    .file-action {
+                        width: rem(32);
+                        height: rem(32);
+                        color: $primary;
+                    }
+                }
+            }
+
+            .total-faculty-number {
+                font-size: rem(20);
+                font-weight: 500;
+            }
         }
     }
+
+    &.large-modal {
+        width: rem(900) !important;
+    }
+}
+
+.faculty-form {
+    width: 100%;
+}
+
+.counter {
+    background-color: $primary;
+    border-radius: 50%;
+    color: white;
+    display: flex;
+    aspect-ratio: 1;
+    min-width: rem(32);
+    padding: rem(4);
+    justify-content: center;
+    z-index: 10;
 }

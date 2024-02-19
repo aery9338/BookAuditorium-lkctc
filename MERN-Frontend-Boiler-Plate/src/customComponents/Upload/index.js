@@ -14,34 +14,44 @@ const Upload = ({
     multiple,
     aspectRatio,
     maxFileSize = 5,
+    className = "",
     beforeUpload = (file) => (maxFileSize > 0 ? fileSizeCheck(file, maxFileSize) : false),
 }) => {
-    return !aspectRatio ? (
-        <RenderUploadComponent
-            accept={accept}
-            listType={listType}
-            beforeUpload={beforeUpload}
-            showUploadList={showUploadList}
-            fileTypeName={fileTypeName}
-            onChange={onChange}
-            multiple={multiple}
-        >
-            {children}
-        </RenderUploadComponent>
-    ) : (
-        <ImgCrop beforeCrop={(file) => fileSizeCheck(file, 5)} cropShape={"rect"} quality={1} aspect={aspectRatio}>
-            <RenderUploadComponent
-                accept={accept}
-                listType={listType}
-                beforeUpload={beforeUpload}
-                showUploadList={showUploadList}
-                fileTypeName={fileTypeName}
-                onChange={onChange}
-                multiple={multiple}
-            >
-                {children}
-            </RenderUploadComponent>
-        </ImgCrop>
+    return (
+        <Flex className={className}>
+            {!aspectRatio ? (
+                <RenderUploadComponent
+                    accept={accept}
+                    listType={listType}
+                    beforeUpload={beforeUpload}
+                    showUploadList={showUploadList}
+                    fileTypeName={fileTypeName}
+                    onChange={onChange}
+                    multiple={multiple}
+                >
+                    {children}
+                </RenderUploadComponent>
+            ) : (
+                <ImgCrop
+                    beforeCrop={(file) => fileSizeCheck(file, 5)}
+                    cropShape={"rect"}
+                    quality={1}
+                    aspect={aspectRatio}
+                >
+                    <RenderUploadComponent
+                        accept={accept}
+                        listType={listType}
+                        beforeUpload={beforeUpload}
+                        showUploadList={showUploadList}
+                        fileTypeName={fileTypeName}
+                        onChange={onChange}
+                        multiple={multiple}
+                    >
+                        {children}
+                    </RenderUploadComponent>
+                </ImgCrop>
+            )}
+        </Flex>
     )
 }
 
@@ -56,8 +66,7 @@ const RenderUploadComponent = ({
     multiple,
 }) => {
     const fetchData = async ({ file, fileList }) => {
-        if (multiple) onChange(await compileFiles(fileList?.map((file) => file?.originFileObj ?? file)))
-        else onChange(await compileFiles([fileList[fileList.length - 1]?.originFileObj ?? fileList[0]]))
+        onChange(await compileFiles(multiple ? fileList : [fileList[fileList.length - 1]]))
     }
     return (
         <UploadComponent

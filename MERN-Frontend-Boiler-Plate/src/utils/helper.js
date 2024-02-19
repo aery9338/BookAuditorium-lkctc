@@ -255,6 +255,7 @@ export const fileSizeCheck = (file, maxFileSizeMb) => {
 
 export const getFirstLetters = (name, substring = 2) => {
     let firstLetterName = ""
+    name = typeof name === "string" ? name : ""
     name.split(" ").forEach((word) => {
         const firstLetter = word.trim().charAt(0).toUpperCase()
         if (firstLetter.match(/[A-Z]/)) firstLetterName += firstLetter
@@ -304,7 +305,7 @@ export const compileFiles = async (files) => {
                             })
                         })
                         processedData.push({
-                            ...file,
+                            file,
                             type: "excel",
                             time: new Date(),
                             data: excelData,
@@ -324,11 +325,11 @@ export const compileFiles = async (files) => {
             }
 
             if (file?.type?.includes("image/")) {
-                reader.readAsDataURL(file?.originFileObj || file)
+                reader.readAsDataURL(file?.originFileObj ?? file)
             } else if (compare(file.type, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")) {
-                reader.readAsBinaryString(file)
+                reader.readAsBinaryString(file?.originFileObj ?? file)
             } else {
-                reader.readAsText(file?.originFileObj || file)
+                reader.readAsText(file?.originFileObj ?? file)
             }
         })
     }

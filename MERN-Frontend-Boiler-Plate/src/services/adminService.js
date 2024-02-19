@@ -21,6 +21,10 @@ class adminService {
         return await http.post(`/api/admin/faculty`, data)
     }
 
+    async createBulkFaculty(data) {
+        return await http.post(`/api/admin/faculty/bulk`, data)
+    }
+
     async updateFaculty(id, data) {
         return await http.put(`/api/admin/faculty/${id}`, data)
     }
