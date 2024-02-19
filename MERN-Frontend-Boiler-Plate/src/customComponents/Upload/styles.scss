@@ -6,12 +6,10 @@
     display: flex;
     flex-direction: column;
     gap: rem(20);
-    
-    .upload-card {
 
+    .upload-card {
         .ant-upload-text {
             text-align: center;
         }
     }
 }
-
