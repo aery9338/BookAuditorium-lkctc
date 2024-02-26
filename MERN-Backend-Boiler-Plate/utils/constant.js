@@ -14,6 +14,7 @@ const InviteStatus = Object.freeze({
     PENDING: "pending",
     ACCEPTED: "accepted",
     REJECTED: "rejected",
+    CANCELLED: "cancelled",
 })
 
 const Length = Object.freeze({

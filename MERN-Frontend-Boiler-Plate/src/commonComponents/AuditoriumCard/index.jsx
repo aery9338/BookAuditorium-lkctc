@@ -1,21 +1,32 @@
 import React from "react"
-import { useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
+import Slider from "react-slick"
 import { MdOutlineLocationCity } from "react-icons/md"
 import { MdOutlineOpenInNew } from "react-icons/md"
 import { Button, Popconfirm } from "antd"
-import { selectIsAdmin } from "reduxStore/selectors"
 import { Features } from "utils/constants"
 import "./styles.scss"
 
-const AuditoriumCard = ({ auditorium, onEdit = () => null, onDelete = () => null }) => {
+const AuditoriumCard = ({ auditorium, view, onEdit = () => null, onDelete = () => null }) => {
     const navigate = useNavigate()
-    const isAdmin = useSelector(selectIsAdmin)
+    const isAdmin = view === "admin"
 
     return (
         <div className="auditorium-container">
             <div className={`image-container ${isAdmin ? "" : "show-preview"}`}>
-                <img className="image" src={auditorium?.images?.[0]} alt={""} />
+                <Slider
+                    dots={false}
+                    infinite={true}
+                    speed={1600}
+                    slidesToShow={1}
+                    slidesToScroll={1}
+                    autoplay={true}
+                    autoplaySpeed={5600}
+                >
+                    {auditorium?.images?.map((image) => (
+                        <img key={image} src={image} className="image" alt="" />
+                    ))}
+                </Slider>
                 <Button
                     onClick={() => navigate(`/auditorium/${auditorium.id}?view=true`)}
                     className="preview-image-main-action"

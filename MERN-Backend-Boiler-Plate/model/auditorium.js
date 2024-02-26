@@ -11,6 +11,10 @@ const auditoriumSchema = new mongoose.Schema(
         description: { type: String, required: true },
         capacity: { type: Number, required: true },
         features: [{ _id: false, name: { type: String }, description: { type: String } }],
+        isdeleted: {
+            type: Boolean,
+            default: false,
+        },
         createdby: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
@@ -18,10 +22,6 @@ const auditoriumSchema = new mongoose.Schema(
         modifiedby: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
-        },
-        isdeleted: {
-            type: Boolean,
-            default: false,
         },
     },
     {

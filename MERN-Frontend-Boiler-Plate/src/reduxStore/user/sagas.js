@@ -1,7 +1,9 @@
 import { notification } from "antd"
 import { all, call, put, select, takeEvery } from "redux-saga/effects"
 import { configActions, userActions } from "reduxStore"
+import bookingService from "services/bookingService"
 import userAuthService from "services/userAuthService"
+import { isAuthorized } from "utils/helper"
 import initialState from "./initialState"
 import { selectViewMode } from "./selectors"
 
@@ -13,6 +15,8 @@ export function* getUserData() {
         if (!error) {
             const { userData } = data
             yield put(userActions.setState({ userData, loggedIn: true }))
+            if (isAuthorized(userData?.roles, "faculty")) yield call(getBookingDetails)
+            if (isAuthorized(userData?.roles, ["admin", "superadmin"])) yield call(getBookingRequests)
         } else {
             yield call(logoutUser)
             notification.error({
@@ -121,6 +125,24 @@ export function* logoutUser() {
     }
 }
 
+export function* getBookingDetails() {
+    try {
+        const { data: bookingDetails, error } = yield call(bookingService.getBookingDetails)
+        if (!error) yield put(userActions.setState({ bookingDetails }))
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+export function* getBookingRequests() {
+    try {
+        const { data, error } = yield call(bookingService.getBookingRequests)
+        if (!error) console.log({ data })
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 // Defines which saga should run upon each action dispatch
 export default function* rootSaga() {
     yield all([
@@ -129,6 +151,8 @@ export default function* rootSaga() {
         takeEvery(userActions.signupUser.type, signupUser),
         takeEvery(userActions.logoutUser.type, logoutUser),
         takeEvery(userActions.getUserData.type, getUserData),
+        takeEvery(userActions.getBookingDetails.type, getBookingDetails),
+        takeEvery(userActions.getBookingRequests.type, getBookingRequests),
         getUserData(), // run once on app load to check user auth
     ])
 }

@@ -174,13 +174,16 @@
                                 }
 
                                 &:nth-child(2) .feature-card .feature-image {
-                                    background-color: $purple-1;
+                                    background-color: $green-1;
                                 }
                                 &:nth-child(3) .feature-card .feature-image {
                                     background-color: $yellow-1;
                                 }
                                 &:nth-child(4) .feature-card .feature-image {
-                                    background-color: $green-1;
+                                    background-color: $purple-1;
+                                }
+                                &:nth-child(5) .feature-card .feature-image {
+                                    background-color: $orange-1;
                                 }
                             }
                         }

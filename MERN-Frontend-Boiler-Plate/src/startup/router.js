@@ -21,16 +21,6 @@ const routes = [
     //     path: "/signup",
     // },
 
-    // Private Pages
-    // {
-    //     auth: true,
-    //     Component: lazy(() => import("pages/public/Homepage")),
-    //     exact: true,
-    //     hideLayout: false,
-    //     path: "/",
-    //     redirect: "/dashboard",
-    //     roles: ["admin", "faculty"],
-    // },
     {
         auth: true,
         Component: lazy(() => import("pages/public/Auditorium")),

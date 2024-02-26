@@ -16,10 +16,6 @@ const {
 } = require("../validation/auditorium")
 const Auditorium = require("../model/auditorium")
 
-router.get("/", adminTokenAuth, async (req, res) => {
-    return res.json({ data: { adminData: {} }, error: false })
-})
-
 router.post("/auditorium", adminTokenAuth, async (req, res) => {
     const session = await mongoose.startSession()
     try {

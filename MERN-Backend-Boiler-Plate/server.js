@@ -7,7 +7,6 @@ const routes = require("./routes")
 const bodyParser = require("body-parser")
 const server = require("http").Server(app)
 require("./startup/logger")(app)
-require("./startup/websocket")(server)
 // require("./startup/dailyschedular")()
 require("./startup/db")()
 

@@ -8,24 +8,21 @@ const { User } = require("../model/user")
 const { createJWToken, createRefreshJWToken } = require("../middleware/helper")
 
 router.get("/me", userTokenAuth, async (req, res) => {
-    const { _id } = req.userData
-    let userData = await User.findById(_id)
-    if (!userData) return res.status(400).json({ error: true, message: "Doesn't find the users" })
-    return res.json({
-        data: {
-            userData,
-            access_token: createJWToken(JSON.parse(JSON.stringify(userData))),
-            refresh_token: createRefreshJWToken(JSON.parse(JSON.stringify(userData))),
-        },
-        error: false,
-    })
-})
-
-router.get("/check_username", async (req, res) => {
-    const { username } = req.query
-    const userData = await User.findOne({ username })
-    if (!userData) return res.json({ message: "username is availble", success: true })
-    else return res.status(400).json({ error: true, message: "username is already in use" })
+    try {
+        const { _id } = req.userData
+        let userData = await User.findById(_id)
+        if (!userData) return res.status(400).json({ error: true, message: "Doesn't find the users" })
+        return res.json({
+            data: {
+                userData,
+                access_token: createJWToken(JSON.parse(JSON.stringify(userData))),
+                refresh_token: createRefreshJWToken(JSON.parse(JSON.stringify(userData))),
+            },
+            error: false,
+        })
+    } catch (error) {
+        return res.status(400).json({ error: true, message: `Something failed: ${error}` })
+    }
 })
 
 router.post("/signup", async (req, res) => {

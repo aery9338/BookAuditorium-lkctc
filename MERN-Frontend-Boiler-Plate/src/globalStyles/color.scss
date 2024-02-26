@@ -49,10 +49,13 @@
     --pastel-1: #ffedea;
 
     --light: #feffff;
+    --light-1: #feffff;
+    --light-2: #feffff;
+    --light-3: #f8f8ff;
     --dark: #2a2a2a;
     --dark-1: #141322;
     --dark-2: #363636;
-    --dark-3: #f8f8ff;
+    --dark-3: #363636bb;
 
     --text-light: #eae3f1;
     --text-dark: #0f1012;
@@ -128,6 +131,9 @@
     --pastel-1: #ffedea;
 
     --light: #feffff;
+    --light-1: #feffff;
+    --light-2: #feffff;
+    --light-3: #f8f8ff;
     --dark: #2a2a2a;
     --dark-1: #141322;
     --dark-2: #444444;
@@ -206,6 +212,9 @@ $pastel: var(--pastel);
 $pastel-1: var(--pastel-1);
 
 $light: var(--light);
+$light-1: var(--light-1);
+$light-2: var(--light-2);
+$light-3: var(--light-3);
 $dark: var(--dark);
 $dark-1: var(--dark-1);
 $dark-2: var(--dark-2);

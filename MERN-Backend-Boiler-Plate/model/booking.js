@@ -6,62 +6,79 @@ const bookingSchema = new mongoose.Schema({
         ref: "Auditorium",
         required: true,
     },
-    user: {
+    staff: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
+    },
+    title: {
+        type: String,
         required: true,
     },
-    date: {
+    bookingdate: {
         type: Date,
         validate: {
-            validator: function (v) {
+            validator: function (date) {
                 const today = new Date()
-                return v >= today
+                return date >= today
             },
-            message: "Date cannot be in the older then today",
+            message: "Date can't be older then today",
         },
         required: true,
     },
-    startTime: {
+    starttime: {
         type: String,
         required: true,
-        validate: {
-            validator: function (v) {
-                const today = new Date()
-                const clgstarttime = today.setHours(8, 0, 0, 0)
-                return v >= clgstarttime
-            },
-            message: "Time should be between college hours",
-        },
+        // validate: {
+        //     validator: function (v) {
+        //         const today = new Date()
+        //         const clgstarttime = today.setHours(8, 0, 0, 0)
+        //         return v >= clgstarttime
+        //     },
+        //     message: "Time should be between college hours",
+        // },
     },
-    endTime: {
+    endtime: {
         type: String,
         required: true,
-        validate: {
-            validator: function (v) {
-                const today = new Date()
-                const clgendtime = today.setHours(20, 0, 0, 0)
-                return v <= clgendtime
-            },
-            message: "Time should be between college hours",
-        },
+        // validate: {
+        //     validator: function (v) {
+        //         const today = new Date()
+        //         const clgendtime = today.setHours(20, 0, 0, 0)
+        //         return v <= clgendtime
+        //     },
+        //     message: "Time should be between college hours",
+        // },
     },
-    bookingStatus: {
+    department: {
         type: String,
-        enum: ["pending", "approved", "rejected"],
+        enum: ["it", "management", "other"],
         default: "pending",
+    },
+    bookingstatus: {
+        type: String,
+        enum: ["pending", "approved", "rejected", "cancelled"],
+        default: "pending",
+    },
+    occasion: {
+        type: String,
+        enum: ["official", "meeting", "program", "practice", "function", "seminar", "other"],
+        default: "pending",
+    },
+    purpose: {
+        type: String,
     },
     isdeleted: {
         type: Boolean,
         default: false,
     },
     createdby: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
         required: true,
     },
     modifiedby: {
-        type: String,
-        required: true,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
     },
 })
 

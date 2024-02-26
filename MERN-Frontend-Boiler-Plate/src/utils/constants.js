@@ -1,3 +1,9 @@
+import { BsFillMusicPlayerFill } from "react-icons/bs"
+import { FaMicrophoneAlt } from "react-icons/fa"
+import { GiMicrophone } from "react-icons/gi"
+import { PiTelevision } from "react-icons/pi"
+import { RiProjector2Fill } from "react-icons/ri"
+
 export const DocumentStatus = Object.freeze({
     NORMAL: "normal",
     DELETED: "deleted",
@@ -36,12 +42,12 @@ export const Weight = Object.freeze({
 })
 
 export const Departments = Object.freeze({
-    IT: "Information Technology",
+    it: "Information Technology",
     management: "Management",
     other: "Other",
 })
 
-export const ApplicationTypes = Object.freeze({
+export const Occasions = Object.freeze({
     official: "Official",
     meeting: "Meeting",
     program: "Program",
@@ -53,11 +59,26 @@ export const ApplicationTypes = Object.freeze({
 
 export const Features = Object.freeze({
     mic: "Mic",
-    microphone: "Microphone",
     wirelessMic: "Wireless Mic",
-    projetor: "Projector",
+    projector: "Projector",
     smartTV: "Smart TV",
     soundBox: "Sound Box",
+})
+
+export const FeaturesDescription = Object.freeze({
+    mic: "Enhance auditorium events with professional microphones.",
+    wirelessMic: "Enhance auditorium events with professional microphones.",
+    projector: "Elevate presentations with a high-quality auditorium projector.",
+    smartTV: "Experience brilliance with Smart TVs in this auditorium.",
+    soundBox: "Sound Box",
+})
+
+export const FeaturesIcon = Object.freeze({
+    mic: <FaMicrophoneAlt />,
+    wirelessMic: <GiMicrophone />,
+    projector: <RiProjector2Fill />,
+    smartTV: <PiTelevision />,
+    soundBox: <BsFillMusicPlayerFill />,
 })
 
 export const UserRoles = Object.freeze({

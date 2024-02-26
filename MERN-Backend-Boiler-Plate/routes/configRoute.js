@@ -7,39 +7,22 @@ const router = express.Router()
 
 router.get("/", userTokenAuth, async (req, res) => {
     let data = {}
-    const auditoriums = await Auditorium.aggregate([
+    const auditoriums = await Auditorium.aggregate([{ $match: { isdeleted: false } }, { $addFields: { key: "$_id" } }])
+    data.auditoriums = auditoriums
+
+    const faculties = await User.aggregate([
         {
             $match: {
+                roles: isAuthorized(req.userData.roles, ["admin", "superadmin"])
+                    ? { $nin: ["superadmin"] }
+                    : { $in: ["faculty", "staff"] },
                 isdeleted: false,
             },
         },
-        {
-            $addFields: {
-                key: "$_id",
-            },
-        },
+        { $addFields: { key: "$_id" } },
     ])
-    data.auditoriums = auditoriums
-    if (isAuthorized(req.userData.roles, ["admin", "superadmin"])) {
-        const faculties = await User.aggregate([
-            {
-                $match: {
-                    roles: {
-                        $not: {
-                            $elemMatch: { $eq: "superadmin" },
-                        },
-                    },
-                    isdeleted: false,
-                },
-            },
-            {
-                $addFields: {
-                    key: "$_id",
-                },
-            },
-        ])
-        data.faculties = faculties
-    }
+    data.faculties = faculties
+
     return res.json({ error: false, data })
 })
 

@@ -19,3 +19,9 @@ export const selectIsUserInitialLoading = (state) => state.user.initialLoading
 export const selectViewMode = (state) => state.user.viewMode
 
 export const selectIsAdmin = (state) => isAuthorized(state.user.userData.roles, ["admin", "superadmin"])
+
+export const selectIsFaculty = (state) => isAuthorized(state.user.userData.roles, ["faculty"])
+
+export const selectIsStaff = (state) => isAuthorized(state.user.userData.roles, ["staff"])
+
+export const selectBookingDetails = (state) => state.user.bookingDetails

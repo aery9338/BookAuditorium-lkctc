@@ -55,10 +55,6 @@ module.exports = (app) => {
                     level: "error",
                     db: appConfig.ProjectDB,
                     collection: "errorLogs",
-                    options: {
-                        useUnifiedTopology: true,
-                        useNewUrlParser: true,
-                    },
                     handleExceptions: true,
                     handleRejections: true,
                 }),

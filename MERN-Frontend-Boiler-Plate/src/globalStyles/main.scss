@@ -188,10 +188,11 @@ a.ant-typography {
     border-radius: rem(8);
     box-shadow: $shadow;
     display: flex;
-    height: auto;
+    height: fit-content;
     justify-content: center;
     letter-spacing: 0.8px;
     padding: rem(8) rem(28);
+    width: fit-content;
 
     > svg {
         height: rem(24);
@@ -209,7 +210,6 @@ a.ant-typography {
         background-color: transparent;
         border-color: $primary;
         color: $primary;
-        height: rem(54);
 
         &:where(:active, :hover, :focus-visible) {
             border-color: $primary-1 !important;
@@ -326,7 +326,11 @@ a.ant-typography {
 }
 
 .ant-tag {
+    align-items: center;
     border-radius: 16px;
+    display: flex;
+    gap: rem(8);
+    line-height: 0;
     padding: 3px 12px;
     width: fit-content;
 }
@@ -392,7 +396,7 @@ a.ant-typography {
     }
 
     .ant-select-clear {
-        margin-right: -14px;
+        margin-right: rem(0);
         margin-top: -10px;
     }
 
@@ -617,7 +621,7 @@ textarea {
         border: none !important;
         border-radius: 0;
         box-shadow: none !important;
-        font-size: rem(21);
+        font-size: rem(21) !important;
         height: auto;
     }
 
@@ -911,5 +915,88 @@ textarea {
     span {
         font-size: rem(20);
         font-weight: 500;
+    }
+}
+
+.ant-segmented {
+    background-color: transparent;
+
+    &.ant-segmented-sm {
+        .ant-segmented-item {
+            .ant-segmented-item-label {
+                padding: rem(6) rem(14) !important;
+            }
+        }
+    }
+
+    .ant-segmented-group {
+        gap: rem(12);
+
+        .ant-segmented-item {
+            background: rgba(0, 0, 0, 0.02);
+            border: 1px solid #f0f0f0;
+            border-radius: rem(8);
+            height: fit-content;
+            transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+
+            &-label {
+                color: $title-color;
+                font-size: rem(20);
+                font-weight: 500;
+                letter-spacing: 0.5px;
+                margin-left: 0;
+                padding: rem(8) rem(24);
+                transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+
+                .ant-segmented-item-icon {
+                    display: flex;
+                }
+
+                &:where(:hover, :active, :focus) {
+                    color: $primary-1;
+                    transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+                }
+            }
+        }
+
+        .ant-segmented-item-selected {
+            background-color: $primary;
+
+            .ant-segmented-item-label {
+                color: $light !important;
+                font-weight: 500;
+                font-size: rem(18);
+            }
+        }
+    }
+}
+
+.banner {
+    background-color: $light;
+    border: 1px solid $grey;
+    border-radius: rem(12);
+    flex-flow: row wrap;
+    gap: rem(40);
+    padding: rem(12) rem(24);
+
+    &-text {
+        gap: rem(8);
+
+        &-title {
+            font-size: rem(22);
+            font-weight: 700;
+        }
+
+        &-sub-title {
+            color: $dark-3;
+            font-size: rem(20);
+            font-weight: 600;
+        }
+
+        &-description {
+            color: $muted;
+            font-size: rem(18);
+            font-weight: 500;
+        }
     }
 }

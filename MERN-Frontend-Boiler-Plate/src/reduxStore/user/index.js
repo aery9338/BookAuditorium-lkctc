@@ -20,6 +20,8 @@ const userSlice = createSlice({
         loginUser: () => {},
         signupUser: () => {},
         logoutUser: () => {},
+        getBookingDetails: () => {},
+        getBookingRequests: () => {},
     },
 })
 

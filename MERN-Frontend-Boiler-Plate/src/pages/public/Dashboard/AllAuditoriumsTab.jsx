@@ -20,6 +20,7 @@ const AllAuditoriumsTab = () => {
     const auditoriums = useSelector(selectAllAuditoriums)
     const [openAuditoriumModal, setOpenAuditoriumModal] = useState(false)
     const [editAuditorium, setEditAuditorium] = useState(null)
+    const [isSubmitBtnLoading, setIsSubmitBtnLoading] = useState(false)
     const [selectedIndex, setSelectedIndex] = useState(0)
     const [files, setFiles] = useState({ 0: null, 1: null, 2: null })
     const [features, setFeatures] = useState([{ name: null, description: "" }])
@@ -60,50 +61,59 @@ const AllAuditoriumsTab = () => {
     }
 
     const submitAuditoriumForm = async (values) => {
-        const images = []
+        setIsSubmitBtnLoading(true)
+        try {
+            const images = []
+            const { title, description, block, floor, capacity } = values
+            await Promise.all(
+                Object.values(files)?.map(async (file) => {
+                    try {
+                        if (typeof file === "string") return images.push(file)
+                        if (!file?.name) return null
+                        const storageRef = ref(storage, "auditorium/" + file.name)
+                        const res = await uploadBytes(storageRef, file)
+                        if (!res?.metadata?.fullPath) return notification.error("File not uploaded")
+                        const url = await getDownloadURL(ref(storage, "auditorium/" + file.name))
+                        images.push(url)
+                    } catch (error) {
+                        console.error({ error })
+                    }
+                })
+            )
 
-        const { title, description, block, floor, capacity } = values
-        await Promise.all(
-            Object.values(files)?.map(async (file) => {
-                try {
-                    if (typeof file === "string") return images.push(file)
-                    if (!file?.name) return null
-                    const storageRef = ref(storage, "auditorium/" + file.name)
-                    const res = await uploadBytes(storageRef, file)
-                    if (!res?.metadata?.fullPath) return notification.error("File not uploaded")
-                    const url = await getDownloadURL(ref(storage, "auditorium/" + file.name))
-                    images.push(url)
-                } catch (error) {
-                    console.error({ error })
-                }
-            })
-        )
+            const valuesToSubmit = {
+                title,
+                description,
+                images,
+                capacity,
+                destination: { block, floor },
+                features: Object.values(features)?.filter(({ name }) => !!name),
+            }
 
-        const valuesToSubmit = {
-            title,
-            description,
-            images,
-            capacity,
-            destination: { block, floor },
-            features: Object.values(features)?.filter(({ name }) => !!name),
+            if (!images?.some((url) => url))
+                return notification.error({ description: "Add at least 1 auditorium picture" })
+
+            const settingsDifferences = settingsDiff(valuesToSubmit, editAuditorium ?? {})
+            if (settingsDifferences.changed) {
+                const auditoriumId = editAuditorium?._id ?? null
+                const { error, message } = auditoriumId
+                    ? await adminService.updateAuditorium(auditoriumId, settingsDifferences.changedSettings)
+                    : await adminService.createAuditorium(settingsDifferences.changedSettings)
+                if (!error) {
+                    notification.success({ message })
+                    dispatch(configActions.getConfigData())
+                } else notification.error({ message })
+            }
+        } catch (error) {
+            console.error("Something wrong: ", error)
+        } finally {
+            setIsSubmitBtnLoading(false)
+            closeModal()
         }
-
-        const settingsDifferences = settingsDiff(valuesToSubmit, editAuditorium ?? {})
-        if (settingsDifferences.changed) {
-            const auditoriumId = editAuditorium?._id ?? null
-            const { error, message } = auditoriumId
-                ? await adminService.updateAuditorium(auditoriumId, settingsDifferences.changedSettings)
-                : await adminService.createAuditorium(settingsDifferences.changedSettings)
-            if (!error) {
-                notification.success({ message })
-                dispatch(configActions.getConfigData())
-            } else notification.error({ message })
-        }
-        closeModal()
     }
 
     return (
-        <div className="auditorium-wrapper">
+        <div className="all-auditoriums-wrapper">
             <div className="header-section">
                 <div className="header">Auditorium ({auditoriums.length})</div>
                 {isAdmin && (
@@ -120,6 +130,7 @@ const AllAuditoriumsTab = () => {
                         return (
                             <AuditoriumCard
                                 key={auditorium._id}
+                                view={"admin"}
                                 onEdit={() => onEditAuditorium(auditorium)}
                                 onDelete={() => onDeleteAuditorium(auditorium?._id)}
                                 auditorium={auditorium}
@@ -151,11 +162,11 @@ const AllAuditoriumsTab = () => {
                                                 <div className="counter">{selectedIndex + 1}</div>
                                                 <Upload
                                                     aspectRatio={1.4}
-                                                    onChange={(file) =>
+                                                    onChange={(files) =>
                                                         setFiles((prevValues) => {
                                                             return {
                                                                 ...prevValues,
-                                                                [selectedIndex]: file,
+                                                                [selectedIndex]: files?.[0]?.file,
                                                             }
                                                         })
                                                     }
@@ -229,11 +240,11 @@ const AllAuditoriumsTab = () => {
 
                                                 <Upload
                                                     aspectRatio={1.4}
-                                                    onChange={(file) =>
+                                                    onChange={(files) =>
                                                         setFiles((prevValues) => {
                                                             return {
                                                                 ...prevValues,
-                                                                [selectedIndex]: file,
+                                                                [selectedIndex]: files?.[0]?.file,
                                                             }
                                                         })
                                                     }
@@ -442,8 +453,10 @@ const AllAuditoriumsTab = () => {
                                 </div>
                             </div>
                             <div className="footer">
-                                <Button onClick={closeModal}>Cancel</Button>
-                                <Button htmlType="submit" type="primary">
+                                <Button onClick={closeModal} disabled={isSubmitBtnLoading}>
+                                    Cancel
+                                </Button>
+                                <Button htmlType="submit" type="primary" loading={isSubmitBtnLoading}>
                                     {editAuditorium?._id ? "Update" : "Create"} &nbsp; <BiSolidPaperPlane />
                                 </Button>
                             </div>

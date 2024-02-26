@@ -244,13 +244,13 @@ export const isIncluded = (searchString, searchWithIn, strict = false) =>
         ? searchWithIn.includes(searchString)
         : includes(searchWithIn, searchString, (item, search) => compare(item, search, strict))
 
-export const fileSizeCheck = (file, maxFileSizeMb) => {
+export const isFileSizeExceeded = (file, maxFileSizeMb = 5, showError) => {
     const fileSizeMb = file.size / 1000000
     if (fileSizeMb > maxFileSizeMb) {
-        message.error(`Max File Size Exceeded : ${maxFileSizeMb} MB`)
-        return true // returned true for error
+        if (showError) message.error(`Max File Size Exceeded : ${maxFileSizeMb} MB`)
+        return true
     }
-    return false // returned true for not having error
+    return false
 }
 
 export const getFirstLetters = (name, substring = 2) => {
@@ -287,6 +287,7 @@ export const getUniqueValues = (arr, key = "name") => {
 export const compileFiles = async (files) => {
     const processedData = []
     const readFileAsync = (file) => {
+        file = file?.originFileObj ?? file
         return new Promise((resolve, reject) => {
             const reader = new FileReader()
 
@@ -325,11 +326,11 @@ export const compileFiles = async (files) => {
             }
 
             if (file?.type?.includes("image/")) {
-                reader.readAsDataURL(file?.originFileObj ?? file)
+                reader.readAsDataURL(file)
             } else if (compare(file.type, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")) {
-                reader.readAsBinaryString(file?.originFileObj ?? file)
+                reader.readAsBinaryString(file)
             } else {
-                reader.readAsText(file?.originFileObj ?? file)
+                reader.readAsText(file)
             }
         })
     }

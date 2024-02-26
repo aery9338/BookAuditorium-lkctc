@@ -21,7 +21,7 @@ const Header = () => {
 
     return (
         <div className="header-wrapper">
-            <div className="logo-wrapper">
+            <div className="logo-wrapper" onClick={() => navigate("/")}>
                 <img src={images.logo} alt="company_logo" />
                 <Typography>
                     Book auditorium <br />
