@@ -1,0 +1,58 @@
+<svg xml:space="preserve" viewBox="0 0 100 100" y="0" x="0"
+    xmlns="http://www.w3.org/2000/svg" id="1" version="1.1" style="height: 100%; width: 100%; background: rgba(255, 255, 255, 0);" width="200px" height="200px">
+    <g class="ldl-scale" style="transform-origin: 50% 50%; transform: rotate(0deg) scale(0.8, 0.8);">
+        <g class="ldl-ani">
+            <g class="ldl-layer">
+                <g class="ldl-ani">
+                    <g>
+                        <g class="ldl-layer">
+                            <g class="ldl-ani" style="transform-origin: 50px 50px; transform: matrix(1, 0, 0, 1, 0, 0); animation: 1.11111s linear -0.833333s infinite normal forwards running shiver;">
+                                <path fill="#333" d="M47.429 53.064c-3.016-2.207-5.906-4.565-8.75-6.977-2.852-2.402-5.629-4.894-8.392-7.404-2.738-2.538-5.46-5.096-8.107-7.743-2.655-2.637-5.264-5.329-7.745-8.174a2.024 2.024 0 0 1 2.571-3.064c3.232 11.949 6.336 4.052 9.395 6.208 3.066 2.147 6.058 4.384 9.033 6.64 2.951 2.285 5.887 4.587 8.748 6.979 2.869 2.382 5.693 4.818 8.39 7.406a4.01 4.01 0 0 1-5.143 6.129z" style="fill: rgb(255, 255, 255);"></path>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+            <g class="ldl-layer">
+                <g class="ldl-ani" style="transform-origin: 50px 50px; transform: matrix(1, 0, 0, 1, 0, 0); animation: 1.11111s linear -1.11111s infinite normal forwards running shiver;">
+                    <path stroke-miterlimit="20" stroke-linejoin="round" stroke-linecap="round" stroke-width="8" stroke="#333" fill="none" d="M49.833 27.833V12.5c20.711 0 37.5 16.789 37.5 37.5s-16.789 37.5-37.5 37.5-37.5-16.789-37.5-37.5" style="stroke: rgb(255, 255, 255);"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+    <style id="shiver" data-anikit="">
+        @keyframes shiver {
+            0% { transform: translate(0px,0px) rotate(0deg) scale(1) }
+            3.33333% { transform: translate(0px,0px) rotate(0deg) scale(1.04279) }
+            6.66667% { transform: translate(0px,0px) rotate(0deg) scale(1.00524) }
+            10% { transform: translate(0px,0px) rotate(0deg) scale(0.96369) }
+            13.33333% { transform: translate(0px,0px) rotate(0deg) scale(0.95064) }
+            16.66667% { transform: translate(0px,0px) rotate(0deg) scale(0.97651) }
+            20% { transform: translate(0px,0px) rotate(0deg) scale(1.02078) }
+            23.33333% { transform: translate(0px,0px) rotate(0deg) scale(1.04875) }
+            26.66667% { transform: translate(0px,0px) rotate(0deg) scale(1.03832) }
+            30% { transform: translate(0px,0px) rotate(0deg) scale(0.99777) }
+            33.33333% { transform: translate(0px,0px) rotate(0deg) scale(0.95897) }
+            36.66667% { transform: translate(0px,0px) rotate(0deg) scale(0.95244) }
+            40% { transform: translate(0px,0px) rotate(0deg) scale(0.98335) }
+            43.33333% { transform: translate(0px,0px) rotate(0deg) scale(1.02733) }
+            46.66667% { transform: translate(0px,0px) rotate(0deg) scale(1.04988) }
+            50% { transform: translate(0px,0px) rotate(0deg) scale(1.0331) }
+            53.33333% { transform: translate(0px,0px) rotate(0deg) scale(0.99035) }
+            56.66667% { transform: translate(0px,0px) rotate(0deg) scale(0.95507) }
+            60% { transform: translate(0px,0px) rotate(0deg) scale(0.95527) }
+            63.33333% { transform: translate(0px,0px) rotate(0deg) scale(0.99057) }
+            66.66667% { transform: translate(0px,0px) rotate(0deg) scale(1.03343) }
+            70% { transform: translate(0px,0px) rotate(0deg) scale(1.04984) }
+            73.33333% { transform: translate(0px,0px) rotate(0deg) scale(1.02714) }
+            76.66667% { transform: translate(0px,0px) rotate(0deg) scale(0.98293) }
+            80% { transform: translate(0px,0px) rotate(0deg) scale(0.9523) }
+            83.33333% { transform: translate(0px,0px) rotate(0deg) scale(0.9591) }
+            86.66667% { transform: translate(0px,0px) rotate(0deg) scale(0.99821) }
+            90% { transform: translate(0px,0px) rotate(0deg) scale(1.0386) }
+            93.33333% { transform: translate(0px,0px) rotate(0deg) scale(1.0487) }
+            96.66667% { transform: translate(0px,0px) rotate(0deg) scale(1.02038) }
+            100% { transform: translate(0,0) rotate(0) scale(1) }
+        }
+    </style>
+</svg>

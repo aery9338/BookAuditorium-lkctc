@@ -25,3 +25,7 @@ export const selectIsFaculty = (state) => isAuthorized(state.user.userData.roles
 export const selectIsStaff = (state) => isAuthorized(state.user.userData.roles, ["staff"])
 
 export const selectBookingDetails = (state) => state.user.bookingDetails
+
+export const selectEventsDetails = (state) => state.user.bookingDetails
+
+export const selectAllBookingRequests = (state) => state.user.allBookingRequests

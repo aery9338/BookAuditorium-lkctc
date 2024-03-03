@@ -5,6 +5,7 @@ const initialState = {
     initialLoading: true,
     viewMode: "light",
     bookingDetails: [],
+    allBookingRequests: [],
 }
 
 export default initialState

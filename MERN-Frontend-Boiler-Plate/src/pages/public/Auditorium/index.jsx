@@ -50,6 +50,24 @@ const AuditoriumPage = () => {
     const onFinish = async ({ title, occasion, department, staff, purpose, ...values }) => {
         try {
             setIsBtnLoading(true)
+            const starttime = new Date(
+                new Date(values.bookingdate).getFullYear(),
+                new Date(values.bookingdate).getMonth(),
+                new Date(values.bookingdate).getDate(),
+                new Date(values.bookingtime[0]).getHours(),
+                new Date(values.bookingtime[0]).getMinutes(),
+                0,
+                0
+            )
+            const endtime = new Date(
+                new Date(values.bookingdate).getFullYear(),
+                new Date(values.bookingdate).getMonth(),
+                new Date(values.bookingdate).getDate(),
+                new Date(values.bookingtime[1]).getHours(),
+                new Date(values.bookingtime[1]).getMinutes(),
+                0,
+                0
+            )
             const newRequest = {
                 title,
                 occasion,
@@ -57,26 +75,9 @@ const AuditoriumPage = () => {
                 staff,
                 purpose,
                 auditorium: auditoriumData._id,
-                bookingdate: new Date(values.bookingdate).toLocaleDateString(),
-                starttime: new Date(values.bookingtime[0]).toLocaleTimeString(),
-                endtime: new Date(values.bookingtime[1]).toLocaleTimeString(),
-                // bookingdate: new Intl.DateTimeFormat("en-GB", {
-                //     day: "2-digit",
-                //     month: "2-digit",
-                //     year: "numeric",
-                // }).format(values.bookingdate),
-                // bookingtime: [
-                //     new Intl.DateTimeFormat("en-US", {
-                //         hour: "numeric",
-                //         minute: "2-digit",
-                //         hour12: true,
-                //     }).format(values.bookingtime[0]),
-                //     new Intl.DateTimeFormat("en-US", {
-                //         hour: "numeric",
-                //         minute: "2-digit",
-                //         hour12: true,
-                //     }).format(values.bookingtime[1]),
-                // ],
+                bookingdate: new Date(new Date(values.bookingdate).setHours(0, 0, 0, 0)),
+                starttime,
+                endtime,
             }
             const { error, message } = await bookingService.createBookingRequest(newRequest)
             if (!error) {
@@ -116,6 +117,7 @@ const AuditoriumPage = () => {
                             <div className="auditorium-image">
                                 <Slider
                                     dots={true}
+                                    arrows={false}
                                     infinite={true}
                                     speed={1600}
                                     slidesToShow={1}

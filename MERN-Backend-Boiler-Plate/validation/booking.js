@@ -1,4 +1,5 @@
 const Joi = require("joi")
+const { BookingStatus } = require("../utils/constant")
 
 const validateBookingCreateReq = (user) => {
     return Joi.object({
@@ -17,6 +18,15 @@ const validateBookingCreateReq = (user) => {
     }).validate(user)
 }
 
+const validateBookingUpdateReq = (user) => {
+    return Joi.object({
+        bookingstatus: Joi.string()
+            .valid(BookingStatus.APPROVED, BookingStatus.CANCELLED, BookingStatus.PENDING, BookingStatus.REJECTED)
+            .required(),
+    }).validate(user)
+}
+
 module.exports = {
     validateBookingCreateReq,
+    validateBookingUpdateReq,
 }

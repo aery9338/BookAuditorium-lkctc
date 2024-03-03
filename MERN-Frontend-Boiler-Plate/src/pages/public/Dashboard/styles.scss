@@ -60,7 +60,7 @@
             .list-container {
                 display: grid;
                 gap: rem(48);
-                grid-template-columns: repeat(auto-fill, minmax(312px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(rem(450), 1fr));
             }
         }
 
@@ -151,17 +151,18 @@
                         box-shadow: $shadow-2;
                         margin: 1px;
                         padding: rem(24);
+                        position: relative;
                         width: 100%;
 
                         .auditorium-wrapper {
-                            box-shadow: 2px 4px 4px 2px rgba(15, 16, 18, 0.04);
                             border: 1px solid #00000020;
-                            height: 100%;
-                            padding: rem(12);
                             border-radius: rem(8);
+                            box-shadow: 2px 4px 4px 2px rgba(15, 16, 18, 0.04);
                             cursor: pointer;
+                            height: fit-content;
+                            padding: rem(12);
                             width: 35%;
-                            
+
                             &:hover {
                                 box-shadow: 2px 4px 4px 2px rgba(15, 16, 18, 0.06);
                             }
@@ -178,13 +179,44 @@
                         }
 
                         .request-details {
-                            flex: 1;
                             flex-flow: row wrap;
+                            padding: rem(6) rem(12);
                             gap: rem(16) rem(32);
+                            width: 50%;
+
+                            > div {
+                                flex: 1 0 min(35%, 100%);
+                                .title,
+                                .sub-title {
+                                    white-space: pre;
+                                }
+                            }
+                        }
+
+                        .action-container {
+                            align-items: self-end;
+                            flex-direction: column;
+                            height: 100%;
+                            margin-left: auto;
+                        }
+
+                        .delete-action {
+                            position: absolute;
+                            right: rem(24);
+                            top: rem(16);
+
+                            button {
+                                align-items: center;
+                                padding: rem(4) rem(8);
+                            }
                         }
 
                         .ant-tag {
                             font-size: rem(18);
+
+                            .icon {
+                                width: rem(24);
+                            }
                         }
 
                         .request-title {
@@ -244,7 +276,21 @@
                 .request-card {
                     flex-direction: column;
 
+                    .request-details {
+                        width: 100%;
+                    }
+
+                    .delete-action {
+                        bottom: rem(16);
+                        top: unset;
+                    }
+
                     .auditorium-wrapper {
+                        width: 100%;
+                    }
+
+                    .action-container {
+                        flex-direction: row;
                         width: 100%;
                     }
                 }
@@ -262,13 +308,27 @@
                 .requests-container {
                     display: grid;
                     gap: rem(36) rem(24);
-                    grid-template-columns: repeat(auto-fill, minmax(rem(500), 1fr));
+                    grid-template-columns: repeat(auto-fill, minmax(rem(450), 1fr));
 
                     .request-card-wrapper {
                         .request-card {
                             flex-direction: column;
 
+                            .request-details {
+                                width: 100%;
+                            }
+
+                            .delete-action {
+                                bottom: rem(16);
+                                top: unset;
+                            }
+
                             .auditorium-wrapper {
+                                width: 100%;
+                            }
+
+                            .action-container {
+                                flex-direction: row;
                                 width: 100%;
                             }
                         }
@@ -289,6 +349,22 @@
             }
         }
     }
+
+    // @media (width < 375px) {
+    //     .dashboard-wrapper {
+    //         .requests-wrapper {
+    //             .requests-container {
+    //                 .request-card-wrapper {
+    //                     .request-card {
+    //                         .request-details {
+    //                             flex-direction: column;
+    //                         }
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
 }
 
 .add-edit-auditorium-modal {

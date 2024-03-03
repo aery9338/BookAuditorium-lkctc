@@ -24,6 +24,9 @@
     font-weight: 400;
     margin: 0;
     padding: 0;
+    &:focus-visible {
+        outline: none;
+    }
 }
 
 body {
@@ -205,6 +208,9 @@ a.ant-typography {
         font-size: rem(20);
         font-weight: 500;
     }
+    // &.ant-btn:not(:disabled):focus-visible {
+    //     outline: 2px solid $primary !important;
+    // }
 
     &.ant-btn-default {
         background-color: transparent;
@@ -331,7 +337,9 @@ a.ant-typography {
     display: flex;
     gap: rem(8);
     line-height: 0;
-    padding: 3px 12px;
+    margin: 0;
+    padding: rem(3) rem(12);
+    line-height: unset;
     width: fit-content;
 }
 
@@ -920,6 +928,18 @@ textarea {
 
 .ant-segmented {
     background-color: transparent;
+    overflow: auto;
+    &::-webkit-scrollbar {
+        visibility: hidden;
+    }
+
+    &::-webkit-scrollbar-track {
+        visibility: hidden;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        visibility: hidden;
+    }
 
     &.ant-segmented-sm {
         .ant-segmented-item {
@@ -964,8 +984,6 @@ textarea {
 
             .ant-segmented-item-label {
                 color: $light !important;
-                font-weight: 500;
-                font-size: rem(18);
             }
         }
     }
@@ -975,9 +993,10 @@ textarea {
     background-color: $light;
     border: 1px solid $grey;
     border-radius: rem(12);
+    column-gap: rem(40);
     flex-flow: row wrap;
-    gap: rem(40);
     padding: rem(12) rem(24);
+    row-gap: rem(16);
 
     &-text {
         gap: rem(8);
@@ -998,5 +1017,9 @@ textarea {
             font-size: rem(18);
             font-weight: 500;
         }
+    }
+
+    .banner-actions {
+        margin-left: auto;
     }
 }

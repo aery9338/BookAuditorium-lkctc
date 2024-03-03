@@ -13,6 +13,8 @@ import "./styles.scss"
 
 const Dashboard = () => {
     const [loading, setLoading] = React.useState(true)
+    let defaultTab = window.location.hash?.includes("#") ? window.location.hash?.substring(1) : "auditoriums"
+    const [activeTab, setAciveTab] = React.useState(defaultTab)
     const isAdmin = useSelector(selectIsAdmin)
     const isFaculty = useSelector(selectIsFaculty)
     const isStaff = useSelector(selectIsStaff)
@@ -24,6 +26,10 @@ const Dashboard = () => {
 
     const tabsItems = {
         ...insertIf(isAdmin, {
+            requests: {
+                label: "Requests",
+                children: <RequestsTab />,
+            },
             allAuditoriums: {
                 label: "All Auditoriums",
                 children: <AllAuditoriumsTab />,
@@ -31,10 +37,6 @@ const Dashboard = () => {
             faculty: {
                 label: "Faculty",
                 children: <FacultyTab />,
-            },
-            requests: {
-                label: "Requests",
-                children: <></>,
             },
         }),
         ...insertIf(isFaculty, {
@@ -47,10 +49,13 @@ const Dashboard = () => {
                 children: <RequestsTab />,
             },
         }),
-        ...insertIf(isStaff, {}),
+        ...insertIf(isStaff, {
+            dashboard: {
+                label: "Events",
+                children: <RequestsTab />,
+            },
+        }),
     }
-
-    let defaultTab = window.location.hash?.includes("#") ? window.location.hash?.substring(1) : "auditoriums"
 
     return (
         <div className="dashboard-conatiner">
@@ -59,8 +64,11 @@ const Dashboard = () => {
             ) : (
                 <div className="dashboard-wrapper">
                     <Tabs
-                        defaultActiveKey={defaultTab}
-                        onChange={(value) => navigate("#" + value)}
+                        value={activeTab}
+                        onChange={(value) => {
+                            setAciveTab(value)
+                            navigate("#" + value)
+                        }}
                         size={"large"}
                         className="custom-tab"
                         items={Object.keys(tabsItems)?.map((key) => {

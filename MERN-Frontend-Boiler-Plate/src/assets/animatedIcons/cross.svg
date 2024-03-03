@@ -1,0 +1,36 @@
+<svg xml:space="preserve" viewBox="0 0 100 100" y="0" x="0"
+    xmlns="http://www.w3.org/2000/svg" id="1" version="1.1" style="height: 100%; width: 100%; background: rgba(255, 255, 255, 0);" width="200px" height="200px">
+    <g class="ldl-scale" style="transform-origin: 50% 50%; transform: rotate(0deg) scale(0.8, 0.8);">
+        <g class="ldl-ani">
+            <g class="ldl-layer">
+                <g class="ldl-ani" style="transform-origin: 50px 50px; transform: matrix(0.01, 0, 0, 0.01, 0, 0); animation: 1.11111s linear 0.277778s infinite normal forwards heartbeat;">
+                    <path fill="#ffffff" d="M14.653 85.487c-3.138-1.806-4.167-6.008-2.198-9.12 8.401-13.282 18.34-25.329 29.177-36.099 10.916-10.864 22.708-20.49 34.913-29.273 2.772-1.995 6.57-1.344 8.557 1.485 1.928 2.744 1.471 6.578-1.06 8.732-11.111 9.456-21.591 19.558-30.95 30.517C43.876 62.5 35.786 74.12 29.248 86.488c-1.653 3.126-5.423 4.276-8.429 2.547l-6.166-3.548z" style="fill: #ffffff;"></path>
+                </g>
+            </g>
+            <g class="ldl-layer">
+                <g class="ldl-ani" style="transform-origin: 50px 50px; transform: matrix(0.01, 0, 0, 0.01, 0, 0); animation: 1.11111s linear 0.277778s infinite normal forwards heartbeat;">
+                    <path fill="#ffffff" d="M78.739 82.438c-3.067 1.804-7.041.872-8.916-2.152-6.367-10.267-14.543-19.718-23.698-28.397-9.306-8.827-19.587-16.906-30.29-24.594a6.594 6.594 0 0 1-1.682-8.948l1.23-1.895a6.609 6.609 0 0 1 9.03-2.012c11.571 7.19 22.962 14.943 33.735 23.864 10.673 8.851 20.777 18.958 29.162 30.721 2.256 3.165 1.337 7.584-2.014 9.555l-6.557 3.858z" style="fill: #ffffff;"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+     <style>
+        @keyframes heartbeat {
+            0% {
+                animation-timing-function: cubic-bezier(0.1678,0.6042,0.5465,3.0859);
+                transform: scale(1.3);
+            }
+            30% {
+                animation-timing-function: cubic-bezier(0.3206,0.3435,0.6825,0.6598);
+                transform: scale(1.15);
+            }
+            31% {
+                animation-timing-function: cubic-bezier(0.2811,0.5061,0.5347,0.909);
+                transform: scale(1.1458);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+    </style>
+</svg>

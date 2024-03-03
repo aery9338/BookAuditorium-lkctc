@@ -16,6 +16,7 @@ export function* getUserData() {
             const { userData } = data
             yield put(userActions.setState({ userData, loggedIn: true }))
             if (isAuthorized(userData?.roles, "faculty")) yield call(getBookingDetails)
+            if (isAuthorized(userData?.roles, "staff")) yield call(getEventDetails)
             if (isAuthorized(userData?.roles, ["admin", "superadmin"])) yield call(getBookingRequests)
         } else {
             yield call(logoutUser)
@@ -52,10 +53,10 @@ export function* loginUser({ payload }) {
                 })
             )
             yield put(configActions.getConfigData())
-            notification.success({
-                message: "Login successful",
-                // description: message,
-            })
+            if (isAuthorized(userData?.roles, "faculty")) yield call(getBookingDetails)
+            if (isAuthorized(userData?.roles, "staff")) yield call(getEventDetails)
+            if (isAuthorized(userData?.roles, ["admin", "superadmin"])) yield call(getBookingRequests)
+            notification.success({ description: `Welcome ${userData.displayname}!` })
         } else {
             notification.error({
                 message: "Login failed",
@@ -89,7 +90,7 @@ export function* signupUser({ payload }) {
             )
             yield put(configActions.getConfigData())
             notification.success({
-                message: "Account registered",
+                description: `Hi ${userData.displayname}`,
                 // description: "Please complete email verification to complete account setup",
             })
         } else {
@@ -134,10 +135,19 @@ export function* getBookingDetails() {
     }
 }
 
+export function* getEventDetails() {
+    try {
+        const { data: bookingDetails, error } = yield call(bookingService.getEventDetails)
+        if (!error) yield put(userActions.setState({ bookingDetails }))
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 export function* getBookingRequests() {
     try {
-        const { data, error } = yield call(bookingService.getBookingRequests)
-        if (!error) console.log({ data })
+        const { data: allBookingRequests, error } = yield call(bookingService.getBookingRequests)
+        if (!error) yield put(userActions.setState({ allBookingRequests }))
     } catch (error) {
         console.error(error)
     }

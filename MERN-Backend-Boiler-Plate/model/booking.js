@@ -26,28 +26,12 @@ const bookingSchema = new mongoose.Schema({
         required: true,
     },
     starttime: {
-        type: String,
+        type: Date,
         required: true,
-        // validate: {
-        //     validator: function (v) {
-        //         const today = new Date()
-        //         const clgstarttime = today.setHours(8, 0, 0, 0)
-        //         return v >= clgstarttime
-        //     },
-        //     message: "Time should be between college hours",
-        // },
     },
     endtime: {
-        type: String,
+        type: Date,
         required: true,
-        // validate: {
-        //     validator: function (v) {
-        //         const today = new Date()
-        //         const clgendtime = today.setHours(20, 0, 0, 0)
-        //         return v <= clgendtime
-        //     },
-        //     message: "Time should be between college hours",
-        // },
     },
     department: {
         type: String,

@@ -16,6 +16,7 @@ const AuditoriumCard = ({ auditorium, view, onEdit = () => null, onDelete = () =
             <div className={`image-container ${isAdmin ? "" : "show-preview"}`}>
                 <Slider
                     dots={false}
+                    arrows={false}
                     infinite={true}
                     speed={1600}
                     slidesToShow={1}

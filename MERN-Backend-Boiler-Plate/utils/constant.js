@@ -10,9 +10,9 @@ const Gender = Object.freeze({
     OTHER: "other",
 })
 
-const InviteStatus = Object.freeze({
+const BookingStatus = Object.freeze({
     PENDING: "pending",
-    ACCEPTED: "accepted",
+    APPROVED: "approved",
     REJECTED: "rejected",
     CANCELLED: "cancelled",
 })
@@ -39,7 +39,7 @@ const Weight = Object.freeze({
 module.exports = {
     DocumentStatus,
     Gender,
-    InviteStatus,
+    BookingStatus,
     Length,
     Time,
     Weight,

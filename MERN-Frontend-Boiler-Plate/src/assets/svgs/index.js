@@ -6,5 +6,4 @@ export const icons = {
     twitter: require("./twitter.svg").default,
     pinterest: require("./pinterest.svg").default,
     linkedin: require("./linkedin.svg").default,
-    waiting: require("./waiting.svg").default,
 }
