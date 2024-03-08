@@ -3,8 +3,11 @@ const mongoose = require("mongoose")
 const router = express.Router()
 const { userTokenAuth, adminTokenAuth } = require("../middleware/tokenAuth")
 const Booking = require("../model/booking")
+const Notification = require("../model/notification")
+const User = require("../model/user")
 const { validateBookingCreateReq, validateBookingUpdateReq } = require("../validation/booking")
 const { BookingStatus } = require("../utils/constant")
+const Auditorium = require("../model/auditorium")
 
 router.get("/", userTokenAuth, async (req, res) => {
     try {
@@ -79,6 +82,46 @@ router.post("/", userTokenAuth, async (req, res) => {
         const { error } = validateBookingCreateReq(reqBody)
         if (error) return res.status(400).json({ error: true, message: error.details[0].message })
         const booking = await Booking.create([reqBody], { session })
+        const adminIds = await User.find({
+            roles: { $in: ["admin", "superadmin"] },
+            isdeleted: false,
+        }).select("_id")
+        const audtoriumDetail = await Auditorium.findById(reqBody.auditorium).select("title")
+        const newNotifications = await Notification.create(
+            adminIds.map((adminId) => {
+                return {
+                    notification: `Booking Request from ${req.userData.displayname} is receiced for ${
+                        audtoriumDetail.title
+                    } auditorium on ${new Intl.DateTimeFormat("en-GB", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                    }).format(new Date(reqBody.bookingdate))} from ${new Intl.DateTimeFormat("en-US", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: true,
+                    }).format(new Date(reqBody.starttime))} to ${new Intl.DateTimeFormat("en-US", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: true,
+                    }).format(new Date(reqBody.endtime))}`,
+                    to: adminId._id,
+                    type: "new-request",
+                    booking: booking[0]._id,
+                    createdby: req.userData._id,
+                    auditorium: reqBody.auditorium,
+                }
+            }),
+            { session }
+        )
+        const io = await req.app.get("io")
+        newNotifications.forEach((notification) => {
+            io.emit(`notification-${notification.to.toString()}`, {
+                message: "New Booking request",
+                description: notification.notification,
+                type: notification.type,
+            })
+        })
         await session.commitTransaction()
         return res.json({ data: booking, message: "Booking request received, Wait for admin response" })
     } catch (error) {

@@ -1,10 +1,10 @@
 const express = require("express")
 const mongoose = require("mongoose")
 const bcrypt = require("bcrypt")
+const User = require("../model/user")
 const router = express.Router()
 const { userTokenAuth } = require("../middleware/tokenAuth")
 const { validateUserSignUpReq, validateUserLoginReq } = require("../validation/user")
-const { User } = require("../model/user")
 const { createJWToken, createRefreshJWToken } = require("../middleware/helper")
 
 router.get("/me", userTokenAuth, async (req, res) => {

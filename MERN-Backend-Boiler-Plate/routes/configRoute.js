@@ -1,6 +1,6 @@
 const express = require("express")
 const Auditorium = require("../model/auditorium")
-const { User } = require("../model/user")
+const User = require("../model/user")
 const { userTokenAuth } = require("../middleware/tokenAuth")
 const { isAuthorized } = require("../utils/helper")
 const router = express.Router()

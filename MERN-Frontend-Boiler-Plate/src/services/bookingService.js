@@ -20,6 +20,10 @@ class bookingService {
     async modifyBookingRequest(id, data) {
         return await http.put(`/api/booking/${id}`, data)
     }
+
+    async getNotifications() {
+        return await http.get(`/api/notification`)
+    }
 }
 
 export default new bookingService()

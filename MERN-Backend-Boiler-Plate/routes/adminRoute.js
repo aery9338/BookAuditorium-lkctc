@@ -4,7 +4,7 @@ const router = express.Router()
 const bcrypt = require("bcrypt")
 const { adminTokenAuth } = require("../middleware/tokenAuth")
 const appConfig = require("../startup/config")
-const { User } = require("../model/user")
+const User = require("../model/user")
 const {
     validateAuditoriumCreateReq,
     validateAuditoriumUpdateReq,

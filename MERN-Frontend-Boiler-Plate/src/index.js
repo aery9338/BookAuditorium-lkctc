@@ -8,6 +8,7 @@ import { AppConfig } from "startup/config"
 import IdleTimer from "startup/IdleTimer"
 import InternetSocket from "startup/InternetSocket"
 import Router from "startup/router"
+import ServerSocket from "startup/serverSocket"
 import { createReduxStore } from "./reduxStore"
 import "globalStyles/main.scss"
 
@@ -18,6 +19,7 @@ const root = ReactDOM.createRoot(document.getElementById("root"))
 root.render(
     <Provider store={reduxStore}>
         {AppConfig?.useIdleTimer && <IdleTimer />}
+        {AppConfig?.useServerSocket && <ServerSocket />}
         {AppConfig?.useInternetSocket && <InternetSocket />}
         <Router history={history} />
     </Provider>

@@ -1,61 +1,75 @@
-import React from "react"
+import React, { useMemo } from "react"
+import { Helmet } from "react-helmet"
 import { useSelector } from "react-redux"
-import { useNavigate } from "react-router-dom"
 import { Tabs } from "antd"
 import { Spin } from "customComponents"
-import { selectIsAdmin, selectIsFaculty, selectIsStaff } from "reduxStore/selectors"
-import { insertIf } from "utils/helper"
+import { selectUserRole } from "reduxStore/selectors"
+import { useQueryParams } from "utils/customHooks"
 import AllAuditoriumsTab from "./AllAuditoriumsTab"
 import BookAuditoriumTab from "./BookAuditoriumTab"
 import FacultyTab from "./FacultyTab"
 import RequestsTab from "./RequestsTab"
 import "./styles.scss"
 
+const getTabs = (userRole) => {
+    switch (userRole) {
+        case "admin":
+            return [
+                {
+                    key: "requests",
+                    label: "Requests",
+                    children: <RequestsTab />,
+                },
+                {
+                    key: "allAuditoriums",
+                    label: "All Auditoriums",
+                    children: <AllAuditoriumsTab />,
+                },
+                {
+                    key: "faculty",
+                    label: "Faculty",
+                    children: <FacultyTab />,
+                },
+            ]
+
+        case "faculty":
+            return [
+                {
+                    key: "auditoriums",
+                    label: "Book an auditorium",
+                    children: <BookAuditoriumTab />,
+                },
+                {
+                    key: "requests",
+                    label: "Your requests",
+                    children: <RequestsTab />,
+                },
+            ]
+
+        case "staff":
+            return [
+                {
+                    key: "events",
+                    label: "Events",
+                    children: <RequestsTab />,
+                },
+            ]
+
+        default:
+            return []
+    }
+}
+
 const Dashboard = () => {
+    const { getQueryParam, setQueryParam } = useQueryParams()
+    const userRole = useSelector(selectUserRole)
+    const tabs = useMemo(() => getTabs(userRole), [userRole])
     const [loading, setLoading] = React.useState(true)
-    let defaultTab = window.location.hash?.includes("#") ? window.location.hash?.substring(1) : "auditoriums"
-    const [activeTab, setAciveTab] = React.useState(defaultTab)
-    const isAdmin = useSelector(selectIsAdmin)
-    const isFaculty = useSelector(selectIsFaculty)
-    const isStaff = useSelector(selectIsStaff)
-    const navigate = useNavigate()
+    const activeTab = getQueryParam("dashboardTab") ?? tabs[0]?.key
 
     React.useEffect(() => {
         setLoading(false)
     }, [])
-
-    const tabsItems = {
-        ...insertIf(isAdmin, {
-            requests: {
-                label: "Requests",
-                children: <RequestsTab />,
-            },
-            allAuditoriums: {
-                label: "All Auditoriums",
-                children: <AllAuditoriumsTab />,
-            },
-            faculty: {
-                label: "Faculty",
-                children: <FacultyTab />,
-            },
-        }),
-        ...insertIf(isFaculty, {
-            auditoriums: {
-                label: "Book an auditorium",
-                children: <BookAuditoriumTab />,
-            },
-            requests: {
-                label: "Your requests",
-                children: <RequestsTab />,
-            },
-        }),
-        ...insertIf(isStaff, {
-            dashboard: {
-                label: "Events",
-                children: <RequestsTab />,
-            },
-        }),
-    }
 
     return (
         <div className="dashboard-conatiner">
@@ -63,17 +77,16 @@ const Dashboard = () => {
                 <Spin />
             ) : (
                 <div className="dashboard-wrapper">
+                    <Helmet>
+                        <title>Dashboard</title>
+                        <meta name="description" content="ProgressPicture login form" />
+                    </Helmet>
                     <Tabs
-                        value={activeTab}
-                        onChange={(value) => {
-                            setAciveTab(value)
-                            navigate("#" + value)
-                        }}
+                        activeKey={activeTab}
+                        onChange={(key) => setQueryParam("dashboardTab", key)}
                         size={"large"}
                         className="custom-tab"
-                        items={Object.keys(tabsItems)?.map((key) => {
-                            return { ...tabsItems[key], key }
-                        })}
+                        items={tabs}
                     />
                 </div>
             )}

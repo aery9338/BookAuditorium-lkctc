@@ -22,6 +22,7 @@ const userSlice = createSlice({
         logoutUser: () => {},
         getBookingDetails: () => {},
         getBookingRequests: () => {},
+        getNotifications: () => {},
     },
 })
 

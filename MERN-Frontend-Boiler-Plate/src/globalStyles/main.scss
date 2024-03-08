@@ -185,6 +185,12 @@ a.ant-typography {
     }
 }
 
+.ant-drawer {
+    .ant-drawer-content-wrapper {
+        width: max(45%, rem(500));
+    }
+}
+
 .ant-btn {
     align-items: center;
     align-items: center;
@@ -208,6 +214,7 @@ a.ant-typography {
         font-size: rem(20);
         font-weight: 500;
     }
+
     // &.ant-btn:not(:disabled):focus-visible {
     //     outline: 2px solid $primary !important;
     // }

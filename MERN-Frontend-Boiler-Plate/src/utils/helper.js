@@ -212,7 +212,6 @@ export const isComponent = (component) => component?.$$typeof === Symbol?.for("r
 export const htmlTagsRegex = /<[^>]+>|\s+/g
 
 export const processHtmlString = (string, extractBodyContent = false) => {
-    console.log(string)
     if (extractBodyContent) {
         const parser = new DOMParser()
         const doc = parser.parseFromString(string, "text/html")
@@ -337,4 +336,34 @@ export const compileFiles = async (files) => {
     const filteredFiles = getUniqueValues(files, "name")
     await Promise.all(filteredFiles.map(readFileAsync))
     return processedData
+}
+
+export const timeAgo = (timestamp, returnObject) => {
+    const seconds = Math.floor((new Date() - new Date(timestamp)) / 1000)
+    if (seconds <= 30) return "Just now"
+    const intervals = {
+        year: 31536000,
+        month: 2592000,
+        week: 604800,
+        day: 86400,
+        hour: 3600,
+        minute: 60,
+        second: 1,
+    }
+
+    let count
+    for (const unit in intervals) {
+        count = Math.floor(seconds / intervals[unit])
+        if (count > 0) {
+            if (unit === "week" && count >= 4) {
+                const months = Math.floor(count / 4)
+                return returnObject
+                    ? { count: months, unit }
+                    : months === 1
+                    ? `${months} month ago`
+                    : `${months} months ago`
+            }
+            return returnObject ? { count, unit } : count === 1 ? `${count} ${unit} ago` : `${count} ${unit}s ago`
+        }
+    }
 }

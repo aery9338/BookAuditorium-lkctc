@@ -11,7 +11,7 @@ import { configActions } from "reduxStore"
 import { selectAllAuditoriums, selectIsAdmin } from "reduxStore/selectors"
 import adminService from "services/adminService"
 import { Features } from "utils/constants"
-import storage from "utils/firebase"
+import { storage } from "utils/firebase"
 import { settingsDiff } from "utils/helper"
 
 const AllAuditoriumsTab = () => {

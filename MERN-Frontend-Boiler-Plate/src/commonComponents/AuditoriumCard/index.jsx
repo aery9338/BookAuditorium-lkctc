@@ -17,13 +17,14 @@ const AuditoriumCard = ({ auditorium, view, onEdit = () => null, onDelete = () =
                 <Slider
                     dots={false}
                     arrows={false}
-                    infinite={true}
+                    infinite={auditorium?.images?.length > 1}
                     speed={1600}
                     slidesToShow={1}
                     slidesToScroll={1}
                     autoplay={true}
                     autoplaySpeed={5600}
                 >
+                    {console.log(auditorium?.images?.length)}
                     {auditorium?.images?.map((image) => (
                         <img key={image} src={image} className="image" alt="" />
                     ))}

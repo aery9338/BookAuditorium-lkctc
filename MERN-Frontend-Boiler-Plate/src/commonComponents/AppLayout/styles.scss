@@ -18,23 +18,21 @@
 
         .app-header-wrapper {
             align-items: center;
-            box-shadow: $shadow;
+            box-shadow: $shadow-light;
             display: flex;
-            height: rem(72);
+            z-index: 1;
+            // height: rem(90);
         }
 
         .app-content-wrapper {
             background-color: $background;
             display: flex;
-            height: 100%;
-            height: calc(100vh - rem(120));
-
-            &.full {
-                height: calc(100vh - rem(48));
-            }
+            flex: 1;
+            overflow: auto;
+            // height: calc(100vh - rem(140));
 
             .app-side-wrapper {
-                box-shadow: $shadow;
+                box-shadow: $shadow-light;
                 height: 100%;
                 overflow: auto;
                 width: clamp(400px, 25%, 250px);
@@ -50,9 +48,10 @@
 
         .app-footer-wrapper {
             align-items: center;
-            box-shadow: $shadow;
+            box-shadow: $shadow-light;
             display: flex;
-            height: rem(48);
+            z-index: 1;
+            // height: rem(50);
         }
     }
 }

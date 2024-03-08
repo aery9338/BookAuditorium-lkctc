@@ -6,6 +6,8 @@ const initialState = {
     viewMode: "light",
     bookingDetails: [],
     allBookingRequests: [],
+    notifications: [],
+    unreadNotification: 0,
 }
 
 export default initialState

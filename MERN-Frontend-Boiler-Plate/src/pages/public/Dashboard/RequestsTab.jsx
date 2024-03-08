@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react"
+import React, { useEffect, useMemo, useRef, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import Slider from "react-slick"
@@ -14,76 +14,91 @@ import {
     selectIsAdmin,
     selectIsFaculty,
     selectIsStaff,
+    selectUserRole,
 } from "reduxStore/selectors"
 import bookingService from "services/bookingService"
 import { Departments, Occasions } from "utils/constants"
+import { useQueryParams } from "utils/customHooks"
 import { animatedIcons } from "assets/animatedIcons"
+
+const tabItems = (userRole = "", requests = []) => [
+    ...(userRole === "faculty" || userRole === "admin"
+        ? [
+              {
+                  value: "all",
+                  label: `All Requests (${requests.length ?? 0})`,
+              },
+              {
+                  value: "pending",
+                  label: `Pending (${requests?.filter((request) => request.bookingstatus === "pending").length ?? 0})`,
+              },
+              {
+                  value: "approved",
+                  label: `Approved (${
+                      requests?.filter((request) => request.bookingstatus === "approved").length ?? 0
+                  })`,
+              },
+              {
+                  value: "rejected",
+                  label: `Rejected (${
+                      requests?.filter((request) => request.bookingstatus === "rejected").length ?? 0
+                  })`,
+              },
+              ...(userRole === "faculty"
+                  ? [
+                        {
+                            value: "cancelled",
+                            label: `Cancelled (${
+                                requests?.filter((request) => request.bookingstatus === "cancelled").length ?? 0
+                            })`,
+                        },
+                    ]
+                  : []),
+          ]
+        : userRole === "staff"
+        ? [
+              {
+                  value: "today",
+                  label: `Today Events (${
+                      requests?.filter(
+                          (request) =>
+                              new Date(request.bookingdate).setHours(0, 0, 0, 0) === new Date().setHours(0, 0, 0, 0)
+                      ).length ?? 0
+                  })`,
+              },
+              {
+                  value: "all",
+                  label: `All Events (${requests.length ?? 0})`,
+              },
+          ]
+        : []),
+]
 
 const RequestsTab = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
+    const containerRef = useRef()
+    const { getQueryParam, removeQueryParam, setQueryParam } = useQueryParams()
     const isAdmin = useSelector(selectIsAdmin)
     const isFaculty = useSelector(selectIsFaculty)
     const isStaff = useSelector(selectIsStaff)
+    const userRole = useSelector(selectUserRole)
     const requetsDetails = useSelector(
         isAdmin ? selectAllBookingRequests : isFaculty ? selectBookingDetails : selectEventsDetails
     )
+    const highlightedRequest = getQueryParam("requestId")
     const requests = useMemo(() => requetsDetails.data, [requetsDetails])
-    const [activeTab, setAciveTab] = useState("all")
-    const [listType, setListType] = useState("list")
+    const tabs = useMemo(() => tabItems(userRole, requests), [userRole, requests])
+    const activeTab = getQueryParam("requestTab") ?? tabs[0]?.key
 
-    const tabsItems = [
-        ...(!isStaff
-            ? [
-                  {
-                      value: "all",
-                      label: `All Requests (${requetsDetails.totalCount ?? 0})`,
-                  },
-                  {
-                      value: "pending",
-                      label: `Pending (${
-                          requests?.filter((request) => request.bookingstatus === "pending").length ?? 0
-                      })`,
-                  },
-                  {
-                      value: "approved",
-                      label: `Approved (${
-                          requests?.filter((request) => request.bookingstatus === "approved").length ?? 0
-                      })`,
-                  },
-                  {
-                      value: "rejected",
-                      label: `Rejected (${
-                          requests?.filter((request) => request.bookingstatus === "rejected").length ?? 0
-                      })`,
-                  },
-              ]
-            : [
-                  {
-                      value: "today",
-                      label: `Today Events (${
-                          requests?.filter(
-                              (request) =>
-                                  new Date(request.bookingdate).setHours(0, 0, 0, 0) === new Date().setHours(0, 0, 0, 0)
-                          ).length ?? 0
-                      })`,
-                  },
-                  {
-                      value: "all",
-                      label: `All Events (${requetsDetails.totalCount ?? 0})`,
-                  },
-              ]),
-        ...(isAdmin || isStaff
-            ? []
-            : [
-                  {
-                      value: "cancelled",
-                      label: `Cancelled (${
-                          requests?.filter((request) => request.bookingstatus === "cancelled").length ?? 0
-                      })`,
-                  },
-              ]),
-    ]
+    const [listType, setListType] = useState("list")
+    useEffect(() => {
+        if (highlightedRequest) {
+            const selectedItem = containerRef.current.querySelector(`[data-id="${highlightedRequest}"]`)
+            if (selectedItem) selectedItem.scrollIntoView({ behavior: "smooth", block: "start" })
+            setTimeout(() => removeQueryParam("requestId"), 1200)
+        }
+    }, [highlightedRequest, removeQueryParam])
 
     const onModifingRequest = async (id, bookingstatus) => {
         const { error, message } = await bookingService.modifyBookingRequest(id, { bookingstatus })
@@ -107,7 +122,7 @@ const RequestsTab = () => {
                 </Flex>
             </Flex> */}
             <Flex justify="space-between" align="center" gap={"large"}>
-                <Segmented value={activeTab} options={tabsItems} onChange={setAciveTab} />
+                <Segmented value={activeTab} options={tabs} onChange={(key) => setQueryParam("requestTab", key)} />
                 <Segmented
                     className="view-type"
                     size="small"
@@ -119,7 +134,7 @@ const RequestsTab = () => {
                     ]}
                 />
             </Flex>
-            <Flex vertical className="requests-container">
+            <Flex vertical className="requests-container" ref={containerRef}>
                 {requests?.flatMap((request) => {
                     let {
                         _id,
@@ -151,13 +166,14 @@ const RequestsTab = () => {
                     else if (activeTab === "cancelled" && bookingstatus !== "cancelled") return []
                     else if (
                         activeTab === "today" &&
-                        new Date(request.bookingdate).setHours(0, 0, 0, 0) !== new Date().setHours(0, 0, 0, 0)
+                        new Date(bookingdate).setHours(0, 0, 0, 0) !== new Date().setHours(0, 0, 0, 0)
                     )
                         return []
 
                     return (
-                        <Flex key={request._id} className="request-card-wrapper">
-                            <Flex className="request-card" gap={"large"} align="center">
+                        <Flex key={_id} data-id={_id} className="request-card-wrapper">
+                            <div className={highlightedRequest === _id ? "ripple-effect" : ""} />
+                            <Flex className={"request-card"} gap={"large"} align="center">
                                 <Flex
                                     className="auditorium-wrapper"
                                     gap={"middle"}

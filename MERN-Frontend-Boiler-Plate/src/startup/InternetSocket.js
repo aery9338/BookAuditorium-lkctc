@@ -28,7 +28,7 @@ const InternetSocket = () => {
     useEffect(() => {
         dispatch(configActions.setState({ internetConnection: isOnline }))
         if (!isOnline) {
-            message.warn({
+            message.warning({
                 key: connectionKey,
                 content: "You are offline.",
                 duration: 0,

@@ -13,6 +13,7 @@ const isEnvDevOrStaging = isEnvDev || isEnvStaging
 const clientBaseUrl = process.env.REACT_APP_CLIENT_BASE_URL
 const serverBaseUrl = process.env.REACT_APP_SERVER_BASE_URL
 const googleClientId = process.env.REACT_APP_GOOGLE_OAUTH2_CLIENT_ID
+const useServerSocket = process.env.REACT_APP_USE_SERVER_SOCKET
 
 // const useIdleTimer = false process.env.REACT_APP_USE_IDLE_TIMER
 const useIdleTimer = false
@@ -30,5 +31,6 @@ export const AppConfig = {
     googleClientId,
 
     useIdleTimer: trueValues?.includes(useIdleTimer?.toString()?.toLowerCase()),
+    useServerSocket: trueValues?.includes(useServerSocket?.toString()?.toLowerCase()),
     useInternetSocket: trueValues?.includes(useInternetSocket?.toString()?.toLowerCase()),
 }

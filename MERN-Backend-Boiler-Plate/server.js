@@ -6,17 +6,23 @@ const cors = require("cors")
 const routes = require("./routes")
 const bodyParser = require("body-parser")
 const server = require("http").Server(app)
-require("./startup/logger")(app)
-// require("./startup/dailyschedular")()
-require("./startup/db")()
+const initializeSocketIo = require("./startup/webSocket")
+const initializeLogger = require("./startup/logger")
+const initializeDB = require("./startup/db")
+const initializeSchedular = require("./startup/dailyschedular")
 
 const initialize = () => {
     const PORT = process.env.APP_PORT || 5000
+    const io = initializeSocketIo(server)
+    app.set("io", io)
     app.use(bodyParser.json())
     app.use(bodyParser.urlencoded({ extended: true }))
     app.use(cors())
     app.use("/", require("./routes/homeRoute"))
     app.use("/api", routes)
+    initializeLogger(app)
+    initializeDB()
+    initializeSchedular()
 
     server
         .listen(PORT, () => {

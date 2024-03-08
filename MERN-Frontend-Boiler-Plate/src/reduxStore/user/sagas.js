@@ -15,6 +15,7 @@ export function* getUserData() {
         if (!error) {
             const { userData } = data
             yield put(userActions.setState({ userData, loggedIn: true }))
+            yield call(getNotifications)
             if (isAuthorized(userData?.roles, "faculty")) yield call(getBookingDetails)
             if (isAuthorized(userData?.roles, "staff")) yield call(getEventDetails)
             if (isAuthorized(userData?.roles, ["admin", "superadmin"])) yield call(getBookingRequests)
@@ -45,17 +46,9 @@ export function* loginUser({ payload }) {
             const { userData, access_token, refresh_token } = data
             userAuthService.setAccessToken(access_token)
             userAuthService.setRefreshToken(refresh_token)
-            yield put(
-                userActions.setState({
-                    userData,
-                    loggedIn: true,
-                    loading: false,
-                })
-            )
+            yield call(getUserData)
+            yield put(userActions.setState({ userData, loggedIn: true, loading: false }))
             yield put(configActions.getConfigData())
-            if (isAuthorized(userData?.roles, "faculty")) yield call(getBookingDetails)
-            if (isAuthorized(userData?.roles, "staff")) yield call(getEventDetails)
-            if (isAuthorized(userData?.roles, ["admin", "superadmin"])) yield call(getBookingRequests)
             notification.success({ description: `Welcome ${userData.displayname}!` })
         } else {
             notification.error({
@@ -153,6 +146,18 @@ export function* getBookingRequests() {
     }
 }
 
+export function* getNotifications() {
+    try {
+        const {
+            data: { notifications, unreadNotifications },
+            error,
+        } = yield call(bookingService.getNotifications)
+        if (!error) yield put(userActions.setState({ notifications, unreadNotifications }))
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 // Defines which saga should run upon each action dispatch
 export default function* rootSaga() {
     yield all([
@@ -163,6 +168,7 @@ export default function* rootSaga() {
         takeEvery(userActions.getUserData.type, getUserData),
         takeEvery(userActions.getBookingDetails.type, getBookingDetails),
         takeEvery(userActions.getBookingRequests.type, getBookingRequests),
-        getUserData(), // run once on app load to check user auth
+        takeEvery(userActions.getNotifications.type, getNotifications),
+        getUserData(),
     ])
 }

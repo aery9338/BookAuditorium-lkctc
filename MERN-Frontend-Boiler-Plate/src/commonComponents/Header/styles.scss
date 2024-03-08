@@ -52,8 +52,15 @@
                 }
             }
 
+            & .custom-btn {
+                border-radius: rem(12);
+                padding: rem(6);
+                aspect-ratio: 1;
+            }
+
             & .notification {
                 rotate: 45deg;
+                color: $primary;
             }
 
             svg {
@@ -86,6 +93,55 @@
         span {
             color: $primary;
             font-size: rem(18);
+        }
+    }
+}
+
+.notification-drawer {
+    .ant-drawer-body {
+        padding: rem(20);
+        .notification-wapper {
+            .period {
+                font-size: rem(20);
+                font-weight: 500;
+                margin-left: rem(14);
+            }
+
+            .card {
+                margin: 0;
+                padding: rem(16);
+                cursor: pointer;
+                border: 2px solid transparent;
+
+                .header {
+                    .name {
+                        font-size: rem(18);
+                        font-weight: 600;
+                    }
+                    .time {
+                        font-size: rem(14);
+                        font-weight: 500;
+                    }
+                }
+
+                .notification {
+                    .text-spacer {
+                        width: 2px;
+                    }
+
+                    .highlight {
+                        font-weight: 600;
+                    }
+                }
+
+                .action-wrapper {
+                    justify-content: flex-end;
+                }
+
+                &:hover {
+                    border: 2px solid $gray-1;
+                }
+            }
         }
     }
 }
