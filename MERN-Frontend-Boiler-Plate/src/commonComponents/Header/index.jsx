@@ -1,4 +1,5 @@
-import React, { useMemo, useState } from "react"
+/* eslint-disable max-len */
+import React, { useEffect, useMemo, useRef, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import { IoNotificationsOutline } from "react-icons/io5"
@@ -21,22 +22,25 @@ import "./styles.scss"
 const Header = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
+    const timeoutRef = useRef()
     const { setQueryParams } = useQueryParams()
     // const viewMode = useSelector(selectViewMode)
     const userData = useSelector(selectUserData)
     const notifications = useSelector(selectNotifications)
     const unreadNotifications = useSelector(selectUnreadNotifications)
     const [notificationDrawerVisibility, setNotificationDrawerVisibility] = useState(false)
+
     const filterNotificationData = useMemo(() => {
         return notifications?.reduce(
             (acc, notification) => {
                 if (notification.createdby?._id) acc.colors[notification.createdby._id] = getRandomHexColor()
-
                 const { count, unit } = timeAgo(notification.createdon, true)
-                if (!notification.readReceipt) {
+                if (!notification.readreceipt) {
                     acc.categorized.new.push(notification)
-                } else if (["hour", "minute", "second"].includes(unit)) {
+                } else if (new Date().setHours(0, 0, 0, 0) < new Date(notification.createdon)) {
                     acc.categorized.today.push(notification)
+                } else if (new Date(new Date().getDate() - 1).setHours(0, 0, 0, 0) < new Date(notification.createdon)) {
+                    acc.categorized.yesterday.push(notification)
                 } else if ((compare(unit, "week") && compare(count, 1)) || compare(unit, "day")) {
                     acc.categorized.last7days.push(notification)
                 } else {
@@ -44,9 +48,77 @@ const Header = () => {
                 }
                 return acc
             },
-            { colors: {}, categorized: { new: [], today: [], last7days: [], older: [] } }
+            { colors: {}, categorized: { new: [], today: [], yesterday: [], last7days: [], older: [] } }
         )
     }, [notifications])
+
+    useEffect(() => {
+        if (notificationDrawerVisibility && unreadNotifications > 0) {
+            timeoutRef.current = setTimeout(() => {
+                dispatch(userActions.readAllNotification())
+            }, 3000)
+        }
+
+        return () => {
+            clearTimeout(timeoutRef.current)
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [notificationDrawerVisibility])
+
+    const GetRequestNotificationContent = ({
+        responseBack = false,
+        type = "new",
+        status = "",
+        bookingRequestCreatedBy = "",
+        actionTakenBy = "",
+        auditoriumTitle = "",
+        bookingTitle = "",
+        bookingDate = "",
+        startTime = "",
+        endTime = "",
+    }) => {
+        if (type === "new")
+            return (
+                <Typography>
+                    Booking request from <span className="highlight">{bookingRequestCreatedBy}</span> is receiced for{" "}
+                    <span className="highlight">{auditoriumTitle}</span> auditorium on{" "}
+                    <span className="highlight">{bookingDate}</span> from <span className="highlight">{startTime}</span>{" "}
+                    to <span className="highlight">{endTime}</span> entitled{" "}
+                    <span className="highlight">{bookingTitle}</span>
+                </Typography>
+            )
+        else if (type === "schedule")
+            return (
+                <Typography>
+                    {actionTakenBy} requested you to join with{" "}
+                    <span className="highlight">{bookingRequestCreatedBy}</span> in{" "}
+                    <span className="highlight">{auditoriumTitle}</span> auditorium on{" "}
+                    <span className="highlight">{bookingDate}</span> from <span className="highlight">{startTime}</span>{" "}
+                    to <span className="highlight">{endTime}</span>
+                </Typography>
+            )
+        else if (type === "response" && !responseBack)
+            return (
+                <Typography>
+                    Booking request from <span className="highlight">{bookingRequestCreatedBy}</span> is{" "}
+                    <span className="highlight">{status}</span> by <span className="highlight">{actionTakenBy}</span>{" "}
+                    for <span className="highlight">{auditoriumTitle}</span> auditorium on{" "}
+                    <span className="highlight">{bookingDate}</span> entitled{" "}
+                    <span className="highlight">{bookingTitle}</span>
+                </Typography>
+            )
+        else if (responseBack)
+            return (
+                <Typography>
+                    Your booking request is <span className="highlight">{status}</span> by{" "}
+                    <span className="highlight">{actionTakenBy}</span> for{" "}
+                    <span className="highlight">{auditoriumTitle}</span> auditorium on{" "}
+                    <span className="highlight">{bookingDate}</span> entitled{" "}
+                    <span className="highlight">{bookingTitle}</span>
+                </Typography>
+            )
+        else return null
+    }
 
     return (
         <div className="header-wrapper">
@@ -162,41 +234,39 @@ const Header = () => {
                                                 </Typography>
                                             </Flex>
                                             <Flex className="notification">
-                                                <Typography>
-                                                    Booking Request from <span className="text-spacer" />
-                                                    <span className="highlight">
-                                                        {notification.createdby.displayname}
-                                                    </span>
-                                                    <span className="text-spacer" /> is receiced for{" "}
-                                                    <span className="text-spacer" />
-                                                    <span className="highlight">{notification.auditorium.title}</span>
-                                                    <span className="text-spacer" /> auditorium on{" "}
-                                                    <span className="text-spacer" />
-                                                    <span className="highlight">
-                                                        {new Intl.DateTimeFormat("en-GB", {
-                                                            day: "2-digit",
-                                                            month: "short",
-                                                            year: "numeric",
-                                                        }).format(new Date(notification.booking.bookingdate))}
-                                                    </span>
-                                                    <span className="text-spacer" /> from{" "}
-                                                    <span className="text-spacer" />
-                                                    <span className="highlight">
-                                                        {new Intl.DateTimeFormat("en-US", {
-                                                            hour: "2-digit",
-                                                            minute: "2-digit",
-                                                            hour12: true,
-                                                        }).format(new Date(notification.booking.starttime))}
-                                                    </span>
-                                                    <span className="text-spacer" /> to <span className="text-spacer" />
-                                                    <span className="highlight">
-                                                        {new Intl.DateTimeFormat("en-US", {
-                                                            hour: "2-digit",
-                                                            minute: "2-digit",
-                                                            hour12: true,
-                                                        }).format(new Date(notification.booking.endtime))}
-                                                    </span>
-                                                </Typography>
+                                                <GetRequestNotificationContent
+                                                    responseBack={compare(
+                                                        notification.booking.createdby._id,
+                                                        notification.to
+                                                    )}
+                                                    type={
+                                                        notification.status === "pending"
+                                                            ? "new"
+                                                            : notification.type === "schedule-request"
+                                                            ? "schedule"
+                                                            : "response"
+                                                    }
+                                                    bookingRequestCreatedBy={notification.booking.createdby.displayname}
+                                                    actionTakenBy={notification.createdby.displayname}
+                                                    auditoriumTitle={notification.auditorium.title}
+                                                    status={notification.status}
+                                                    bookingTitle={notification.booking.title}
+                                                    bookingDate={new Intl.DateTimeFormat("en-GB", {
+                                                        day: "2-digit",
+                                                        month: "short",
+                                                        year: "numeric",
+                                                    }).format(new Date(notification.booking.bookingdate))}
+                                                    startTime={new Intl.DateTimeFormat("en-US", {
+                                                        hour: "2-digit",
+                                                        minute: "2-digit",
+                                                        hour12: true,
+                                                    }).format(new Date(notification.booking.starttime))}
+                                                    endTime={new Intl.DateTimeFormat("en-US", {
+                                                        hour: "2-digit",
+                                                        minute: "2-digit",
+                                                        hour12: true,
+                                                    }).format(new Date(notification.booking.endtime))}
+                                                />
                                             </Flex>
                                             {notification.booking.bookingstatus === "pending" && (
                                                 <Flex className="action-wrapper">
@@ -214,7 +284,7 @@ const Header = () => {
                                                                         requestTab: "all",
                                                                         requestId: notification.booking._id,
                                                                     }),
-                                                                1
+                                                                100
                                                             )
                                                         }}
                                                     >

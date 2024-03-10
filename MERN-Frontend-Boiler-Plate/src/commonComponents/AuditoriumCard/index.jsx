@@ -24,7 +24,6 @@ const AuditoriumCard = ({ auditorium, view, onEdit = () => null, onDelete = () =
                     autoplay={true}
                     autoplaySpeed={5600}
                 >
-                    {console.log(auditorium?.images?.length)}
                     {auditorium?.images?.map((image) => (
                         <img key={image} src={image} className="image" alt="" />
                     ))}

@@ -1,9 +1,10 @@
 const mongoose = require("mongoose")
+const { BookingStatus } = require("../utils/constant")
 
 const bookingSchema = new mongoose.Schema(
     {
         auditorium: { type: mongoose.Schema.Types.ObjectId, ref: "Auditorium", required: true },
-        staff: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+        staff: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
         title: { type: String, required: true },
         starttime: { type: Date, required: true },
         endtime: { type: Date, required: true },
@@ -24,7 +25,11 @@ const bookingSchema = new mongoose.Schema(
             default: "pending",
         },
         department: { type: String, enum: ["it", "management", "other"], default: "pending" },
-        bookingstatus: { type: String, enum: ["pending", "approved", "rejected", "cancelled"], default: "pending" },
+        bookingstatus: {
+            type: String,
+            enum: [BookingStatus.APPROVED, BookingStatus.CANCELLED, BookingStatus.PENDING, BookingStatus.REJECTED],
+            default: "pending",
+        },
         purpose: { type: String },
         isdeleted: { type: Boolean, default: false },
         createdby: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },

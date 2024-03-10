@@ -125,12 +125,17 @@
                 }
 
                 .notification {
+                    font-size: rem(20);
+                    color: #00000080;
+
                     .text-spacer {
                         width: 2px;
                     }
 
                     .highlight {
-                        font-weight: 600;
+                        color: black;
+                        font-weight: 500;
+                        font-size: rem(19);
                     }
                 }
 

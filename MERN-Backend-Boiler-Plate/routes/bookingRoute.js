@@ -8,6 +8,7 @@ const User = require("../model/user")
 const { validateBookingCreateReq, validateBookingUpdateReq } = require("../validation/booking")
 const { BookingStatus } = require("../utils/constant")
 const Auditorium = require("../model/auditorium")
+const { compare } = require("../utils/helper")
 
 router.get("/", userTokenAuth, async (req, res) => {
     try {
@@ -90,7 +91,7 @@ router.post("/", userTokenAuth, async (req, res) => {
         const newNotifications = await Notification.create(
             adminIds.map((adminId) => {
                 return {
-                    notification: `Booking Request from ${req.userData.displayname} is receiced for ${
+                    notification: `Booking request from ${req.userData.displayname} is receiced for ${
                         audtoriumDetail.title
                     } auditorium on ${new Intl.DateTimeFormat("en-GB", {
                         day: "2-digit",
@@ -104,7 +105,7 @@ router.post("/", userTokenAuth, async (req, res) => {
                         hour: "2-digit",
                         minute: "2-digit",
                         hour12: true,
-                    }).format(new Date(reqBody.endtime))}`,
+                    }).format(new Date(reqBody.endtime))} entitled ${reqBody.title}`,
                     to: adminId._id,
                     type: "new-request",
                     booking: booking[0]._id,
@@ -137,10 +138,11 @@ router.put("/:id", userTokenAuth, async (req, res) => {
     try {
         await session.startTransaction()
         const { id } = req.params
+        const userId = req.userData._id
         const { bookingstatus } = req.body
         const { error } = validateBookingUpdateReq({ bookingstatus })
         if (error) return res.status(400).json({ error: true, message: error.details[0].message })
-        const existingBooking = await Booking.findOne({ _id: id, isdeleted: false })
+        const existingBooking = await Booking.findOne({ _id: id, isdeleted: false }).populate("createdby auditorium")
         if (!existingBooking) return res.status(400).json({ error: true, message: "Request not found" })
         if (bookingstatus === BookingStatus.APPROVED) {
             const otherRequestExist = await Booking.findOne({
@@ -170,9 +172,92 @@ router.put("/:id", userTokenAuth, async (req, res) => {
                 ],
             })
             if (otherRequestExist)
-                return res.status(400).json({ error: true, message: "Other Request is alerady  in this time range." })
+                return res.status(400).json({ error: true, message: "Other Request is alerady in this time range." })
         }
         const bookingUpdated = await Booking.findByIdAndUpdate(id, { bookingstatus }, { session })
+        await Notification.updateMany({ isdeleted: false, booking: id }, { status: bookingstatus })
+        const adminIds = await User.find({
+            roles: { $in: ["admin", "superadmin"] },
+            isdeleted: false,
+        }).select("_id")
+        const newNotifications = await Notification.create(
+            [
+                ...adminIds.flatMap((adminId) => {
+                    if (compare(adminId, userId)) return []
+                    return {
+                        notification: `Booking request from ${
+                            existingBooking.createdby.displayname
+                        } is ${bookingstatus} by ${req.userData.displayname} for ${
+                            existingBooking.auditorium.title
+                        } auditorium on ${new Intl.DateTimeFormat("en-GB", {
+                            day: "2-digit",
+                            month: "short",
+                            year: "numeric",
+                        }).format(new Date(existingBooking.bookingdate))} entitled ${existingBooking.title}`,
+                        to: adminId._id,
+                        type: "response-request",
+                        status: bookingstatus,
+                        booking: id,
+                        createdby: userId,
+                        auditorium: existingBooking.auditorium._id,
+                    }
+                }),
+                {
+                    notification: `Your booking request is ${bookingstatus} by ${req.userData.displayname} for ${
+                        existingBooking.auditorium.title
+                    } auditorium on ${new Intl.DateTimeFormat("en-GB", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                    }).format(new Date(existingBooking.bookingdate))} entitled ${existingBooking.title}`,
+                    to: existingBooking.createdby._id,
+                    type: "response-request",
+                    status: bookingstatus,
+                    booking: id,
+                    createdby: userId,
+                    auditorium: existingBooking.auditorium._id,
+                },
+                ...(bookingstatus === BookingStatus.APPROVED
+                    ? [
+                          {
+                              notification: `${req.userData.displayname} requested you to join with ${
+                                  existingBooking.createdby.displayname
+                              } in ${existingBooking.auditorium.title} auditorium on ${new Intl.DateTimeFormat(
+                                  "en-GB",
+                                  {
+                                      day: "2-digit",
+                                      month: "short",
+                                      year: "numeric",
+                                  }
+                              ).format(new Date(existingBooking.bookingdate))} from ${new Intl.DateTimeFormat("en-US", {
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                  hour12: true,
+                              }).format(new Date(existingBooking.starttime))} to ${new Intl.DateTimeFormat("en-US", {
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                  hour12: true,
+                              }).format(new Date(existingBooking.endtime))}`,
+                              to: userId,
+                              type: "schedule-request",
+                              status: bookingstatus,
+                              booking: id,
+                              createdby: userId,
+                              auditorium: existingBooking.auditorium._id,
+                          },
+                      ]
+                    : []),
+            ],
+            { session }
+        )
+        const io = await req.app.get("io")
+        newNotifications.forEach((notification) => {
+            io.emit(`notification-${notification.to.toString()}`, {
+                message: "Booking request is " + notification.status,
+                description: notification.notification,
+                type: notification.type,
+            })
+        })
         await session.commitTransaction()
         return res.json({ data: bookingUpdated, message: "Request is " + bookingstatus })
     } catch (error) {
@@ -198,6 +283,17 @@ router.delete("/:id", userTokenAuth, async (req, res) => {
             },
             { session }
         )
+        const updatedNotifications = await Notification.updateMany(
+            { isdeleted: false, booking: id },
+            { isdeleted: true, status: BookingStatus.CANCELLED, type: "delete-request" }
+        )
+        const io = await req.app.get("io")
+        updatedNotifications.forEach((notification) => {
+            io.emit(`notification-${notification.to.toString()}`, {
+                message: "Request deleted",
+                type: "delete-request",
+            })
+        })
         await session.commitTransaction()
         return res.json({ data: bookingDeleted, message: "Your request has been cancelled" })
     } catch (error) {

@@ -24,6 +24,10 @@ class bookingService {
     async getNotifications() {
         return await http.get(`/api/notification`)
     }
+
+    async readAllNotification() {
+        return await http.get(`/api/notification/read-all`)
+    }
 }
 
 export default new bookingService()

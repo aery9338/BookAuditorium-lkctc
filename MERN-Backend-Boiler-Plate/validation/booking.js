@@ -12,7 +12,7 @@ const validateBookingCreateReq = (user) => {
             .valid("official", "meeting", "program", "practice", "function", "seminar", "other")
             .required(),
         purpose: Joi.string(),
-        staff: Joi.string(),
+        staff: Joi.array(),
         starttime: Joi.string().required(),
         title: Joi.string().required(),
     }).validate(user)

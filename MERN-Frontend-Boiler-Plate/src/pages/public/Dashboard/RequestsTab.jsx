@@ -147,7 +147,7 @@ const RequestsTab = () => {
                         endtime,
                         bookingstatus,
                         createdby,
-                        staff: { displayname } = { displayname: "-" },
+                        staff,
                     } = request
                     bookingdate = new Intl.DateTimeFormat("en-GB", {
                         day: "2-digit",
@@ -183,7 +183,7 @@ const RequestsTab = () => {
                                     <Slider
                                         dots={false}
                                         arrows={false}
-                                        infinite={true}
+                                        infinite={auditorium?.images?.length > 1}
                                         speed={1600}
                                         slidesToShow={1}
                                         slidesToScroll={1}
@@ -224,7 +224,11 @@ const RequestsTab = () => {
                                     </Flex>
                                     <Flex gap={"small"} align="center">
                                         <Typography className="title">Staff :</Typography>
-                                        <Typography className="sub-title">{displayname}</Typography>
+                                        <Typography className="sub-title">
+                                            {staff.length
+                                                ? staff?.map(({ displayname }) => displayname).join(", ")
+                                                : "-"}
+                                        </Typography>
                                     </Flex>
                                     <Flex gap={"small"} align="center">
                                         <Typography className="title">Booking date :</Typography>

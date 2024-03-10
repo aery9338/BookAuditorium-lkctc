@@ -20,7 +20,7 @@ class ErrorBoundary extends React.Component {
             path: window.location?.pathname,
         }
         this.setState(errorDetails)
-        console.log("Error info: ", errorDetails)
+        console.error("Error info: ", errorDetails)
     }
 
     render() {

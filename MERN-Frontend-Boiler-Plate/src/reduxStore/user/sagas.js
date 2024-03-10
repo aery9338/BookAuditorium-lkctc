@@ -158,6 +158,15 @@ export function* getNotifications() {
     }
 }
 
+export function* readAllNotification() {
+    try {
+        const { error } = yield call(bookingService.readAllNotification)
+        if (!error) yield call(getNotifications)
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 // Defines which saga should run upon each action dispatch
 export default function* rootSaga() {
     yield all([
@@ -169,6 +178,7 @@ export default function* rootSaga() {
         takeEvery(userActions.getBookingDetails.type, getBookingDetails),
         takeEvery(userActions.getBookingRequests.type, getBookingRequests),
         takeEvery(userActions.getNotifications.type, getNotifications),
+        takeEvery(userActions.readAllNotification.type, readAllNotification),
         getUserData(),
     ])
 }

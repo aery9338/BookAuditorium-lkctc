@@ -86,7 +86,7 @@ const AuditoriumPage = () => {
                 dispatch(userActions.getBookingDetails())
             }
         } catch (error) {
-            console.log(error)
+            console.error(error)
         } finally {
             setIsBtnLoading(false)
         }
@@ -118,7 +118,7 @@ const AuditoriumPage = () => {
                                 <Slider
                                     dots={true}
                                     arrows={false}
-                                    infinite={true}
+                                    infinite={auditoriumData?.images?.length > 1}
                                     speed={1600}
                                     slidesToShow={1}
                                     slidesToScroll={1}
@@ -287,10 +287,11 @@ const AuditoriumPage = () => {
                                                 showSearch
                                             />
                                         </Form.Item>
-                                        {/*Need staff*/}
-                                        <Form.Item required={false} name="staff" label="Need staff:">
+                                        {/*Lab assistant*/}
+                                        <Form.Item required={false} name="staff" label="Lab assistant:">
                                             <Select
                                                 allowClear
+                                                mode="multi"
                                                 placeholder="Select staff"
                                                 options={faculties?.flatMap((faculty) => {
                                                     if (!isAuthorized(faculty.roles, "staff")) return []

@@ -90,6 +90,7 @@ export const UserRoles = Object.freeze({
 export const notificationPeriod = Object.freeze({
     new: "New",
     today: "Today",
+    yesterday: "Yesterday",
     last7days: "Last 7 days",
     older: "Older",
 })

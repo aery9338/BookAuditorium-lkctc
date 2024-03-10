@@ -23,6 +23,7 @@ const userSlice = createSlice({
         getBookingDetails: () => {},
         getBookingRequests: () => {},
         getNotifications: () => {},
+        readAllNotification: () => {},
     },
 })
 
