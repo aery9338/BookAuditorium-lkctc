@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import {
     Button,
+    Flex,
     // Divider,
     Form,
     Input,
@@ -73,7 +74,7 @@ const Login = () => {
 
                         {/*Password*/}
                         <Form.Item name="password" rules={[{ required: true, message: "Please enter your password" }]}>
-                            <div style={{ display: "flex", alignItems: "center" }}>
+                            <Flex align="center" gap={"middle"}>
                                 <Input.Password type="password" placeholder="Password" className="input-field" />
                                 {/*Forgot password button*/}
                                 <Tooltip placement="bottom" title="Coming soon">
@@ -81,7 +82,7 @@ const Login = () => {
                                         Forgot?
                                     </Button>
                                 </Tooltip>
-                            </div>
+                            </Flex>
                         </Form.Item>
 
                         <Button

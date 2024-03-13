@@ -1,5 +1,6 @@
 const express = require("express")
 const mongoose = require("mongoose")
+const winston = require("winston")
 const router = express.Router()
 const { userTokenAuth, adminTokenAuth } = require("../middleware/tokenAuth")
 const Booking = require("../model/booking")
@@ -9,6 +10,98 @@ const { validateBookingCreateReq, validateBookingUpdateReq } = require("../valid
 const { BookingStatus } = require("../utils/constant")
 const Auditorium = require("../model/auditorium")
 const { compare } = require("../utils/helper")
+const { transporter } = require("../startup/nodemailer")
+const { domainName } = require("../startup/config")
+
+const getEmailContent = (type, data) => {
+    return type === "new-request"
+        ? `
+        <span>
+                Booking request from ${data.requestfrom} is receiced for ${
+              data.auditoriumtitle
+          } auditorium on ${new Intl.DateTimeFormat("en-GB", {
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+          }).format(new Date(data.bookingdate))} from ${new Intl.DateTimeFormat("en-US", {
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: true,
+          }).format(new Date(data.starttime))} to ${new Intl.DateTimeFormat("en-US", {
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: true,
+          }).format(new Date(data.endtime))} entitled ${data.requesttitle}
+        </span>
+        <br />
+        <br />
+        <a
+            href="${domainName}/?dashboardTab=requests&requestTab=all&requestId=${data.bookingId}"
+            style="
+                background-color: #ed7d31;
+                color: #feffff;
+                align-items: center;
+                border-radius: 6px;
+                box-shadow: 4px 4px 20px -4px #14132233;
+                display: flex;
+                height: fit-content;
+                justify-content: center;
+                letter-spacing: .8px;
+                padding: 8px 14px;
+                width: fit-content;
+                border: none;
+                text-align: center;
+                text-decoration: none;
+                font-size: 16px;
+            "
+        >
+            View Booking
+        </a>
+        </div>
+        `
+        : type === "request-response"
+        ? `
+        <span>
+            Booking request from ${data.requestfrom} is ${data.bookingstatus} by ${data.responsefrom} for ${
+              data.auditoriumtitle
+          } auditorium on ${new Intl.DateTimeFormat("en-GB", {
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+          }).format(new Date(data.bookingdate))} entitled ${data.requesttitle}
+        </span>`
+        : type === "response-back"
+        ? `
+        <span>
+            Your booking request is ${data.bookingstatus} by ${data.responsefrom} for ${
+              data.auditoriumtitle
+          } auditorium on ${new Intl.DateTimeFormat("en-GB", {
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+          }).format(new Date(data.bookingdate))} entitled ${data.requesttitle}
+        </span>
+        `
+        : type === "schedule-request"
+        ? `
+        <span>
+        ${data.responsefrom} requested you to join with ${data.requestfrom} in ${
+              data.auditoriumtitle
+          } auditorium on ${new Intl.DateTimeFormat("en-GB", {
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+          }).format(new Date(data.bookingdate))} from ${new Intl.DateTimeFormat("en-US", {
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: true,
+          }).format(new Date(data.starttime))} to ${new Intl.DateTimeFormat("en-US", {
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: true,
+          }).format(new Date(data.endtime))}</span>`
+        : ""
+}
 
 router.get("/", userTokenAuth, async (req, res) => {
     try {
@@ -86,7 +179,7 @@ router.post("/", userTokenAuth, async (req, res) => {
         const adminIds = await User.find({
             roles: { $in: ["admin", "superadmin"] },
             isdeleted: false,
-        }).select("_id")
+        }).select("_id email")
         const audtoriumDetail = await Auditorium.findById(reqBody.auditorium).select("title")
         const newNotifications = await Notification.create(
             adminIds.map((adminId) => {
@@ -115,6 +208,43 @@ router.post("/", userTokenAuth, async (req, res) => {
             }),
             { session }
         )
+        try {
+            await Promise.all(
+                adminIds.map(
+                    async ({ email }) =>
+                        await transporter.sendMail({
+                            to: email,
+                            subject: `New request recieved from ${req.userData.displayname}`,
+                            text: `Booking request from ${req.userData.displayname} is receiced for ${
+                                audtoriumDetail.title
+                            } auditorium on ${new Intl.DateTimeFormat("en-GB", {
+                                day: "2-digit",
+                                month: "short",
+                                year: "numeric",
+                            }).format(new Date(reqBody.bookingdate))} from ${new Intl.DateTimeFormat("en-US", {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                                hour12: true,
+                            }).format(new Date(reqBody.starttime))} to ${new Intl.DateTimeFormat("en-US", {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                                hour12: true,
+                            }).format(new Date(reqBody.endtime))} entitled ${reqBody.title}`,
+                            html: getEmailContent("new-request", {
+                                requestfrom: req.userData.displayname,
+                                auditoriumtitle: audtoriumDetail.title,
+                                bookingdate: reqBody.bookingdate,
+                                starttime: reqBody.starttime,
+                                endtime: reqBody.endtime,
+                                requesttitle: reqBody.title,
+                                bookingId: booking[0]._id,
+                            }),
+                        })
+                )
+            )
+        } catch (error) {
+            winston.info(error)
+        }
         const io = await req.app.get("io")
         newNotifications.forEach((notification) => {
             io.emit(`notification-${notification.to.toString()}`, {
@@ -138,11 +268,13 @@ router.put("/:id", userTokenAuth, async (req, res) => {
     try {
         await session.startTransaction()
         const { id } = req.params
-        const userId = req.userData._id
+        const { _id: userId, displayname: userDisplayname } = req.userData
         const { bookingstatus } = req.body
         const { error } = validateBookingUpdateReq({ bookingstatus })
         if (error) return res.status(400).json({ error: true, message: error.details[0].message })
-        const existingBooking = await Booking.findOne({ _id: id, isdeleted: false }).populate("createdby auditorium")
+        const existingBooking = await Booking.findOne({ _id: id, isdeleted: false }).populate(
+            "createdby auditorium staff"
+        )
         if (!existingBooking) return res.status(400).json({ error: true, message: "Request not found" })
         if (bookingstatus === BookingStatus.APPROVED) {
             const otherRequestExist = await Booking.findOne({
@@ -179,22 +311,22 @@ router.put("/:id", userTokenAuth, async (req, res) => {
         const adminIds = await User.find({
             roles: { $in: ["admin", "superadmin"] },
             isdeleted: false,
-        }).select("_id")
+        }).select("_id email")
         const newNotifications = await Notification.create(
             [
-                ...adminIds.flatMap((adminId) => {
-                    if (compare(adminId, userId)) return []
+                ...adminIds.flatMap(({ _id: adminId }) => {
+                    if (compare(adminId.toString(), userId)) return []
                     return {
                         notification: `Booking request from ${
                             existingBooking.createdby.displayname
-                        } is ${bookingstatus} by ${req.userData.displayname} for ${
+                        } is ${bookingstatus} by ${userDisplayname} for ${
                             existingBooking.auditorium.title
                         } auditorium on ${new Intl.DateTimeFormat("en-GB", {
                             day: "2-digit",
                             month: "short",
                             year: "numeric",
                         }).format(new Date(existingBooking.bookingdate))} entitled ${existingBooking.title}`,
-                        to: adminId._id,
+                        to: adminId,
                         type: "response-request",
                         status: bookingstatus,
                         booking: id,
@@ -203,7 +335,7 @@ router.put("/:id", userTokenAuth, async (req, res) => {
                     }
                 }),
                 {
-                    notification: `Your booking request is ${bookingstatus} by ${req.userData.displayname} for ${
+                    notification: `Your booking request is ${bookingstatus} by ${userDisplayname} for ${
                         existingBooking.auditorium.title
                     } auditorium on ${new Intl.DateTimeFormat("en-GB", {
                         day: "2-digit",
@@ -218,9 +350,9 @@ router.put("/:id", userTokenAuth, async (req, res) => {
                     auditorium: existingBooking.auditorium._id,
                 },
                 ...(bookingstatus === BookingStatus.APPROVED
-                    ? [
-                          {
-                              notification: `${req.userData.displayname} requested you to join with ${
+                    ? existingBooking.staff.map(({ _id }) => {
+                          return {
+                              notification: `${userDisplayname} requested you to join with ${
                                   existingBooking.createdby.displayname
                               } in ${existingBooking.auditorium.title} auditorium on ${new Intl.DateTimeFormat(
                                   "en-GB",
@@ -238,18 +370,106 @@ router.put("/:id", userTokenAuth, async (req, res) => {
                                   minute: "2-digit",
                                   hour12: true,
                               }).format(new Date(existingBooking.endtime))}`,
-                              to: userId,
+                              to: _id,
                               type: "schedule-request",
                               status: bookingstatus,
                               booking: id,
                               createdby: userId,
                               auditorium: existingBooking.auditorium._id,
-                          },
-                      ]
+                          }
+                      })
                     : []),
             ],
             { session }
         )
+        try {
+            await Promise.all([
+                ...adminIds.map(async ({ _id, email }) => {
+                    if (!compare(_id.toString(), userId))
+                        await transporter.sendMail({
+                            to: email,
+                            subject: `${existingBooking.title} request is ${bookingstatus} by ${userDisplayname}`,
+                            text: `Booking request from ${
+                                existingBooking.createdby.displayname
+                            } is ${bookingstatus} by ${userDisplayname} for ${
+                                existingBooking.auditorium.title
+                            } auditorium on ${new Intl.DateTimeFormat("en-GB", {
+                                day: "2-digit",
+                                month: "short",
+                                year: "numeric",
+                            }).format(new Date(existingBooking.bookingdate))} entitled ${existingBooking.title}`,
+                            html: getEmailContent("request-response", {
+                                requestfrom: existingBooking.createdby.displayname,
+                                responsefrom: userDisplayname,
+                                bookingstatus: bookingstatus,
+                                auditoriumtitle: existingBooking.auditorium.title,
+                                bookingdate: existingBooking.bookingdate,
+                                requesttitle: existingBooking.title,
+                            }),
+                        })
+                }),
+                await transporter.sendMail({
+                    to: existingBooking.createdby.email,
+                    subject: `Your request is ${bookingstatus} by ${userDisplayname}`,
+                    text: `Your booking request is ${bookingstatus} by ${userDisplayname} for ${
+                        existingBooking.auditorium.title
+                    } auditorium on ${new Intl.DateTimeFormat("en-GB", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                    }).format(new Date(existingBooking.bookingdate))} entitled ${existingBooking.title}`,
+                    html: getEmailContent("response-back", {
+                        responsefrom: userDisplayname,
+                        bookingstatus: bookingstatus,
+                        auditoriumtitle: existingBooking.auditorium.title,
+                        bookingdate: existingBooking.bookingdate,
+                        requesttitle: existingBooking.title,
+                    }),
+                }),
+                ...(bookingstatus === BookingStatus.APPROVED
+                    ? existingBooking.staff.map(async ({ email }) => {
+                          await transporter.sendMail({
+                              to: email,
+                              subject: `Request you to join ${
+                                  existingBooking.auditorium.title
+                              } on ${new Intl.DateTimeFormat("en-GB", {
+                                  day: "2-digit",
+                                  month: "short",
+                                  year: "numeric",
+                              }).format(new Date(existingBooking.bookingdate))}`,
+                              text: `${userDisplayname} requested you to join with ${
+                                  existingBooking.createdby.displayname
+                              } in ${existingBooking.auditorium.title} auditorium on ${new Intl.DateTimeFormat(
+                                  "en-GB",
+                                  {
+                                      day: "2-digit",
+                                      month: "short",
+                                      year: "numeric",
+                                  }
+                              ).format(new Date(existingBooking.bookingdate))} from ${new Intl.DateTimeFormat("en-US", {
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                  hour12: true,
+                              }).format(new Date(existingBooking.starttime))} to ${new Intl.DateTimeFormat("en-US", {
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                  hour12: true,
+                              }).format(new Date(existingBooking.endtime))}`,
+                              html: getEmailContent("schedule-request", {
+                                  responsefrom: userDisplayname,
+                                  requestfrom: existingBooking.createdby.displayname,
+                                  bookingdate: existingBooking.bookingdate,
+                                  starttime: existingBooking.starttime,
+                                  endtime: existingBooking.endtime,
+                                  auditoriumtitle: existingBooking.auditorium.title,
+                              }),
+                          })
+                      })
+                    : []),
+            ])
+        } catch (error) {
+            winston.info(error)
+        }
         const io = await req.app.get("io")
         newNotifications.forEach((notification) => {
             io.emit(`notification-${notification.to.toString()}`, {

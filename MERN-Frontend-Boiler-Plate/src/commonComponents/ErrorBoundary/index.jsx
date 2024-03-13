@@ -14,13 +14,13 @@ class ErrorBoundary extends React.Component {
     }
 
     componentDidCatch(error, errorInfo) {
-        const errorDetails = {
+        error = {
             error: error,
             errorInfo: errorInfo,
             path: window.location?.pathname,
         }
-        this.setState(errorDetails)
-        console.error("Error info: ", errorDetails)
+        this.setState()
+        console.error("Error info: ", error)
     }
 
     render() {

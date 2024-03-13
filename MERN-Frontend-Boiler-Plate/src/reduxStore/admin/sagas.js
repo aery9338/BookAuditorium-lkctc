@@ -21,7 +21,7 @@ export function* getAdminData() {
         //     notification.error({ description: message })
         // }
     } catch (error) {
-        console.error("Error (Get user data): ", error)
+        console.error("Error info: ", error)
     } finally {
         yield put(adminActions.setState({ loading: false }))
     }

@@ -76,7 +76,7 @@ const AllAuditoriumsTab = () => {
                         const url = await getDownloadURL(ref(storage, "auditorium/" + file.name))
                         images.push(url)
                     } catch (error) {
-                        console.error({ error })
+                        console.error("Error info: ", error)
                     }
                 })
             )
@@ -105,7 +105,7 @@ const AllAuditoriumsTab = () => {
                 } else notification.error({ message })
             }
         } catch (error) {
-            console.error("Something wrong: ", error)
+            console.error("Error info: ", error)
         } finally {
             setIsSubmitBtnLoading(false)
             closeModal()

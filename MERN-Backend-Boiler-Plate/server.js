@@ -11,17 +11,16 @@ const initializeLogger = require("./startup/logger")
 const initializeDB = require("./startup/db")
 const initializeSchedular = require("./startup/dailyschedular")
 
-const initialize = () => {
+const initialize = async () => {
     const PORT = process.env.APP_PORT || 5000
     const io = initializeSocketIo(server)
     app.set("io", io)
     app.use(bodyParser.json())
     app.use(bodyParser.urlencoded({ extended: true }))
     app.use(cors())
-    app.use("/", require("./routes/homeRoute"))
+    await initializeLogger(app)
+    await initializeDB()
     app.use("/api", routes)
-    initializeLogger(app)
-    initializeDB()
     initializeSchedular()
 
     server

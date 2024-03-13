@@ -30,7 +30,9 @@ http.interceptors.request.use(
         }
         return config
     },
-    (error) => console.error(error)
+    (error) => {
+        console.error("Error info: ", error)
+    }
 )
 
 http.interceptors.response.use(
@@ -73,7 +75,12 @@ http.interceptors.response.use(
             error: true,
             message: processHtmlString(error?.response?.data?.message ?? "", true),
         }
-        console.error("Api Error: ", { ...error, errorResponse, expectedError })
+        error = {
+            ...error,
+            errorResponse,
+            expectedError,
+        }
+        console.error("Error info: ", error)
         return errorResponse
     }
 )

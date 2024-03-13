@@ -79,7 +79,7 @@ const Header = () => {
     }) => {
         if (type === "new")
             return (
-                <Typography>
+                <Typography className="notification-text">
                     Booking request from <span className="highlight">{bookingRequestCreatedBy}</span> is receiced for{" "}
                     <span className="highlight">{auditoriumTitle}</span> auditorium on{" "}
                     <span className="highlight">{bookingDate}</span> from <span className="highlight">{startTime}</span>{" "}
@@ -89,7 +89,7 @@ const Header = () => {
             )
         else if (type === "schedule")
             return (
-                <Typography>
+                <Typography className="notification-text">
                     {actionTakenBy} requested you to join with{" "}
                     <span className="highlight">{bookingRequestCreatedBy}</span> in{" "}
                     <span className="highlight">{auditoriumTitle}</span> auditorium on{" "}
@@ -99,7 +99,7 @@ const Header = () => {
             )
         else if (type === "response" && !responseBack)
             return (
-                <Typography>
+                <Typography className="notification-text">
                     Booking request from <span className="highlight">{bookingRequestCreatedBy}</span> is{" "}
                     <span className="highlight">{status}</span> by <span className="highlight">{actionTakenBy}</span>{" "}
                     for <span className="highlight">{auditoriumTitle}</span> auditorium on{" "}
@@ -109,7 +109,7 @@ const Header = () => {
             )
         else if (responseBack)
             return (
-                <Typography>
+                <Typography className="notification-text">
                     Your booking request is <span className="highlight">{status}</span> by{" "}
                     <span className="highlight">{actionTakenBy}</span> for{" "}
                     <span className="highlight">{auditoriumTitle}</span> auditorium on{" "}

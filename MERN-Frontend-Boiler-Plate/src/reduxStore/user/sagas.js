@@ -27,7 +27,7 @@ export function* getUserData() {
             })
         }
     } catch (error) {
-        console.error("Error (Get user data): ", error)
+        console.error("Error info: ", error)
     } finally {
         yield put(userActions.setState({ loading: false, initialLoading: false }))
     }
@@ -58,7 +58,7 @@ export function* loginUser({ payload }) {
         }
         yield put(userActions.setState({ loading: false }))
     } catch (error) {
-        console.error("Error (Login user): ", error)
+        console.error("Error info: ", error)
         yield put(userActions.setState(initialState))
         notification.error({
             message: "Login failed",
@@ -94,7 +94,7 @@ export function* signupUser({ payload }) {
         }
         yield put(userActions.setState({ loading: false }))
     } catch (error) {
-        console.error("Error (Signup user): ", error)
+        console.error("Error info: ", error)
         yield put(userActions.setState(initialState))
         notification.error({
             message: "Registration failed",
@@ -109,7 +109,7 @@ export function* logoutUser() {
         userAuthService.logout()
         notification.success({ message: "Logged out successfully" })
     } catch (error) {
-        console.error(error)
+        console.error("Error info: ", error)
         notification.error({
             message: "Logout failed",
             description: error,
@@ -124,7 +124,7 @@ export function* getBookingDetails() {
         const { data: bookingDetails, error } = yield call(bookingService.getBookingDetails)
         if (!error) yield put(userActions.setState({ bookingDetails }))
     } catch (error) {
-        console.error(error)
+        console.error("Error info: ", error)
     }
 }
 
@@ -133,7 +133,7 @@ export function* getEventDetails() {
         const { data: bookingDetails, error } = yield call(bookingService.getEventDetails)
         if (!error) yield put(userActions.setState({ bookingDetails }))
     } catch (error) {
-        console.error(error)
+        console.error("Error info: ", error)
     }
 }
 
@@ -142,7 +142,7 @@ export function* getBookingRequests() {
         const { data: allBookingRequests, error } = yield call(bookingService.getBookingRequests)
         if (!error) yield put(userActions.setState({ allBookingRequests }))
     } catch (error) {
-        console.error(error)
+        console.error("Error info: ", error)
     }
 }
 
@@ -154,7 +154,7 @@ export function* getNotifications() {
         } = yield call(bookingService.getNotifications)
         if (!error) yield put(userActions.setState({ notifications, unreadNotifications }))
     } catch (error) {
-        console.error(error)
+        console.error("Error info: ", error)
     }
 }
 
@@ -163,7 +163,7 @@ export function* readAllNotification() {
         const { error } = yield call(bookingService.readAllNotification)
         if (!error) yield call(getNotifications)
     } catch (error) {
-        console.error(error)
+        console.error("Error info: ", error)
     }
 }
 

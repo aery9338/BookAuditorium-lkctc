@@ -5,6 +5,7 @@ import Slider from "react-slick"
 import { AiOutlineAppstore, AiOutlineBars } from "react-icons/ai"
 // import { HiPlus } from "react-icons/hi"
 import { MdDeleteForever } from "react-icons/md"
+import { TbDownload } from "react-icons/tb"
 import { Button, Flex, Image, message as Message, Popconfirm, Segmented, Tag, Tooltip, Typography } from "antd"
 import { userActions } from "reduxStore"
 import {
@@ -26,7 +27,9 @@ const tabItems = (userRole = "", requests = []) => [
         ? [
               {
                   value: "all",
-                  label: `All Requests (${requests.length ?? 0})`,
+                  label: `All Requests (${
+                      requests?.filter((request) => request.bookingstatus !== "cancelled").length ?? 0
+                  })`,
               },
               {
                   value: "pending",
@@ -89,7 +92,7 @@ const RequestsTab = () => {
     const highlightedRequest = getQueryParam("requestId")
     const requests = useMemo(() => requetsDetails.data, [requetsDetails])
     const tabs = useMemo(() => tabItems(userRole, requests), [userRole, requests])
-    const activeTab = getQueryParam("requestTab") ?? tabs[0]?.key
+    const activeTab = getQueryParam("requestTab") ?? tabs[0]?.value
 
     const [listType, setListType] = useState("list")
     useEffect(() => {
@@ -164,6 +167,7 @@ const RequestsTab = () => {
                     else if (activeTab === "approved" && bookingstatus !== "approved") return []
                     else if (activeTab === "rejected" && bookingstatus !== "rejected") return []
                     else if (activeTab === "cancelled" && bookingstatus !== "cancelled") return []
+                    else if (activeTab === "all" && bookingstatus === "cancelled") return []
                     else if (
                         activeTab === "today" &&
                         new Date(bookingdate).setHours(0, 0, 0, 0) !== new Date().setHours(0, 0, 0, 0)
@@ -317,19 +321,28 @@ const RequestsTab = () => {
                                         </Popconfirm>
                                     </Flex>
                                 )}
-                                {bookingstatus === "pending" && isFaculty && (
-                                    <Popconfirm
-                                        title={`Are you sure you want to cancel ${title} request!`}
-                                        okText="Delete"
-                                        onConfirm={() => onModifingRequest(_id, "cancelled")}
-                                    >
-                                        <Flex className="delete-action">
+                                {isFaculty &&
+                                    (bookingstatus === "pending" ? (
+                                        <Popconfirm
+                                            title={`Are you sure you want to cancel ${title} request!`}
+                                            okText="Delete"
+                                            onConfirm={() => onModifingRequest(_id, "cancelled")}
+                                        >
+                                            <Flex className="request-action">
+                                                <Button type="primary" size="small">
+                                                    <MdDeleteForever />
+                                                </Button>
+                                            </Flex>
+                                        </Popconfirm>
+                                    ) : bookingstatus === "approved" ? (
+                                        <Flex className="request-action">
                                             <Button type="primary" size="small">
-                                                <MdDeleteForever />
+                                                <TbDownload />
                                             </Button>
                                         </Flex>
-                                    </Popconfirm>
-                                )}
+                                    ) : (
+                                        <></>
+                                    ))}
                             </Flex>
                         </Flex>
                     )

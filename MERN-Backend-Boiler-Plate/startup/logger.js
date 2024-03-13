@@ -19,30 +19,36 @@ const formattedLogTime = () => {
     return `${day} ${month} ${year}, ${formattedHours}:${minutes}:${seconds}:${milliseconds} ${ampm}`
 }
 
-module.exports = (app) => {
+module.exports = async (app) => {
     winston.add(
         new winston.transports.Console({
             format: winston.format.combine(
-                winston.format.printf((props) => {
-                    return `[${props.level}]: ${props.message} - ${formattedLogTime()}`
-                })
+                winston.format.printf(({ level, message }) => `[${level}]: ${message} - ${formattedLogTime()}`)
+            ),
+        })
+    )
+
+    winston.add(
+        new winston.transports.File({
+            level: "silly",
+            filename: "logs/infoLog.log",
+            format: winston.format.combine(
+                winston.format.printf(({ level, message }) => `[${level}]: ${message} - ${formattedLogTime()}`)
             ),
         })
     )
 
     // Add the Winston logger middleware to the app
-    app.use(
+    await app.use(
         expressWinston.logger({
             transports: [
                 new winston.transports.Console({
                     format: winston.format.combine(
-                        winston.format.printf(({ level, message }) => {
-                            return `[${level}]: ${message} - ${formattedLogTime()}`
-                        })
+                        winston.format.printf(({ level, message }) => `[${level}]: ${message} - ${formattedLogTime()}`)
                     ),
                 }),
                 new winston.transports.File({
-                    level: "info",
+                    level: "silly",
                     filename: "logs/infoLog.log",
                 }),
                 new winston.transports.File({
@@ -55,10 +61,15 @@ module.exports = (app) => {
                     level: "error",
                     db: appConfig.ProjectDB,
                     collection: "errorLogs",
+                    options: {
+                        useUnifiedTopology: true,
+                        useNewUrlParser: true,
+                    },
                     handleExceptions: true,
                     handleRejections: true,
                 }),
                 new winston.transports.MongoDB({
+                    level: "silly",
                     db: appConfig.ProjectDB,
                     collection: "infoLogs",
                     options: {

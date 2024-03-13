@@ -8,7 +8,7 @@ export function* getConfigData() {
         const { error, data } = yield call(configService.getConfigData)
         if (!error) yield put(configActions.setState(data))
     } catch (error) {
-        console.error(error)
+        console.error("Error info: ", error)
     } finally {
         yield put(configActions.setState({ loading: false, initialLoading: false }))
     }

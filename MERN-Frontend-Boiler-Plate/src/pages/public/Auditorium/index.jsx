@@ -86,7 +86,7 @@ const AuditoriumPage = () => {
                 dispatch(userActions.getBookingDetails())
             }
         } catch (error) {
-            console.error(error)
+            console.error("Error info: ", error)
         } finally {
             setIsBtnLoading(false)
         }
@@ -291,7 +291,7 @@ const AuditoriumPage = () => {
                                         <Form.Item required={false} name="staff" label="Lab assistant:">
                                             <Select
                                                 allowClear
-                                                mode="multi"
+                                                mode="multiple"
                                                 placeholder="Select staff"
                                                 options={faculties?.flatMap((faculty) => {
                                                     if (!isAuthorized(faculty.roles, "staff")) return []
