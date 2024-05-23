@@ -259,7 +259,7 @@ const RequestsTab = () => {
                                         </Typography>
                                     </Flex>
                                 </Flex>
-                                {isFaculty && (
+                                {(isFaculty || (bookingstatus !== "pending" && isAdmin)) && (
                                     <Flex className="action-container" justify="center">
                                         {bookingstatus === "rejected" && (
                                             <Tag color="#f50">
