@@ -98,6 +98,8 @@
 }
 
 .notification-drawer {
+    min-width: 300px;
+
     .ant-drawer-body {
         padding: rem(20);
         .notification-wapper {
